@@ -18,5 +18,6 @@ function Component() {
       code: "",
     },
   });
+  form;
   return "Hello /auth/one-time-password!";
 }

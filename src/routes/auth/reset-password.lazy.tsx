@@ -20,5 +20,6 @@ function Component() {
       password_confirmation: ""
     }
   })
+  form;
   return "Hello /auth/reset-password!";
 }

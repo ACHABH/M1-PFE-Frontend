@@ -18,5 +18,6 @@ function Component() {
       email: "",
     },
   });
+  form;
   return "Hello /auth/forget-password!";
 }
