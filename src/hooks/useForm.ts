@@ -8,7 +8,7 @@ import { StrictOmit } from "../types";
 
 export function useForm<
   TFieldValues extends FieldValues = FieldValues,
-  TContext = any,
+  TContext = unknown,
 >(props: UseFormProps<TFieldValues, TContext>) {
   const [disbaled, setDisabled] = useState(false);
   const form = useReactHookForm(props);
@@ -28,7 +28,7 @@ export function useForm<
         }
       };
     },
-    []
+    [form]
   );
 
   return {

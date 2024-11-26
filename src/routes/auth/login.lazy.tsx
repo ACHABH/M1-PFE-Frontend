@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import Stack from "react-bootstrap/Stack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useForm } from "../../hook/useForm";
+import { useForm } from "../../hooks/useForm";
 
 const FormSchema = z.object({
   email: z.string().trim().min(1).email(),
