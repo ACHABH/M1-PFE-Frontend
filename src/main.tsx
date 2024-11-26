@@ -1,0 +1,33 @@
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
+import Loading from "./loading.tsx";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./index.css";
+
+import { routeTree } from "./routeTree.gen";
+import ThemeProvider from "./contexts/theme.tsx";
+import QueryProvider from "./providers/query.tsx";
+
+const router = createRouter({ routeTree });
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
+
+const rootElement = document.getElementById("root");
+if (rootElement && !rootElement.innerHTML) {
+  createRoot(rootElement).render(
+    <React.StrictMode>
+      <React.Suspense fallback={<Loading />}>
+        <QueryProvider>
+          <ThemeProvider>
+            <RouterProvider router={router} />
+          </ThemeProvider>
+        </QueryProvider>
+      </React.Suspense>
+    </React.StrictMode>
+  );
+}
