@@ -77,7 +77,7 @@ function Component() {
         )}
       </Form.Group>
       <Stack direction="horizontal" style={{ justifyContent: "space-between" }}>
-        <Button variant="primary" type="submit" disabled={form.disbaled}>
+        <Button variant="primary" type="submit" disabled={form.disabled}>
           Sign in
         </Button>
         <Link to="/auth/forget-password">Forgot your password?</Link>

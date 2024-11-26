@@ -10,7 +10,7 @@ export function useForm<
   TFieldValues extends FieldValues = FieldValues,
   TContext = unknown,
 >(props: UseFormProps<TFieldValues, TContext>) {
-  const [disbaled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(false);
   const form = useReactHookForm(props);
 
   const onSubmit = useCallback(
@@ -34,6 +34,6 @@ export function useForm<
   return {
     ...(form as StrictOmit<typeof form, "handleSubmit">),
     onSubmit,
-    disbaled,
+    disabled,
   };
 }
