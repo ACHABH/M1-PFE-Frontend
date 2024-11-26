@@ -7,6 +7,7 @@ import Button from "react-bootstrap/Button";
 import Stack from "react-bootstrap/Stack";
 import { useTheme } from "../contexts/theme";
 import NavigationMotionLayout from "../layout/navigation-motion";
+import NotFound from "../not-found";
 
 function ThemeMode() {
   const { theme, toggleTheme } = useTheme()!;
@@ -36,6 +37,7 @@ const user = {
 
 export const Route = createRootRoute({
   component: Component,
+  notFoundComponent: NotFound,
 });
 
 function Component() {

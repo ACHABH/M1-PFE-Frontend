@@ -3,12 +3,13 @@ import { createRoot } from "react-dom/client";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import Loading from "./loading.tsx";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap-icons/font/bootstrap-icons.min.css"
+import "bootstrap-icons/font/bootstrap-icons.min.css";
 import "./index.css";
 
 import { routeTree } from "./routeTree.gen";
 import ThemeProvider from "./contexts/theme.tsx";
 import QueryProvider from "./providers/query.tsx";
+import ErrorBoundary from "./error-boundary.tsx";
 
 const router = createRouter({ routeTree });
 
@@ -22,13 +23,15 @@ const rootElement = document.getElementById("root");
 if (rootElement && !rootElement.innerHTML) {
   createRoot(rootElement).render(
     <React.StrictMode>
-      <React.Suspense fallback={<Loading />}>
-        <QueryProvider>
-          <ThemeProvider>
-            <RouterProvider router={router} />
-          </ThemeProvider>
-        </QueryProvider>
-      </React.Suspense>
+      <ErrorBoundary>
+        <React.Suspense fallback={<Loading />}>
+          <QueryProvider>
+            <ThemeProvider>
+              <RouterProvider router={router} />
+            </ThemeProvider>
+          </QueryProvider>
+        </React.Suspense>
+      </ErrorBoundary>
     </React.StrictMode>
   );
 }
