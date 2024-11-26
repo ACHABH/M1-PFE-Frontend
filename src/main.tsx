@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import Loading from "./loading.tsx";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.min.css"
 import "./index.css";
 
 import { routeTree } from "./routeTree.gen";
