@@ -8,7 +8,7 @@ import { useForm } from "../../hooks/useForm";
 
 const FormSchema = z.object({
   email: z.string().trim().min(1).email(),
-  password: z.string().trim().min(1),
+  password: z.string().trim().min(0),
   remember: z.coerce.boolean(),
 });
 
@@ -42,7 +42,7 @@ function Component() {
       <Form.Group className="mb-3">
         <Form.Label htmlFor="email">Email address</Form.Label>
         <Form.Control
-          {...form.register("email")}
+          {...form.register("email", { required: true })}
           name="email"
           type="email"
           placeholder="Email"
@@ -55,11 +55,10 @@ function Component() {
       <Form.Group className="mb-3">
         <Form.Label htmlFor="password">Password</Form.Label>
         <Form.Control
-          {...form.register("password")}
+          {...form.register("password", { required: false })}
           name="password"
           type="password"
           placeholder="Password"
-          required
         />
         {form.formState.errors.password?.message && (
           <Form.Text>{form.formState.errors.password?.message}</Form.Text>
@@ -67,10 +66,11 @@ function Component() {
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Check
-          {...form.register("remember")}
+          {...form.register("remember", { required: true })}
           name="remember"
           type="checkbox"
           label="Check me out"
+          checked
         />
         {form.formState.errors.remember?.message && (
           <Form.Text>{form.formState.errors.remember.message}</Form.Text>

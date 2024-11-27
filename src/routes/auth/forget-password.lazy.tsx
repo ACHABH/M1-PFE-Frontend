@@ -1,7 +1,7 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import { useForm } from "../../hooks/useForm";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "../../hooks/useForm";
 
 const FormSchema = z.object({
   email: z.string().trim().min(1).email(),
