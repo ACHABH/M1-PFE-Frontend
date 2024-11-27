@@ -8,7 +8,7 @@ import { useForm } from "../../hooks/useForm";
 
 const FormSchema = z.object({
   email: z.string().trim().min(1).email(),
-  password: z.string().trim().min(0),
+  password: z.string().trim(),
   remember: z.coerce.boolean(),
 });
 
