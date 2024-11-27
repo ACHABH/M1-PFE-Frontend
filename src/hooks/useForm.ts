@@ -9,9 +9,10 @@ import { StrictOmit } from "../types";
 export function useForm<
   TFieldValues extends FieldValues = FieldValues,
   TContext = unknown,
+  TTransformedValues extends FieldValues | undefined = undefined
 >(props: UseFormProps<TFieldValues, TContext>) {
   const [disabled, setDisabled] = useState(false);
-  const form = useReactHookForm(props);
+  const form = useReactHookForm<TFieldValues, TContext, TTransformedValues>(props);
 
   const onSubmit = useCallback(
     (...args: Parameters<typeof form.handleSubmit>) => {
