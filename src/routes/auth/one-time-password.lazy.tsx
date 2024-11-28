@@ -7,12 +7,14 @@ const FormSchema = z.object({
   code: z.string().trim().min(1),
 });
 
+type ZodFormSchema = z.infer<typeof FormSchema>;
+
 export const Route = createLazyFileRoute("/auth/one-time-password")({
   component: Component,
 });
 
 function Component() {
-  const form = useForm({
+  const form = useForm<ZodFormSchema>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       code: "",

@@ -6,20 +6,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 const FormSchema = z.object({
   password: z.string().trim().min(1),
   password_confirmation: z.string().trim().min(1),
-})
+});
+
+type ZodFormSchema = z.infer<typeof FormSchema>;
 
 export const Route = createLazyFileRoute("/auth/reset-password")({
   component: Component,
 });
 
 function Component() {
-  const form = useForm({
+  const form = useForm<ZodFormSchema>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       password: "",
-      password_confirmation: ""
-    }
-  })
+      password_confirmation: "",
+    },
+  });
   form;
   return "Hello /auth/reset-password!";
 }

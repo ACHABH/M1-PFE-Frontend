@@ -7,12 +7,14 @@ const FormSchema = z.object({
   email: z.string().trim().min(1).email(),
 });
 
+type ZodFormSchema = z.infer<typeof FormSchema>;
+
 export const Route = createLazyFileRoute("/auth/forget-password")({
   component: Component,
 });
 
 function Component() {
-  const form = useForm({
+  const form = useForm<ZodFormSchema>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       email: "",
