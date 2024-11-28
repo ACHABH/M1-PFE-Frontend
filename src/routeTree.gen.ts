@@ -83,7 +83,7 @@ const AdminAddUserLazyRoute = AdminAddUserLazyImport.update({
   id: '/admin/add-user',
   path: '/admin/add-user',
   getParentRoute: () => rootRoute,
-} as any).lazy(() =>./routes/admin/add-user.lazy
+} as any).lazy(() =>
   import('./routes/admin/add-user.lazy').then((d) => d.Route),
 )
 
