@@ -12,12 +12,14 @@ const FormSchema = z.object({
   remember: z.coerce.boolean(),
 });
 
+type ZodFormSchema = z.infer<typeof FormSchema>;
+
 export const Route = createLazyFileRoute("/auth/login")({
   component: Component,
 });
 
 function Component() {
-  const form = useForm({
+  const form = useForm<ZodFormSchema>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       email: "",
