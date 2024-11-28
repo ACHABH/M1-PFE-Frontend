@@ -1,11 +1,12 @@
 {
-  // "compilerOptions": {
-  //   "removeComments": true,
-  //   "baseUrl": "./src",
-  //   "paths": {
-  //     "@/*": ["/*"],
-  //   },
-  // },
+  "compilerOptions": {
+    "removeComments": true,
+    "strictNullChecks": true
+    // "baseUrl": "./src",
+    // "paths": {
+    //   "@/*": ["/*"],
+    // },
+  },
   "files": [],
   "references": [
     {
