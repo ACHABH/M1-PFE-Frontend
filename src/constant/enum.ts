@@ -38,3 +38,6 @@ export const PROJECT_PROPOSITIONS_STATUS = [
 ] as const;
 export type ProjectPropositionsStatus =
   (typeof PROJECT_PROPOSITIONS_STATUS)[number];
+
+export const EMAIL_STATUS = ["sent", "pending", "failed"] as const;
+export type EmailStatus = (typeof EMAIL_STATUS)[number];
