@@ -25,6 +25,7 @@ const AuthOneTimePasswordLazyImport = createFileRoute(
 )()
 const AuthLoginLazyImport = createFileRoute('/auth/login')()
 const AuthForgetPasswordLazyImport = createFileRoute('/auth/forget-password')()
+const AdminAddUserLazyImport = createFileRoute('/admin/add-user')()
 
 // Create/Update Routes
 
@@ -78,6 +79,14 @@ const AuthForgetPasswordLazyRoute = AuthForgetPasswordLazyImport.update({
   import('./routes/auth/forget-password.lazy').then((d) => d.Route),
 )
 
+const AdminAddUserLazyRoute = AdminAddUserLazyImport.update({
+  id: '/admin/add-user',
+  path: '/admin/add-user',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>./routes/admin/add-user.lazy
+  import('./routes/admin/add-user.lazy').then((d) => d.Route),
+)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -94,6 +103,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/add-user': {
+      id: '/admin/add-user'
+      path: '/admin/add-user'
+      fullPath: '/admin/add-user'
+      preLoaderRoute: typeof AdminAddUserLazyImport
       parentRoute: typeof rootRoute
     }
     '/auth/forget-password': {
@@ -151,6 +167,7 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/admin/add-user': typeof AdminAddUserLazyRoute
   '/auth/forget-password': typeof AuthForgetPasswordLazyRoute
   '/auth/login': typeof AuthLoginLazyRoute
   '/auth/one-time-password': typeof AuthOneTimePasswordLazyRoute
@@ -160,6 +177,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '/admin/add-user': typeof AdminAddUserLazyRoute
   '/auth/forget-password': typeof AuthForgetPasswordLazyRoute
   '/auth/login': typeof AuthLoginLazyRoute
   '/auth/one-time-password': typeof AuthOneTimePasswordLazyRoute
@@ -171,6 +189,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/admin/add-user': typeof AdminAddUserLazyRoute
   '/auth/forget-password': typeof AuthForgetPasswordLazyRoute
   '/auth/login': typeof AuthLoginLazyRoute
   '/auth/one-time-password': typeof AuthOneTimePasswordLazyRoute
@@ -183,6 +202,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/admin/add-user'
     | '/auth/forget-password'
     | '/auth/login'
     | '/auth/one-time-password'
@@ -191,6 +211,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin/add-user'
     | '/auth/forget-password'
     | '/auth/login'
     | '/auth/one-time-password'
@@ -200,6 +221,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/dashboard'
+    | '/admin/add-user'
     | '/auth/forget-password'
     | '/auth/login'
     | '/auth/one-time-password'
@@ -211,6 +233,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   DashboardRoute: typeof DashboardRouteWithChildren
+  AdminAddUserLazyRoute: typeof AdminAddUserLazyRoute
   AuthForgetPasswordLazyRoute: typeof AuthForgetPasswordLazyRoute
   AuthLoginLazyRoute: typeof AuthLoginLazyRoute
   AuthOneTimePasswordLazyRoute: typeof AuthOneTimePasswordLazyRoute
@@ -220,6 +243,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   DashboardRoute: DashboardRouteWithChildren,
+  AdminAddUserLazyRoute: AdminAddUserLazyRoute,
   AuthForgetPasswordLazyRoute: AuthForgetPasswordLazyRoute,
   AuthLoginLazyRoute: AuthLoginLazyRoute,
   AuthOneTimePasswordLazyRoute: AuthOneTimePasswordLazyRoute,
@@ -238,6 +262,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/dashboard",
+        "/admin/add-user",
         "/auth/forget-password",
         "/auth/login",
         "/auth/one-time-password",
@@ -252,6 +277,9 @@ export const routeTree = rootRoute
       "children": [
         "/dashboard/"
       ]
+    },
+    "/admin/add-user": {
+      "filePath": "admin/add-user.lazy.tsx"
     },
     "/auth/forget-password": {
       "filePath": "auth/forget-password.lazy.tsx"
