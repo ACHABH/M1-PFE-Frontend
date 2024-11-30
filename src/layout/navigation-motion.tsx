@@ -1,4 +1,4 @@
-import type { ChildrenProps } from "../types";
+import type { ChildrenProps } from "../types/props";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 export default function NavigationMotionLayout({ children }: ChildrenProps) {

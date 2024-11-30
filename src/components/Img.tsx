@@ -1,4 +1,4 @@
-import type { StrictOmit } from "../types";
+import type { StrictOmit } from "../types/util";
 import { type ComponentProps, memo } from "react";
 import Image from "react-bootstrap/Image";
 

@@ -1,4 +1,4 @@
-import type { ChildrenProps } from "../types";
+import type { ChildrenProps } from "../types/props";
 import { createContext, useCallback, useContext, useState } from "react";
 import useEffectOnce from "react-use/lib/useEffectOnce";
 import useUpdateEffect from "react-use/lib/useUpdateEffect";

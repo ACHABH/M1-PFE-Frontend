@@ -1,4 +1,4 @@
-import type { ChildrenProps } from "../types";
+import type { ChildrenProps } from "../types/props";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
