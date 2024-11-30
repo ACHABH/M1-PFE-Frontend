@@ -1,25 +1,150 @@
 import type { StrictPick } from "../types/util";
+import type { User } from "../types/db";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useEffect } from "react";
+import Cookies from "js-cookie";
 import { request } from "../utils/request";
-import { User } from "../types/db";
+import { CODE } from "../constant/cookie";
 
-export type UseLoginBody = Partial<StrictPick<User, "email" | "password">>;
+export type UseLoginBody = Partial<
+  StrictPick<User, "email" | "password"> & { remember: boolean }
+>;
 
 export function useLogin() {
+  const navigate = useNavigate({ from: "/auth/login" });
+
   return useMutation({
     async mutationFn(body: UseLoginBody) {
       const res = await request("/api/auth/login", {
         method: "POST",
         body: JSON.stringify(body),
       });
+
+      if (res.ok) {
+        if (body.password?.length === 0) {
+          navigate({
+            to: "/auth/one-time-password",
+            search: { email: body.email },
+          });
+        } else {
+          navigate({
+            to: "/dashboard",
+          });
+        }
+      }
+
+      return res;
     },
   });
 }
 
-export function useLogout() {}
+export function useLogout() {
+  const navigate = useNavigate();
 
-export function useOneTimePassword() {}
+  return useMutation({
+    async mutationFn() {
+      const res = await request("/api/auth/logout", {
+        method: "POST",
+      });
 
-export function useForgotPassword() {}
+      if (res.ok) {
+        navigate({ to: "/" });
+      }
 
-export function useResetPassword() {}
+      return res;
+    },
+  });
+}
+
+export type UseOneTimePasswordBody = { code: string };
+
+export function useOneTimePassword() {
+  const navigate = useNavigate({ from: "/auth/one-time-password" });
+  const search = useSearch({ strict: false }) as { email?: string };
+
+  useEffect(() => {
+    if (typeof search?.email === "undefined" || search?.email?.length <= 0) {
+      navigate({ to: "/auth/login" });
+      return;
+    }
+  }, [navigate, search]);
+
+  return useMutation({
+    async mutationFn(body: UseOneTimePasswordBody) {
+      const encryptedCode = Cookies.get(CODE);
+
+      const res = await request("/api/auth/one-time-password", {
+        method: "POST",
+        body: JSON.stringify({
+          email: search.email!,
+          encrypted_code: encryptedCode,
+          ...body,
+        }),
+      });
+
+      if (res.ok) {
+        navigate({ to: "/dashboard" });
+      }
+
+      return res;
+    },
+  });
+}
+
+export type UseForgetPasswordBody = StrictPick<User, "email">;
+
+export function useForgetPassword() {
+  const navigate = useNavigate({ from: "/auth/forget-password" });
+
+  return useMutation({
+    async mutationFn(body: UseForgetPasswordBody) {
+      const res = await request("/api/auth/forget-password", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+
+      if (res.ok) {
+        navigate({ to: "/auth/reset-password", search: { email: body.email } });
+      }
+
+      return res;
+    },
+  });
+}
+
+export type UseResetPasswordBody = StrictPick<User, "password"> & {
+  password_confirmation: string;
+} & { code: string };
+
+export function useResetPassword() {
+  const navigate = useNavigate({ from: "/auth/reset-password" });
+  const search = useSearch({ strict: false }) as { email?: string };
+
+  useEffect(() => {
+    if (typeof search?.email === "undefined" || search?.email?.length <= 0) {
+      navigate({ to: "/auth/login" });
+      return;
+    }
+  }, [navigate, search]);
+
+  return useMutation({
+    async mutationFn(body: UseResetPasswordBody) {
+      const encryptedCode = Cookies.get(CODE);
+      const res = await request("/api/auth/reset-password", {
+        method: "POST",
+        body: JSON.stringify({
+          email: search.email!,
+          encrypted_code: encryptedCode,
+          ...body,
+        }),
+      });
+
+      if (res.ok) {
+        navigate({ to: "/auth/login" });
+      }
+
+      return res;
+    },
+  });
+}

@@ -5,6 +5,7 @@ import Stack from "react-bootstrap/Stack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm } from "../../hooks/useForm";
+import { useLogin } from "../../api/auth";
 
 const FormSchema = z.object({
   email: z.string().trim().min(1).email(),
@@ -19,6 +20,7 @@ export const Route = createLazyFileRoute("/auth/login")({
 });
 
 function Component() {
+  const { mutateAsync } = useLogin();
   const form = useForm<ZodFormSchema>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -30,9 +32,7 @@ function Component() {
 
   return (
     <Form
-      onSubmit={form.onSubmit(async (data) => {
-        console.log(data);
-      })}
+      onSubmit={form.onSubmit((data) => mutateAsync(data))}
       className="justify-content-center bg-white p-4 shadow mt-5"
       style={{
         width: "30%",

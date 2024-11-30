@@ -19,13 +19,17 @@ export const request: typeof window.fetch = async (path, init = {}) => {
     },
     credentials: "include",
   });
-  if (!res.ok) return res;
-
+  
   const json = (await res.json()) as FetchResponse<
     Partial<FetchResponseDataCode & FetchResponseDataToken>
   >;
+
+  if (import.meta.env.DEV) {
+    console.log(`${path}:`, json);
+  }
+
   if (!json?.ok) return res;
-  if (!("token" in json) && !("code" in json)) return res;
+  if (json?.data?.code?.length === 0 && json?.data?.token?.length === 0) return res;
 
   Cookies.set(TOKEN, json?.data?.token ?? "", {
     sameSite: "Lax",

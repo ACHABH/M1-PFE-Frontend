@@ -8,7 +8,6 @@ import Stack from "react-bootstrap/Stack";
 import { useTheme } from "../contexts/theme";
 import NavigationMotionLayout from "../layout/navigation-motion";
 import NotFound from "../not-found";
-import { footer } from "framer-motion/client";
 
 function ThemeMode() {
   const { theme, toggleTheme } = useTheme()!;

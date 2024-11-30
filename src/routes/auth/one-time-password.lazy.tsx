@@ -4,9 +4,10 @@ import { useForm } from "../../hooks/useForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+import { useOneTimePassword } from "../../api/auth";
 
 const FormSchema = z.object({
-  code: z.string().trim().min(1),
+  code: z.string().trim().min(1).max(6),
 });
 
 type ZodFormSchema = z.infer<typeof FormSchema>;
@@ -16,6 +17,7 @@ export const Route = createLazyFileRoute("/auth/one-time-password")({
 });
 
 function Component() {
+  const { mutateAsync } = useOneTimePassword()
   const form = useForm<ZodFormSchema>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -25,9 +27,7 @@ function Component() {
 
   return (
     <Form
-      onSubmit={form.onSubmit(async (data) => {
-        console.log(data)
-      })}
+      onSubmit={form.onSubmit((data) => mutateAsync(data))}
       className="justify-content-center bg-white p-4 shadow mt-5"
       style={{
         width: '30%',

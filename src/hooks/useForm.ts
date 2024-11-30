@@ -1,10 +1,10 @@
+import type { StrictOmit } from "../types/util";
 import { type BaseSyntheticEvent, useCallback, useState } from "react";
 import {
   type FieldValues,
   type UseFormProps,
   useForm as useReactHookForm,
 } from "react-hook-form";
-import { StrictOmit } from "../types";
 
 export function useForm<
   TFieldValues extends FieldValues = FieldValues,
