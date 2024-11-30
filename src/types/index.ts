@@ -1,2 +1,1 @@
-export type * from "./props";
-export type * from "./util";
+import "@total-typescript/ts-reset";
