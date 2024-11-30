@@ -2,6 +2,8 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 import { useForm } from "../../hooks/useForm";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
 
 const FormSchema = z.object({
   code: z.string().trim().min(1),
@@ -20,6 +22,36 @@ function Component() {
       code: "",
     },
   });
-  form;
-  return "Hello /auth/one-time-password!";
+
+  return (
+    <Form
+      onSubmit={form.onSubmit(async (data) => {
+        console.log(data)
+      })}
+      className="justify-content-center bg-white p-4 shadow mt-5"
+      style={{
+        width: '30%',
+        margin: 'auto',
+        borderRadius: '20px',
+        border: '1.5px solid #ccc',
+      }}
+    >
+      <h3 className='text-center mb-2'>Login via OTP</h3>
+      <Form.Group className="my-3">
+        <Form.Label htmlFor="code">One Time Password</Form.Label>
+        <Form.Control
+          {...form.register('code', { required: false })}
+          name="code"
+          type="text"
+          placeholder="One Time Password"
+        />
+        {form.formState.errors.code?.message && (
+          <Form.Text>{form.formState.errors.code?.message}</Form.Text>
+        )}
+      </Form.Group>
+      <Button variant="primary" type="submit" className="my-3" disabled={form.disabled} style={{width:"100%"}}>
+        Login
+      </Button>
+    </Form>
+  )
 }
