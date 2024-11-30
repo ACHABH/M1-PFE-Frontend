@@ -37,6 +37,7 @@ export type User = {
   first_name: string;
   last_name: string;
   email: string;
+  password: string;
   email_verified_at: string;
   role: UserRole;
 } & PrimaryKey &

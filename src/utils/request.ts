@@ -7,13 +7,14 @@ import type {
 } from "../types/http";
 
 export const request: typeof window.fetch = async (path, init = {}) => {
-  const token = Cookies.get(TOKEN);
+  const token = Cookies.get(TOKEN) ?? "";
 
   const res = await fetch(`http://127.0.0.1:8000${path}`, {
     ...init,
     headers: {
       ...init?.headers,
       Accept: "application/json",
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
     credentials: "include",
