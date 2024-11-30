@@ -19,7 +19,8 @@ export const request: typeof window.fetch = async (path, init = {}) => {
     },
     credentials: "include",
   });
-  
+  const resClone = res.clone();
+
   const json = (await res.json()) as FetchResponse<
     Partial<FetchResponseDataCode & FetchResponseDataToken>
   >;
@@ -28,21 +29,27 @@ export const request: typeof window.fetch = async (path, init = {}) => {
     console.log(`${path}:`, json);
   }
 
-  if (!json?.ok) return res;
-  if (json?.data?.code?.length === 0 && json?.data?.token?.length === 0) return res;
+  if (!json?.ok) return resClone;
 
-  Cookies.set(TOKEN, json?.data?.token ?? "", {
-    sameSite: "Lax",
-    secure: import.meta.env.PROD,
-    path: "/",
-    expires: 30,
-  });
-  Cookies.set(CODE, json?.data?.code ?? "", {
-    sameSite: "Lax",
-    secure: import.meta.env.PROD,
-    path: "/",
-    expires: 1,
-  });
+  const responseToken = json?.data?.token ?? "";
+  if (responseToken.length > 0) {
+    Cookies.set(TOKEN, responseToken, {
+      sameSite: "Lax",
+      secure: import.meta.env.PROD,
+      path: "/",
+      expires: 30,
+    });
+  }
 
-  return res;
+  const responseCode = json?.data?.code ?? "";
+  if (responseCode.length > 0) {
+    Cookies.set(CODE, responseCode, {
+      sameSite: "Lax",
+      secure: import.meta.env.PROD,
+      path: "/",
+      expires: 1,
+    });
+  }
+
+  return resClone;
 };

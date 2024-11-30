@@ -1,5 +1,9 @@
 export const QUERY = {
+  AUTH: {
+    KEY: ["auth"],
+    STATUS: () => [...QUERY.AUTH.KEY, "status"] as const,
+  },
   USER: {
-    PROFILE: ["user"],
+    KEY: ["user"],
   },
 } as const;

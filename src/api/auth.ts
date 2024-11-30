@@ -1,17 +1,20 @@
+import type { FetchResponseSuccess } from "../types/http";
 import type { StrictPick } from "../types/util";
 import type { User } from "../types/db";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { request } from "../utils/request";
 import { CODE } from "../constant/cookie";
+import { QUERY } from "../constant/query";
 
 export type UseLoginBody = Partial<
   StrictPick<User, "email" | "password"> & { remember: boolean }
 >;
 
 export function useLogin() {
+  const queryClient = useQueryClient();
   const navigate = useNavigate({ from: "/auth/login" });
 
   return useMutation({
@@ -36,10 +39,14 @@ export function useLogin() {
 
       return res;
     },
+    async onSuccess() {
+      await queryClient.invalidateQueries({ queryKey: QUERY.AUTH.STATUS() });
+    },
   });
 }
 
 export function useLogout() {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   return useMutation({
@@ -54,12 +61,16 @@ export function useLogout() {
 
       return res;
     },
+    async onSuccess() {
+      await queryClient.invalidateQueries({ queryKey: QUERY.AUTH.STATUS() });
+    },
   });
 }
 
 export type UseOneTimePasswordBody = { code: string };
 
 export function useOneTimePassword() {
+  const queryClient = useQueryClient();
   const navigate = useNavigate({ from: "/auth/one-time-password" });
   const search = useSearch({ strict: false }) as { email?: string };
 
@@ -85,9 +96,13 @@ export function useOneTimePassword() {
 
       if (res.ok) {
         navigate({ to: "/dashboard" });
+        Cookies.remove(CODE);
       }
 
       return res;
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries({ queryKey: QUERY.AUTH.STATUS() });
     },
   });
 }
@@ -142,9 +157,29 @@ export function useResetPassword() {
 
       if (res.ok) {
         navigate({ to: "/auth/login" });
+        Cookies.remove(CODE);
       }
 
       return res;
+    },
+  });
+}
+
+export type UseAuthStatusCallback = (user: User | null) => void | Promise<void>;
+
+export function useAuthStatus(callback?: UseAuthStatusCallback) {
+  return useQuery({
+    queryKey: QUERY.AUTH.STATUS(),
+    async queryFn(context) {
+      const res = await request("/api/auth/status", {
+        signal: context.signal,
+      });
+      const json = (await res.json()) as FetchResponseSuccess<{
+        user: User | null;
+      }>;
+      const user = json?.data?.user ?? null;
+      await callback?.(user);
+      return user;
     },
   });
 }

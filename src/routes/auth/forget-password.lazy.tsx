@@ -1,11 +1,11 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "../../hooks/useForm";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Stack from "react-bootstrap/Stack";
-import { useForgetPassword } from "../../api/auth";
+import { useAuthStatus, useForgetPassword } from "../../api/auth";
 
 const FormSchema = z.object({
   email: z.string().trim().min(1).email(),
@@ -18,6 +18,12 @@ export const Route = createLazyFileRoute("/auth/forget-password")({
 });
 
 function Component() {
+  const navigate = useNavigate({ from: "/auth/forget-password" });
+  useAuthStatus((user) => {
+    if (!user) return;
+    navigate({ to: "/dashboard" });
+  });
+
   const { mutateAsync } = useForgetPassword();
   const form = useForm<ZodFormSchema>({
     resolver: zodResolver(FormSchema),
