@@ -1,4 +1,4 @@
-import type { ChildrenProps } from "./types";
+import type { ChildrenProps } from "./types/props";
 import { Component, ErrorInfo } from "react";
 
 type State = {
