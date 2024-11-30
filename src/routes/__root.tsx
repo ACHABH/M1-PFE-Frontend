@@ -8,6 +8,7 @@ import Stack from "react-bootstrap/Stack";
 import { useTheme } from "../contexts/theme";
 import NavigationMotionLayout from "../layout/navigation-motion";
 import NotFound from "../not-found";
+import { footer } from "framer-motion/client";
 
 function ThemeMode() {
   const { theme, toggleTheme } = useTheme()!;
@@ -41,6 +42,14 @@ export const Route = createRootRoute({
 });
 
 function Component() {
+
+  const footerStyle: React.CSSProperties = {
+    marginTop: 'auto',
+    position: 'fixed',
+    bottom: '0',
+    width: '100%',
+    borderTop:"2px outset",
+  };
   return (
     <>
       <Navbar expand="lg">
@@ -85,8 +94,8 @@ function Component() {
       <NavigationMotionLayout>
         <Outlet />
       </NavigationMotionLayout>
-      <Container as="footer">
-        <p className="text-center">
+      <Container as="footer" style={footerStyle} fluid>
+        <p className="text-center p-2" style={{margin:"0"}}>
           All rights reserved, Abu berk belkaid &copy;
         </p>
       </Container>
