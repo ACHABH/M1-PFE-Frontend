@@ -1,4 +1,3 @@
-import type { FetchResponseSuccess } from "../types/http";
 import type { StrictPick } from "../types/util";
 import type { User } from "../types/db";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -8,6 +7,7 @@ import Cookies from "js-cookie";
 import { request } from "../utils/request";
 import { CODE } from "../constant/cookie";
 import { QUERY } from "../constant/query";
+import { auth } from "../lib/auth";
 
 export type UseLoginBody = Partial<
   StrictPick<User, "email" | "password"> & { remember: boolean }
@@ -165,21 +165,16 @@ export function useResetPassword() {
   });
 }
 
-export type UseAuthStatusCallback = (user: User | null) => void | Promise<void>;
+export type UseAuthCallback = (user: User | null) => void | Promise<void>;
 
-export function useAuthStatus(callback?: UseAuthStatusCallback) {
-  return useQuery({
+export function useAuth(callback?: UseAuthCallback) {
+  const { data } = useQuery({
     queryKey: QUERY.AUTH.STATUS(),
     async queryFn(context) {
-      const res = await request("/api/auth/status", {
-        signal: context.signal,
-      });
-      const json = (await res.json()) as FetchResponseSuccess<{
-        user: User | null;
-      }>;
-      const user = json?.data?.user ?? null;
+      const user = await auth({ signal: context.signal });
       await callback?.(user);
       return user;
     },
   });
+  return data;
 }

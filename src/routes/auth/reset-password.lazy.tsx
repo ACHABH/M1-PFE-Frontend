@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "../../hooks/useForm";
-import { useAuthStatus, useResetPassword } from "../../api/auth";
+import { useAuth, useResetPassword } from "../../api/auth";
 
 const FormSchema = z.object({
   code: z.string().trim().min(1),
@@ -20,7 +20,7 @@ export const Route = createLazyFileRoute("/auth/reset-password")({
 
 function RouteComponent() {
   const navigate = useNavigate({ from: "/auth/reset-password" });
-  useAuthStatus((user) => {
+  useAuth((user) => {
     if (!user) return;
     navigate({ to: "/dashboard" });
   });

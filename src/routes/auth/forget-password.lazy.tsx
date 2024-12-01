@@ -5,7 +5,7 @@ import { useForm } from "../../hooks/useForm";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Stack from "react-bootstrap/Stack";
-import { useAuthStatus, useForgetPassword } from "../../api/auth";
+import { useAuth, useForgetPassword } from "../../api/auth";
 
 const FormSchema = z.object({
   email: z.string().trim().min(1).email(),
@@ -19,7 +19,7 @@ export const Route = createLazyFileRoute("/auth/forget-password")({
 
 function Component() {
   const navigate = useNavigate({ from: "/auth/forget-password" });
-  useAuthStatus((user) => {
+  useAuth((user) => {
     if (!user) return;
     navigate({ to: "/dashboard" });
   });

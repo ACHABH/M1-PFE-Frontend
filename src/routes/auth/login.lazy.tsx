@@ -5,7 +5,7 @@ import Stack from "react-bootstrap/Stack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm } from "../../hooks/useForm";
-import { useLogin, useAuthStatus } from "../../api/auth";
+import { useLogin, useAuth } from "../../api/auth";
 
 const FormSchema = z.object({
   email: z.string().trim().min(1).email(),
@@ -21,7 +21,7 @@ export const Route = createLazyFileRoute("/auth/login")({
 
 function Component() {
   const navigate = useNavigate({ from: "/auth/login" });
-  useAuthStatus((user) => {
+  useAuth((user) => {
     if (!user) return;
     navigate({ to: "/dashboard" });
   });
