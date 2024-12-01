@@ -14,6 +14,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as DashboardImport } from './routes/dashboard'
+import { Route as DashboardAdminImport } from './routes/dashboard/admin'
 
 // Create Virtual Routes
 
@@ -25,7 +26,10 @@ const AuthOneTimePasswordLazyImport = createFileRoute(
 )()
 const AuthLoginLazyImport = createFileRoute('/auth/login')()
 const AuthForgetPasswordLazyImport = createFileRoute('/auth/forget-password')()
-const AdminAddUserLazyImport = createFileRoute('/admin/add-user')()
+const DashboardAdminIndexLazyImport = createFileRoute('/dashboard/admin/')()
+const DashboardAdminAddUserLazyImport = createFileRoute(
+  '/dashboard/admin/add-user',
+)()
 
 // Create/Update Routes
 
@@ -79,12 +83,26 @@ const AuthForgetPasswordLazyRoute = AuthForgetPasswordLazyImport.update({
   import('./routes/auth/forget-password.lazy').then((d) => d.Route),
 )
 
-const AdminAddUserLazyRoute = AdminAddUserLazyImport.update({
-  id: '/admin/add-user',
-  path: '/admin/add-user',
-  getParentRoute: () => rootRoute,
+const DashboardAdminRoute = DashboardAdminImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
+const DashboardAdminIndexLazyRoute = DashboardAdminIndexLazyImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardAdminRoute,
 } as any).lazy(() =>
-  import('./routes/admin/add-user.lazy').then((d) => d.Route),
+  import('./routes/dashboard/admin/index.lazy').then((d) => d.Route),
+)
+
+const DashboardAdminAddUserLazyRoute = DashboardAdminAddUserLazyImport.update({
+  id: '/add-user',
+  path: '/add-user',
+  getParentRoute: () => DashboardAdminRoute,
+} as any).lazy(() =>
+  import('./routes/dashboard/admin/add-user.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
@@ -105,12 +123,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardImport
       parentRoute: typeof rootRoute
     }
-    '/admin/add-user': {
-      id: '/admin/add-user'
-      path: '/admin/add-user'
-      fullPath: '/admin/add-user'
-      preLoaderRoute: typeof AdminAddUserLazyImport
-      parentRoute: typeof rootRoute
+    '/dashboard/admin': {
+      id: '/dashboard/admin'
+      path: '/admin'
+      fullPath: '/dashboard/admin'
+      preLoaderRoute: typeof DashboardAdminImport
+      parentRoute: typeof DashboardImport
     }
     '/auth/forget-password': {
       id: '/auth/forget-password'
@@ -147,16 +165,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexLazyImport
       parentRoute: typeof DashboardImport
     }
+    '/dashboard/admin/add-user': {
+      id: '/dashboard/admin/add-user'
+      path: '/add-user'
+      fullPath: '/dashboard/admin/add-user'
+      preLoaderRoute: typeof DashboardAdminAddUserLazyImport
+      parentRoute: typeof DashboardAdminImport
+    }
+    '/dashboard/admin/': {
+      id: '/dashboard/admin/'
+      path: '/'
+      fullPath: '/dashboard/admin/'
+      preLoaderRoute: typeof DashboardAdminIndexLazyImport
+      parentRoute: typeof DashboardAdminImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface DashboardAdminRouteChildren {
+  DashboardAdminAddUserLazyRoute: typeof DashboardAdminAddUserLazyRoute
+  DashboardAdminIndexLazyRoute: typeof DashboardAdminIndexLazyRoute
+}
+
+const DashboardAdminRouteChildren: DashboardAdminRouteChildren = {
+  DashboardAdminAddUserLazyRoute: DashboardAdminAddUserLazyRoute,
+  DashboardAdminIndexLazyRoute: DashboardAdminIndexLazyRoute,
+}
+
+const DashboardAdminRouteWithChildren = DashboardAdminRoute._addFileChildren(
+  DashboardAdminRouteChildren,
+)
+
 interface DashboardRouteChildren {
+  DashboardAdminRoute: typeof DashboardAdminRouteWithChildren
   DashboardIndexLazyRoute: typeof DashboardIndexLazyRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAdminRoute: DashboardAdminRouteWithChildren,
   DashboardIndexLazyRoute: DashboardIndexLazyRoute,
 }
 
@@ -167,34 +215,39 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/dashboard': typeof DashboardRouteWithChildren
-  '/admin/add-user': typeof AdminAddUserLazyRoute
+  '/dashboard/admin': typeof DashboardAdminRouteWithChildren
   '/auth/forget-password': typeof AuthForgetPasswordLazyRoute
   '/auth/login': typeof AuthLoginLazyRoute
   '/auth/one-time-password': typeof AuthOneTimePasswordLazyRoute
   '/auth/reset-password': typeof AuthResetPasswordLazyRoute
   '/dashboard/': typeof DashboardIndexLazyRoute
+  '/dashboard/admin/add-user': typeof DashboardAdminAddUserLazyRoute
+  '/dashboard/admin/': typeof DashboardAdminIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
-  '/admin/add-user': typeof AdminAddUserLazyRoute
   '/auth/forget-password': typeof AuthForgetPasswordLazyRoute
   '/auth/login': typeof AuthLoginLazyRoute
   '/auth/one-time-password': typeof AuthOneTimePasswordLazyRoute
   '/auth/reset-password': typeof AuthResetPasswordLazyRoute
   '/dashboard': typeof DashboardIndexLazyRoute
+  '/dashboard/admin/add-user': typeof DashboardAdminAddUserLazyRoute
+  '/dashboard/admin': typeof DashboardAdminIndexLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/dashboard': typeof DashboardRouteWithChildren
-  '/admin/add-user': typeof AdminAddUserLazyRoute
+  '/dashboard/admin': typeof DashboardAdminRouteWithChildren
   '/auth/forget-password': typeof AuthForgetPasswordLazyRoute
   '/auth/login': typeof AuthLoginLazyRoute
   '/auth/one-time-password': typeof AuthOneTimePasswordLazyRoute
   '/auth/reset-password': typeof AuthResetPasswordLazyRoute
   '/dashboard/': typeof DashboardIndexLazyRoute
+  '/dashboard/admin/add-user': typeof DashboardAdminAddUserLazyRoute
+  '/dashboard/admin/': typeof DashboardAdminIndexLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -202,38 +255,42 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
-    | '/admin/add-user'
+    | '/dashboard/admin'
     | '/auth/forget-password'
     | '/auth/login'
     | '/auth/one-time-password'
     | '/auth/reset-password'
     | '/dashboard/'
+    | '/dashboard/admin/add-user'
+    | '/dashboard/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin/add-user'
     | '/auth/forget-password'
     | '/auth/login'
     | '/auth/one-time-password'
     | '/auth/reset-password'
     | '/dashboard'
+    | '/dashboard/admin/add-user'
+    | '/dashboard/admin'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
-    | '/admin/add-user'
+    | '/dashboard/admin'
     | '/auth/forget-password'
     | '/auth/login'
     | '/auth/one-time-password'
     | '/auth/reset-password'
     | '/dashboard/'
+    | '/dashboard/admin/add-user'
+    | '/dashboard/admin/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   DashboardRoute: typeof DashboardRouteWithChildren
-  AdminAddUserLazyRoute: typeof AdminAddUserLazyRoute
   AuthForgetPasswordLazyRoute: typeof AuthForgetPasswordLazyRoute
   AuthLoginLazyRoute: typeof AuthLoginLazyRoute
   AuthOneTimePasswordLazyRoute: typeof AuthOneTimePasswordLazyRoute
@@ -243,7 +300,6 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   DashboardRoute: DashboardRouteWithChildren,
-  AdminAddUserLazyRoute: AdminAddUserLazyRoute,
   AuthForgetPasswordLazyRoute: AuthForgetPasswordLazyRoute,
   AuthLoginLazyRoute: AuthLoginLazyRoute,
   AuthOneTimePasswordLazyRoute: AuthOneTimePasswordLazyRoute,
@@ -262,7 +318,6 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/dashboard",
-        "/admin/add-user",
         "/auth/forget-password",
         "/auth/login",
         "/auth/one-time-password",
@@ -275,11 +330,17 @@ export const routeTree = rootRoute
     "/dashboard": {
       "filePath": "dashboard.tsx",
       "children": [
+        "/dashboard/admin",
         "/dashboard/"
       ]
     },
-    "/admin/add-user": {
-      "filePath": "admin/add-user.lazy.tsx"
+    "/dashboard/admin": {
+      "filePath": "dashboard/admin.tsx",
+      "parent": "/dashboard",
+      "children": [
+        "/dashboard/admin/add-user",
+        "/dashboard/admin/"
+      ]
     },
     "/auth/forget-password": {
       "filePath": "auth/forget-password.lazy.tsx"
@@ -296,6 +357,14 @@ export const routeTree = rootRoute
     "/dashboard/": {
       "filePath": "dashboard/index.lazy.tsx",
       "parent": "/dashboard"
+    },
+    "/dashboard/admin/add-user": {
+      "filePath": "dashboard/admin/add-user.lazy.tsx",
+      "parent": "/dashboard/admin"
+    },
+    "/dashboard/admin/": {
+      "filePath": "dashboard/admin/index.lazy.tsx",
+      "parent": "/dashboard/admin"
     }
   }
 }
