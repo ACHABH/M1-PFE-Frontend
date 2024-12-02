@@ -5,7 +5,7 @@ import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { request } from "../utils/request";
-import { CODE } from "../constant/cookie";
+import { CODE, TOKEN } from "../constant/cookie";
 import { QUERY } from "../constant/query";
 import { auth } from "../lib/auth";
 
@@ -18,29 +18,27 @@ export function useLogin() {
   const navigate = useNavigate({ from: "/auth/login" });
 
   return useMutation({
-    async mutationFn(body: UseLoginBody) {
-      const res = await request("/api/auth/login", {
+    mutationFn(body: UseLoginBody) {
+      return request("/api/auth/login", {
         method: "POST",
         body: JSON.stringify(body),
       });
-
-      if (res.ok) {
-        if (body.password?.length === 0) {
-          navigate({
-            to: "/auth/one-time-password",
-            search: { email: body.email },
-          });
-        } else {
-          navigate({
-            to: "/dashboard",
-          });
-        }
-      }
-
-      return res;
     },
-    async onSuccess() {
+    async onSuccess(res, body) {
+      if (!res.ok) return;
+
       await queryClient.invalidateQueries({ queryKey: QUERY.AUTH.STATUS() });
+
+      if (body.password?.length === 0) {
+        navigate({
+          to: "/auth/one-time-password",
+          search: { email: body.email },
+        });
+      } else {
+        navigate({
+          to: "/dashboard",
+        });
+      }
     },
   });
 }
@@ -50,19 +48,20 @@ export function useLogout() {
   const navigate = useNavigate();
 
   return useMutation({
-    async mutationFn() {
-      const res = await request("/api/auth/logout", {
+    mutationFn() {
+      return request("/api/auth/logout", {
         method: "POST",
       });
-
-      if (res.ok) {
-        navigate({ to: "/" });
-      }
-
-      return res;
     },
-    async onSuccess() {
+    async onSuccess(res) {
+      if (!res.ok) return;
+
       await queryClient.invalidateQueries({ queryKey: QUERY.AUTH.STATUS() });
+
+      Cookies.remove(TOKEN);
+      Cookies.remove(CODE);
+
+      navigate({ to: "/" });
     },
   });
 }
@@ -82,10 +81,9 @@ export function useOneTimePassword() {
   }, [navigate, search]);
 
   return useMutation({
-    async mutationFn(body: UseOneTimePasswordBody) {
+    mutationFn(body: UseOneTimePasswordBody) {
       const encryptedCode = Cookies.get(CODE);
-
-      const res = await request("/api/auth/one-time-password", {
+      return request("/api/auth/one-time-password", {
         method: "POST",
         body: JSON.stringify({
           email: search.email!,
@@ -93,16 +91,12 @@ export function useOneTimePassword() {
           ...body,
         }),
       });
-
-      if (res.ok) {
-        navigate({ to: "/dashboard" });
-        Cookies.remove(CODE);
-      }
-
-      return res;
     },
-    async onSuccess() {
+    async onSuccess(res) {
+      if (!res.ok) return;
       await queryClient.invalidateQueries({ queryKey: QUERY.AUTH.STATUS() });
+      navigate({ to: "/dashboard" });
+      Cookies.remove(CODE);
     },
   });
 }
@@ -113,17 +107,15 @@ export function useForgetPassword() {
   const navigate = useNavigate({ from: "/auth/forget-password" });
 
   return useMutation({
-    async mutationFn(body: UseForgetPasswordBody) {
-      const res = await request("/api/auth/forget-password", {
+    mutationFn(body: UseForgetPasswordBody) {
+      return request("/api/auth/forget-password", {
         method: "POST",
         body: JSON.stringify(body),
       });
-
-      if (res.ok) {
-        navigate({ to: "/auth/reset-password", search: { email: body.email } });
-      }
-
-      return res;
+    },
+    onSuccess(res, body) {
+      if (!res.ok) return;
+      navigate({ to: "/auth/reset-password", search: { email: body.email } });
     },
   });
 }
@@ -144,9 +136,9 @@ export function useResetPassword() {
   }, [navigate, search]);
 
   return useMutation({
-    async mutationFn(body: UseResetPasswordBody) {
+    mutationFn(body: UseResetPasswordBody) {
       const encryptedCode = Cookies.get(CODE);
-      const res = await request("/api/auth/reset-password", {
+      return request("/api/auth/reset-password", {
         method: "POST",
         body: JSON.stringify({
           email: search.email!,
@@ -154,13 +146,11 @@ export function useResetPassword() {
           ...body,
         }),
       });
-
-      if (res.ok) {
-        navigate({ to: "/auth/login" });
-        Cookies.remove(CODE);
-      }
-
-      return res;
+    },
+    onSuccess(res) {
+      if (!res.ok) return;
+      navigate({ to: "/auth/login" });
+      Cookies.remove(CODE);
     },
   });
 }

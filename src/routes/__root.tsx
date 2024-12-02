@@ -8,6 +8,7 @@ import Stack from "react-bootstrap/Stack";
 import { useTheme } from "../contexts/theme";
 import NavigationMotionLayout from "../layout/navigation-motion";
 import NotFound from "../not-found";
+import { useAuth, useLogout } from "../api/auth";
 
 function ThemeMode() {
   const { theme, toggleTheme } = useTheme()!;
@@ -30,49 +31,43 @@ function ThemeMode() {
   );
 }
 
-const user = {
-  first_name: "test",
-  last_name: "test",
-};
-
 export const Route = createRootRoute({
   component: Component,
   notFoundComponent: NotFound,
 });
 
 function Component() {
+  const user = useAuth();
+  const { mutateAsync: logout } = useLogout();
 
-  const footerStyle: React.CSSProperties = {
-    marginTop: 'auto',
-    position: 'fixed',
-    bottom: '0',
-    width: '100%',
-    borderTop:"2px outset",
-  };
   return (
     <>
       <Navbar expand="lg">
         <Container>
-          <Navbar.Brand as={Link} to="/">
-            PFE
+          <Navbar.Brand as="span">
+            <Link to="/">PFE</Link>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link as={Link} to="/">
-                Home
+              <Nav.Link as="span">
+                <Link to="/">Home</Link>
               </Nav.Link>
-              <Nav.Link as={Link} to="/about">
+              {/* <Nav.Link>
                 About
-              </Nav.Link>
+              </Nav.Link> */}
             </Nav>
-            <Nav>
+            <Nav style={{ alignItems: "center" }}>
               {user ? (
                 <>
-                  <Nav.Link as={Link}>
-                    {user.first_name} {user.last_name}
+                  <Nav.Link as="span">
+                    <Link to="/dashboard">
+                      {user.first_name} {user.last_name}
+                    </Link>
                   </Nav.Link>
-                  <Nav.Link as={Link}>Log out</Nav.Link>
+                  <Nav.Link as={Button} onClick={() => logout()}>
+                    Log out
+                  </Nav.Link>
                   <ThemeMode />
                 </>
               ) : (
@@ -80,8 +75,8 @@ function Component() {
                   direction="horizontal"
                   style={{ justifyContent: "space-between" }}
                 >
-                  <Nav.Link as={Link} to="/login">
-                    <Button type="button">Login</Button>
+                  <Nav.Link as="span">
+                    <Link to="/auth/login">Login</Link>
                   </Nav.Link>
                   <ThemeMode />
                 </Stack>
@@ -93,8 +88,18 @@ function Component() {
       <NavigationMotionLayout>
         <Outlet />
       </NavigationMotionLayout>
-      <Container as="footer" style={footerStyle} fluid>
-        <p className="text-center p-2" style={{margin:"0"}}>
+      <Container
+        as="footer"
+        style={{
+          marginTop: "auto",
+          position: "fixed",
+          bottom: "0",
+          width: "100%",
+          borderTop: "2px outset",
+        }}
+        fluid
+      >
+        <p className="text-center p-2" style={{ margin: "0" }}>
           All rights reserved, Abu berk belkaid &copy;
         </p>
       </Container>
