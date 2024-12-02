@@ -17,6 +17,7 @@ import { Route as rootRoute } from './routes/__root'
 // Create Virtual Routes
 
 const DashboardLazyImport = createFileRoute('/dashboard')()
+const AuthLazyImport = createFileRoute('/auth')()
 const IndexLazyImport = createFileRoute('/')()
 const DashboardIndexLazyImport = createFileRoute('/dashboard/')()
 const DashboardTeacherLazyImport = createFileRoute('/dashboard/teacher')()
@@ -41,6 +42,12 @@ const DashboardLazyRoute = DashboardLazyImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/dashboard.lazy').then((d) => d.Route))
+
+const AuthLazyRoute = AuthLazyImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/auth.lazy').then((d) => d.Route))
 
 const IndexLazyRoute = IndexLazyImport.update({
   id: '/',
@@ -89,31 +96,31 @@ const DashboardAdminLazyRoute = DashboardAdminLazyImport.update({
 )
 
 const AuthResetPasswordLazyRoute = AuthResetPasswordLazyImport.update({
-  id: '/auth/reset-password',
-  path: '/auth/reset-password',
-  getParentRoute: () => rootRoute,
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthLazyRoute,
 } as any).lazy(() =>
   import('./routes/auth/reset-password.lazy').then((d) => d.Route),
 )
 
 const AuthOneTimePasswordLazyRoute = AuthOneTimePasswordLazyImport.update({
-  id: '/auth/one-time-password',
-  path: '/auth/one-time-password',
-  getParentRoute: () => rootRoute,
+  id: '/one-time-password',
+  path: '/one-time-password',
+  getParentRoute: () => AuthLazyRoute,
 } as any).lazy(() =>
   import('./routes/auth/one-time-password.lazy').then((d) => d.Route),
 )
 
 const AuthLoginLazyRoute = AuthLoginLazyImport.update({
-  id: '/auth/login',
-  path: '/auth/login',
-  getParentRoute: () => rootRoute,
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthLazyRoute,
 } as any).lazy(() => import('./routes/auth/login.lazy').then((d) => d.Route))
 
 const AuthForgetPasswordLazyRoute = AuthForgetPasswordLazyImport.update({
-  id: '/auth/forget-password',
-  path: '/auth/forget-password',
-  getParentRoute: () => rootRoute,
+  id: '/forget-password',
+  path: '/forget-password',
+  getParentRoute: () => AuthLazyRoute,
 } as any).lazy(() =>
   import('./routes/auth/forget-password.lazy').then((d) => d.Route),
 )
@@ -145,6 +152,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -154,31 +168,31 @@ declare module '@tanstack/react-router' {
     }
     '/auth/forget-password': {
       id: '/auth/forget-password'
-      path: '/auth/forget-password'
+      path: '/forget-password'
       fullPath: '/auth/forget-password'
       preLoaderRoute: typeof AuthForgetPasswordLazyImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthLazyImport
     }
     '/auth/login': {
       id: '/auth/login'
-      path: '/auth/login'
+      path: '/login'
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginLazyImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthLazyImport
     }
     '/auth/one-time-password': {
       id: '/auth/one-time-password'
-      path: '/auth/one-time-password'
+      path: '/one-time-password'
       fullPath: '/auth/one-time-password'
       preLoaderRoute: typeof AuthOneTimePasswordLazyImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthLazyImport
     }
     '/auth/reset-password': {
       id: '/auth/reset-password'
-      path: '/auth/reset-password'
+      path: '/reset-password'
       fullPath: '/auth/reset-password'
       preLoaderRoute: typeof AuthResetPasswordLazyImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthLazyImport
     }
     '/dashboard/admin': {
       id: '/dashboard/admin'
@@ -234,6 +248,24 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
+interface AuthLazyRouteChildren {
+  AuthForgetPasswordLazyRoute: typeof AuthForgetPasswordLazyRoute
+  AuthLoginLazyRoute: typeof AuthLoginLazyRoute
+  AuthOneTimePasswordLazyRoute: typeof AuthOneTimePasswordLazyRoute
+  AuthResetPasswordLazyRoute: typeof AuthResetPasswordLazyRoute
+}
+
+const AuthLazyRouteChildren: AuthLazyRouteChildren = {
+  AuthForgetPasswordLazyRoute: AuthForgetPasswordLazyRoute,
+  AuthLoginLazyRoute: AuthLoginLazyRoute,
+  AuthOneTimePasswordLazyRoute: AuthOneTimePasswordLazyRoute,
+  AuthResetPasswordLazyRoute: AuthResetPasswordLazyRoute,
+}
+
+const AuthLazyRouteWithChildren = AuthLazyRoute._addFileChildren(
+  AuthLazyRouteChildren,
+)
+
 interface DashboardAdminLazyRouteChildren {
   DashboardAdminAddUserLazyRoute: typeof DashboardAdminAddUserLazyRoute
   DashboardAdminIndexLazyRoute: typeof DashboardAdminIndexLazyRoute
@@ -269,6 +301,7 @@ const DashboardLazyRouteWithChildren = DashboardLazyRoute._addFileChildren(
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '/auth': typeof AuthLazyRouteWithChildren
   '/dashboard': typeof DashboardLazyRouteWithChildren
   '/auth/forget-password': typeof AuthForgetPasswordLazyRoute
   '/auth/login': typeof AuthLoginLazyRoute
@@ -285,6 +318,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '/auth': typeof AuthLazyRouteWithChildren
   '/auth/forget-password': typeof AuthForgetPasswordLazyRoute
   '/auth/login': typeof AuthLoginLazyRoute
   '/auth/one-time-password': typeof AuthOneTimePasswordLazyRoute
@@ -300,6 +334,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
+  '/auth': typeof AuthLazyRouteWithChildren
   '/dashboard': typeof DashboardLazyRouteWithChildren
   '/auth/forget-password': typeof AuthForgetPasswordLazyRoute
   '/auth/login': typeof AuthLoginLazyRoute
@@ -318,6 +353,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/dashboard'
     | '/auth/forget-password'
     | '/auth/login'
@@ -333,6 +369,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/auth/forget-password'
     | '/auth/login'
     | '/auth/one-time-password'
@@ -346,6 +383,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/auth'
     | '/dashboard'
     | '/auth/forget-password'
     | '/auth/login'
@@ -363,20 +401,14 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  AuthLazyRoute: typeof AuthLazyRouteWithChildren
   DashboardLazyRoute: typeof DashboardLazyRouteWithChildren
-  AuthForgetPasswordLazyRoute: typeof AuthForgetPasswordLazyRoute
-  AuthLoginLazyRoute: typeof AuthLoginLazyRoute
-  AuthOneTimePasswordLazyRoute: typeof AuthOneTimePasswordLazyRoute
-  AuthResetPasswordLazyRoute: typeof AuthResetPasswordLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  AuthLazyRoute: AuthLazyRouteWithChildren,
   DashboardLazyRoute: DashboardLazyRouteWithChildren,
-  AuthForgetPasswordLazyRoute: AuthForgetPasswordLazyRoute,
-  AuthLoginLazyRoute: AuthLoginLazyRoute,
-  AuthOneTimePasswordLazyRoute: AuthOneTimePasswordLazyRoute,
-  AuthResetPasswordLazyRoute: AuthResetPasswordLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -390,15 +422,21 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/dashboard",
+        "/auth",
+        "/dashboard"
+      ]
+    },
+    "/": {
+      "filePath": "index.lazy.tsx"
+    },
+    "/auth": {
+      "filePath": "auth.lazy.tsx",
+      "children": [
         "/auth/forget-password",
         "/auth/login",
         "/auth/one-time-password",
         "/auth/reset-password"
       ]
-    },
-    "/": {
-      "filePath": "index.lazy.tsx"
     },
     "/dashboard": {
       "filePath": "dashboard.lazy.tsx",
@@ -411,16 +449,20 @@ export const routeTree = rootRoute
       ]
     },
     "/auth/forget-password": {
-      "filePath": "auth/forget-password.lazy.tsx"
+      "filePath": "auth/forget-password.lazy.tsx",
+      "parent": "/auth"
     },
     "/auth/login": {
-      "filePath": "auth/login.lazy.tsx"
+      "filePath": "auth/login.lazy.tsx",
+      "parent": "/auth"
     },
     "/auth/one-time-password": {
-      "filePath": "auth/one-time-password.lazy.tsx"
+      "filePath": "auth/one-time-password.lazy.tsx",
+      "parent": "/auth"
     },
     "/auth/reset-password": {
-      "filePath": "auth/reset-password.lazy.tsx"
+      "filePath": "auth/reset-password.lazy.tsx",
+      "parent": "/auth"
     },
     "/dashboard/admin": {
       "filePath": "dashboard/admin.lazy.tsx",

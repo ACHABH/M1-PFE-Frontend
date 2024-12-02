@@ -1,10 +1,10 @@
-import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "../../hooks/useForm";
-import { useAuth, useResetPassword } from "../../api/auth";
+import { useResetPassword } from "../../api/auth";
 
 const FormSchema = z.object({
   code: z.string().trim().min(1),
@@ -19,11 +19,11 @@ export const Route = createLazyFileRoute("/auth/reset-password")({
 });
 
 function RouteComponent() {
-  const navigate = useNavigate({ from: "/auth/reset-password" });
-  useAuth((user) => {
-    if (!user) return;
-    navigate({ to: "/dashboard" });
-  });
+  // const navigate = useNavigate({ from: "/auth/reset-password" });
+  // useAuth((user) => {
+  //   if (!user) return;
+  //   navigate({ to: "/dashboard" });
+  // });
 
   const { mutateAsync } = useResetPassword();
   const form = useForm<ZodFormSchema>({

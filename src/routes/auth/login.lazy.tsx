@@ -1,11 +1,11 @@
-import { createLazyFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Stack from "react-bootstrap/Stack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm } from "../../hooks/useForm";
-import { useLogin, useAuth } from "../../api/auth";
+import { useLogin } from "../../api/auth";
 
 const FormSchema = z.object({
   email: z.string().trim().min(1).email(),
@@ -20,11 +20,11 @@ export const Route = createLazyFileRoute("/auth/login")({
 });
 
 function Component() {
-  const navigate = useNavigate({ from: "/auth/login" });
-  useAuth((user) => {
-    if (!user) return;
-    navigate({ to: "/dashboard" });
-  });
+  // const navigate = useNavigate({ from: "/auth/login" });
+  // useAuth((user) => {
+  //   if (!user) return;
+  //   navigate({ to: "/dashboard" });
+  // });
 
   const { mutateAsync } = useLogin();
   const form = useForm<ZodFormSchema>({
