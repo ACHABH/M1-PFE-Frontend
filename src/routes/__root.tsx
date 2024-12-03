@@ -88,9 +88,11 @@ function Component() {
         </Container>
       </Navbar>
       <NavigationMotionLayout>
-        <Suspense fallback={<Loading />}>
-          <Outlet />
-        </Suspense>
+        <Container as="main" style={{ width: "100vw", height: "100vh" }}>
+          <Suspense fallback={<Loading />}>
+            <Outlet />
+          </Suspense>
+        </Container>
       </NavigationMotionLayout>
       <Container
         as="footer"
