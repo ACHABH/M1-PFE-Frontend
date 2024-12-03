@@ -1,0 +1,28 @@
+import { Link } from "@tanstack/react-router";
+// import ProfilePic from "../../public/icons/default-user-picture.png"
+import { z } from "zod";
+
+const PropsSchema = z.object({
+    name: z.string(),
+    path: z.string().optional()
+});
+
+type Props = z.infer<typeof PropsSchema>;
+
+function WelcomeCard(props: Props) {
+    const linkStyle={
+        textDecoration: "none",
+        fontSize: "13px"
+    }
+  return (
+    <div className='bg-white d-flex justify-content-between p-2 rounded shadow mt-4 mx-3' style={{width:"fit-content"}}>
+        <img src={props.path } alt="Profile Picture" className='rounded-circle' style={{width: "50px", height: "50px"}}/>
+        <div>
+            <h4>Welcome, {props.name}</h4>
+            <Link to="/" className='text-secondary' style={linkStyle}>Sign out</Link>
+        </div>
+    </div>
+  )
+}
+
+export default WelcomeCard;

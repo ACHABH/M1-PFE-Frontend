@@ -9,4 +9,253 @@ html, body, #root {
   min-height: 100vh;
   scroll-behavior: smooth;
   overflow-x: hidden;
+  background-color: #f3f4f6;
 }
+
+/* Color Palette */
+:root {
+  --green: #0A7273;
+  --beige: #E9E3D5;
+  --oxford: #033043;
+  --orange: #FDA521;
+}
+
+/* Background Colors */
+.bg-green {
+  background-color: var(--green) !important;
+}
+
+.bg-beige {
+  background-color: var(--beige) !important;
+}
+
+.bg-oxford {
+  background-color: var(--oxford) !important;
+}
+
+.bg-orange {
+  background-color: var(--orange) !important;
+}
+
+/* Text Colors */
+.text-green {
+  color: var(--green) !important;
+}
+
+.text-beige {
+  color: var(--beige) !important;
+}
+
+.text-oxford {
+  color: var(--oxford) !important;
+}
+
+.text-orange {
+  color: var(--orange) !important;
+}
+
+/* Buttons */
+.btn-green {
+  background-color: var(--green);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-green:hover {
+  background-color: #075B5B;
+}
+
+.btn-beige {
+  background-color: var(--beige);
+  color: var(--oxford);
+  border: 1px solid var(--oxford);
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-beige:hover {
+  background-color: #D6CFC0;
+}
+
+.btn-oxford {
+  background-color: var(--oxford);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-oxford:hover {
+  background-color: #022737;
+}
+
+.btn-orange {
+  background-color: var(--orange);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-orange:hover {
+  background-color: #E0911D;
+}
+
+/* Utility Classes */
+.border-green {
+  border: 1px solid var(--green) !important;
+}
+
+.border-beige {
+  border: 1px solid var(--beige) !important;
+}
+
+.border-oxford {
+  border: 1px solid var(--oxford) !important;
+}
+
+.border-orange {
+  border: 1px solid var(--orange) !important;
+}
+
+/* side Menu */
+
+.aside-option {
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  color: rgba(0, 0, 0, 0.842);
+  transition: all 0.2s;
+  text-decoration: none;
+  padding: 7px;
+}
+.aside-option i {
+  width: 20px;
+  text-align: center;
+  margin-right: 10px;
+}
+
+/* .active{
+  color: white;
+  background-color: var(--oxford) !important;
+} */
+.aside-option:hover{
+  color: white;
+  background-color: var(--orange);
+}
+
+.side-menu-btn{
+  color: rgb(80, 78, 78);
+  text-transform: uppercase;
+  font-size: 12px;
+  padding: 0 2px;
+}
+.side-menu-btn h6{
+  margin-top: 4px;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.myBorder-bottom{
+  border-bottom: 1px inset;
+  
+}
+
+.right-shadow {
+box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1); /* Horizontal, Vertical, Blur Radius, Color */
+}
+
+
+/* Dark Mode */
+html[data-bs-theme="dark"] {
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+}
+
+html[data-bs-theme="dark"] .bg-green {
+  background-color: #064d4d !important;
+}
+
+html[data-bs-theme="dark"] .bg-beige {
+  background-color: #4a4a4a !important;
+}
+
+html[data-bs-theme="dark"] .bg-oxford {
+  background-color: #021f2a !important;
+}
+
+html[data-bs-theme="dark"] .bg-orange {
+  background-color: #b36b1e !important;
+}
+
+html[data-bs-theme="dark"] .text-green {
+  color: #064d4d !important;
+}
+
+html[data-bs-theme="dark"] .text-beige {
+  color: #4a4a4a !important;
+}
+
+html[data-bs-theme="dark"] .text-oxford {
+  color: #021f2a !important;
+}
+
+html[data-bs-theme="dark"] .text-orange {
+  color: #b36b1e !important;
+}
+
+html[data-bs-theme="dark"] .btn-green {
+  background-color: #064d4d;
+}
+
+html[data-bs-theme="dark"] .btn-green:hover {
+  background-color: #043838;
+}
+
+html[data-bs-theme="dark"] .btn-beige {
+  background-color: #4a4a4a;
+  color: #e0e0e0;
+}
+
+html[data-bs-theme="dark"] .btn-beige:hover {
+  background-color: #3a3a3a;
+}
+
+html[data-bs-theme="dark"] .btn-oxford {
+  background-color: #021f2a;
+}
+
+html[data-bs-theme="dark"] .btn-oxford:hover {
+  background-color: #01161e;
+}
+
+html[data-bs-theme="dark"] .btn-orange {
+  background-color: #b36b1e;
+}
+
+html[data-bs-theme="dark"] .btn-orange:hover {
+  background-color: #8f5617;
+}
+
+html[data-bs-theme="dark"] .aside-option {
+  color: rgba(255, 255, 255, 0.842);
+}
+
+html[data-bs-theme="dark"] .aside-option:hover {
+  background-color: #b36b1e;
+}
+
+html[data-bs-theme="dark"] .side-menu-btn {
+  color: rgb(200, 200, 200);
+}
+
