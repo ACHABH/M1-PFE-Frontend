@@ -1,6 +1,6 @@
 import type { StrictPick } from "../types/util";
 import type { User } from "../types/db";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
@@ -158,7 +158,7 @@ export function useResetPassword() {
 export type UseAuthCallback = (user: User | null) => void | Promise<void>;
 
 export function useAuth(callback?: UseAuthCallback) {
-  const { data } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: QUERY.AUTH.STATUS(),
     async queryFn(context) {
       const user = await auth({ signal: context.signal });

@@ -9,6 +9,8 @@ import { useTheme } from "../contexts/theme";
 import NavigationMotionLayout from "../layout/navigation-motion";
 import NotFound from "../not-found";
 import { useAuth, useLogout } from "../api/auth";
+import { Suspense } from "react";
+import Loading from "../loading";
 
 function ThemeMode() {
   const { theme, toggleTheme } = useTheme()!;
@@ -86,7 +88,9 @@ function Component() {
         </Container>
       </Navbar>
       <NavigationMotionLayout>
-        <Outlet />
+        <Suspense fallback={<Loading />}>
+          <Outlet />
+        </Suspense>
       </NavigationMotionLayout>
       <Container
         as="footer"
