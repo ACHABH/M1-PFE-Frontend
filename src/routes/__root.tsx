@@ -15,7 +15,7 @@ import Loading from "../loading";
 function ThemeMode() {
   const { theme, toggleTheme } = useTheme()!;
   return (
-    <Nav.Link>
+    <Nav.Link as="span">
       <Button
         type="button"
         variant={theme === "light" ? "dark" : "light"}
