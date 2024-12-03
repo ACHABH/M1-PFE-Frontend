@@ -31,7 +31,7 @@ const FormSchema = z.object({
   company_number: z.string().trim().min(1).nullable(),
 });
 
-type ZodFormSchema = z.infer<typeof FormSchema>;
+export type ZodFormSchema = z.infer<typeof FormSchema>;
 
 export const Route = createLazyFileRoute("/dashboard/admin/add-user")({
   component: Component,
