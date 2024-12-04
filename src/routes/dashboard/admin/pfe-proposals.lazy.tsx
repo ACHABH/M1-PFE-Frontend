@@ -39,7 +39,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className=" mx-auto mt-4" style={{ width: '95%', minHeight: '100vh' }}>
+    <div className=" mx-auto mt-2, mb-3" style={{ width: '95%', minHeight: '100vh' }}>
       <h2>PFE Proposals</h2>
       <button
         className="btn btn-primary mb-3"

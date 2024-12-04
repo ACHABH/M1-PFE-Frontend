@@ -6,11 +6,11 @@ export const Route = createLazyFileRoute("/dashboard/admin")({
 });
 
 function Component() {
-  // const navigate = useNavigate();
-  // const user = useAuth((user) => {
-  //   if (user?.role === "admin") return;
-  //   navigate({ to: "/dashboard" });
-  // });
+  const navigate = useNavigate();
+  const user = useAuth((user) => {
+    if (user?.role === "admin") return;
+    navigate({ to: "/dashboard" });
+  });
 
-  return true && <Outlet />;
+  return user && <Outlet />;
 }

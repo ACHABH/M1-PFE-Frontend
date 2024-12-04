@@ -24,75 +24,14 @@ function RouteComponent() {
       date: '2024-01-22',
       time: '02:00 PM',
       role: 'Examiner',
-      status: 'Pending Confirmation',
+      status: 'Rejceted',
     },
   ])
 
-  const [preferredDates, setPreferredDates] = useState<string[]>([])
-  const [newPreferredDate, setNewPreferredDate] = useState('')
-  const [showPreferredDateForm, setShowPreferredDateForm] = useState(false)
-
-  const handleAddPreferredDate = () => {
-    if (newPreferredDate) {
-      setPreferredDates([...preferredDates, newPreferredDate])
-      setNewPreferredDate('')
-      alert('Preferred date added successfully!')
-    }
-  }
-
-  const handleConfirmRole = (index: number) => {
-    setDefenseSchedules(
-      defenseSchedules.map((schedule, i) =>
-        i === index ? { ...schedule, status: 'Confirmed' } : schedule,
-      ),
-    )
-    alert('Role confirmed successfully!')
-  }
   return (
     <div className="container mt-4">
-      <h3>Manage Defense Schedule</h3>
-
-      <div className="mb-4">
-        <h5>Preferred Dates</h5>
-        <ul className="list-group mb-3">
-          {preferredDates.map((date, index) => (
-            <li key={index} className="list-group-item">
-              {date}
-            </li>
-          ))}
-        </ul>
-        {showPreferredDateForm ? (
-          <div className="d-flex align-items-center">
-            <input
-              type="date"
-              className="form-control me-2"
-              value={newPreferredDate}
-              onChange={(e) => setNewPreferredDate(e.target.value)}
-            />
-            <button
-              className="btn btn-primary"
-              onClick={handleAddPreferredDate}
-            >
-              Add Date
-            </button>
-            <button
-              className="btn btn-secondary ms-2"
-              onClick={() => setShowPreferredDateForm(false)}
-            >
-              Cancel
-            </button>
-          </div>
-        ) : (
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowPreferredDateForm(true)}
-          >
-            Add Preferred Date
-          </button>
-        )}
-      </div>
-
-      <h5>Assigned Defense Roles</h5>
+      <h3>Jurie Schedule</h3>
+      <p className='h6 my-3 text-secondary'>Assigned Defense Roles</p>
       <table className="table table-bordered table-striped">
         <thead>
           <tr>
@@ -102,7 +41,6 @@ function RouteComponent() {
             <th>Time</th>
             <th>Role</th>
             <th>Status</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -118,21 +56,11 @@ function RouteComponent() {
                   className={`badge ${
                     schedule.status === 'Confirmed'
                       ? 'bg-success'
-                      : 'bg-warning'
+                      : 'bg-danger'
                   }`}
                 >
                   {schedule.status}
                 </span>
-              </td>
-              <td>
-                {schedule.status === 'Pending Confirmation' && (
-                  <button
-                    className="btn btn-success btn-sm"
-                    onClick={() => handleConfirmRole(index)}
-                  >
-                    Confirm
-                  </button>
-                )}
               </td>
             </tr>
           ))}

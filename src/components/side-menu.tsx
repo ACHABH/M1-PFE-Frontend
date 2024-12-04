@@ -67,7 +67,7 @@ const SideMenu: React.FC<SidebarProps> = ({
     }
 
     //TODO: test this function
-    const [pendingAmount, setPendingAmount] = useState(0);
+    const [pendingAmount, setPendingAmount] = useState(2);
 
     useEffect(() => {
       async function fetchPendingAmount() {
@@ -83,13 +83,17 @@ const SideMenu: React.FC<SidebarProps> = ({
       fetchPendingAmount();
     }, []);
     return (
-        <Nav className="d-flex flex-column">
+        <Nav className="d-flex flex-column" style={{}}>
           {userRole === "teacher" && (
             <Nav className="flex-column">
             <div className="dashboard py-3 px-2 myBorder-bottom">
               <Link to="/dashboard/teacher/dashboard" className='aside-option' id='0' onClick={() => handleNavLinkClick('0')}>
                     <i className="bi-house me-2"></i>
                     Dashboard
+              </Link>
+              <Link to="/dashboard/teacher/archive" className='aside-option' id="6" onClick={() => handleNavLinkClick('6')}>
+                    <i className="bi-archive me-2"></i>
+                    Archive
               </Link>
             </div>
             <>
@@ -107,17 +111,21 @@ const SideMenu: React.FC<SidebarProps> = ({
                             <i className="bi bi-collection me-2"></i>
                             Submit Proposal
                         </Link>
+                        <Link to="/dashboard/teacher/defense-selction" className='aside-option' id="3" onClick={() => handleNavLinkClick('3')}>
+                            <i className="bi bi-person-check me-2"></i>
+                            Defense Selection
+                        </Link>
                         <Link to="/dashboard/teacher/supervise-projects" className='aside-option' id="3" onClick={() => handleNavLinkClick('3')}>
                             <i className="bi bi-person-check me-2"></i>
                             Supervise Projects
                         </Link>
-                        <Link to="/dashboard/teacher/select-supervision" className='aside-option' id="3" onClick={() => handleNavLinkClick('3')}>
-                            <i className="bi bi-person-check me-2"></i>
-                            Select Supervision
-                        </Link>
                         <Link to="/dashboard/teacher/pending-revisions" className='aside-option' id="3" onClick={() => handleNavLinkClick('3')}>
                             <i className="bi bi-person-check me-2"></i>
                             Pending Revisions &nbsp;&nbsp; <span className='text-white' style={{backgroundColor: "red", borderRadius: "5px",border: "1px solid red", padding:"1px 2px"}}>{pendingAmount}</span>
+                        </Link>
+                        <Link to="/dashboard/teacher/my-supervised-projects" className='aside-option' id="4" onClick={() => handleNavLinkClick('4')}>
+                          <i className="bi bi-folder-check me-2"></i>
+                          Projects I Supervise
                         </Link>
                     </div>
                 </div>
@@ -133,7 +141,7 @@ const SideMenu: React.FC<SidebarProps> = ({
                     <div className="schedule-managment-menu">
                         <Link to="/dashboard/teacher/manage-defense-schedule" className='aside-option' id="4" onClick={() => handleNavLinkClick('4')}>
                             <i className="bi-calendar-event me-2"></i>
-                            Jury Schedule
+                            Jurie Schedule
                         </Link>
                     </div>
                 </div>
@@ -154,6 +162,10 @@ const SideMenu: React.FC<SidebarProps> = ({
                             {/* <FontAwesomeIcon icon={faChalkboardUser} className="fa-icon"/> */}
                             <i className="bi-folder-plus me-2"></i>
                             PFE Proposals
+                        </Link>
+                        <Link to="/dashboard/admin/archive" className='aside-option' id="6" onClick={() => handleNavLinkClick('6')}>
+                          <i className="bi-archive me-2"></i>
+                          Archive
                         </Link>
                     </div>
                     <>
@@ -198,7 +210,7 @@ const SideMenu: React.FC<SidebarProps> = ({
                             <div className="schedule-managment-menu">
                                 <Link to="/dashboard/admin/defense-schedule" className='aside-option' id="4" onClick={() => handleNavLinkClick('4')}>
                                     <i className="bi-calendar-event me-2"></i>
-                                    Jury Schedule
+                                    Jurie Schedule
                                 </Link>
                                 <Link to="/dashboard/admin/email-schedule" className='aside-option' id="5" onClick={() => handleNavLinkClick('5')}>
                                     <i className="bi-clock me-2"></i>

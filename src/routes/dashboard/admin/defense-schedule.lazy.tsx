@@ -7,7 +7,8 @@ const JuriesSlotSchema = z.object({
   date: z.string().date(),
   time: z.string().time(),
   room: z.string().min(1),
-  participants: z.string().min(1),
+  teachers: z.string().min(1),
+  students: z.string().min(1),
 })
 
 type JuriesSlot = z.infer<typeof JuriesSlotSchema>
@@ -22,13 +23,15 @@ function RouteComponent() {
       date: '2024-01-20',
       time: '10:00 AM',
       room: 'S101',
-      participants: 'John Doe, Jane Smith',
+      teachers: 'John Doe, Jane Smith',
+      students: 'Alice Brown, Bob Green',
     },
     {
       date: '2024-01-21',
       time: '02:00 PM',
       room: 'N102',
-      participants: 'Alice Green, Mark Brown',
+      teachers: 'Alice Green, Mark Brown',
+      students: 'Bob Johnson, Sarah White',
     },
   ])
   const [showAddModal, setShowAddModal] = React.useState(false)
@@ -52,7 +55,8 @@ function RouteComponent() {
         slot.date,
         slot.time,
         slot.room,
-        slot.participants,
+        slot.teachers,
+        slot.students,
       ]),
     ]
       .map((row) => row.join(','))
@@ -74,7 +78,7 @@ function RouteComponent() {
           className="btn btn-primary"
           onClick={() => setShowAddModal(true)}
         >
-          Add Juries Slot
+          Set Juries Plan
         </button>
         <button
           className="btn btn-secondary ms-2"
@@ -90,7 +94,8 @@ function RouteComponent() {
             <th>Date</th>
             <th>Time</th>
             <th>Room</th>
-            <th>Participants</th>
+            <th>Teachers</th>
+            <th>Students</th>
           </tr>
         </thead>
         <tbody>
@@ -99,7 +104,8 @@ function RouteComponent() {
               <td>{slot.date}</td>
               <td>{slot.time}</td>
               <td>{slot.room}</td>
-              <td>{slot.participants}</td>
+              <td>{slot.teachers}</td>
+              <td>{slot.students}</td>
             </tr>
           ))}
         </tbody>

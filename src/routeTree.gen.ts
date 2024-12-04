@@ -20,6 +20,7 @@ const DashboardLazyImport = createFileRoute('/dashboard')()
 const AuthLazyImport = createFileRoute('/auth')()
 const IndexLazyImport = createFileRoute('/')()
 const DashboardIndexLazyImport = createFileRoute('/dashboard/')()
+const OwnerOwnerLazyImport = createFileRoute('/owner/owner')()
 const DashboardTeacherLazyImport = createFileRoute('/dashboard/teacher')()
 const DashboardStudentLazyImport = createFileRoute('/dashboard/student')()
 const DashboardCompanyLazyImport = createFileRoute('/dashboard/company')()
@@ -36,17 +37,23 @@ const DashboardTeacherSuperviseProjectsLazyImport = createFileRoute(
 const DashboardTeacherSubmitProposalLazyImport = createFileRoute(
   '/dashboard/teacher/submit-proposal',
 )()
-const DashboardTeacherSelectSupervisionLazyImport = createFileRoute(
-  '/dashboard/teacher/select-supervision',
-)()
 const DashboardTeacherPendingRevisionsLazyImport = createFileRoute(
   '/dashboard/teacher/pending-revisions',
+)()
+const DashboardTeacherMySupervisedProjectsLazyImport = createFileRoute(
+  '/dashboard/teacher/my-supervised-projects',
 )()
 const DashboardTeacherManageDefenseScheduleLazyImport = createFileRoute(
   '/dashboard/teacher/manage-defense-schedule',
 )()
+const DashboardTeacherDefenseSelctionLazyImport = createFileRoute(
+  '/dashboard/teacher/defense-selction',
+)()
 const DashboardTeacherDashboardLazyImport = createFileRoute(
   '/dashboard/teacher/dashboard',
+)()
+const DashboardTeacherArchiveLazyImport = createFileRoute(
+  '/dashboard/teacher/archive',
 )()
 const DashboardAdminUserManagmentLazyImport = createFileRoute(
   '/dashboard/admin/user-managment',
@@ -71,6 +78,9 @@ const DashboardAdminDefenseScheduleLazyImport = createFileRoute(
 )()
 const DashboardAdminDashboardLazyImport = createFileRoute(
   '/dashboard/admin/dashboard',
+)()
+const DashboardAdminArchiveLazyImport = createFileRoute(
+  '/dashboard/admin/archive',
 )()
 const DashboardAdminAddUserLazyImport = createFileRoute(
   '/dashboard/admin/add-user',
@@ -103,6 +113,12 @@ const DashboardIndexLazyRoute = DashboardIndexLazyImport.update({
 } as any).lazy(() =>
   import('./routes/dashboard/index.lazy').then((d) => d.Route),
 )
+
+const OwnerOwnerLazyRoute = OwnerOwnerLazyImport.update({
+  id: '/owner/owner',
+  path: '/owner/owner',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/owner/owner.lazy').then((d) => d.Route))
 
 const DashboardTeacherLazyRoute = DashboardTeacherLazyImport.update({
   id: '/teacher',
@@ -188,17 +204,6 @@ const DashboardTeacherSubmitProposalLazyRoute =
     ),
   )
 
-const DashboardTeacherSelectSupervisionLazyRoute =
-  DashboardTeacherSelectSupervisionLazyImport.update({
-    id: '/select-supervision',
-    path: '/select-supervision',
-    getParentRoute: () => DashboardTeacherLazyRoute,
-  } as any).lazy(() =>
-    import('./routes/dashboard/teacher/select-supervision.lazy').then(
-      (d) => d.Route,
-    ),
-  )
-
 const DashboardTeacherPendingRevisionsLazyRoute =
   DashboardTeacherPendingRevisionsLazyImport.update({
     id: '/pending-revisions',
@@ -206,6 +211,17 @@ const DashboardTeacherPendingRevisionsLazyRoute =
     getParentRoute: () => DashboardTeacherLazyRoute,
   } as any).lazy(() =>
     import('./routes/dashboard/teacher/pending-revisions.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const DashboardTeacherMySupervisedProjectsLazyRoute =
+  DashboardTeacherMySupervisedProjectsLazyImport.update({
+    id: '/my-supervised-projects',
+    path: '/my-supervised-projects',
+    getParentRoute: () => DashboardTeacherLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/teacher/my-supervised-projects.lazy').then(
       (d) => d.Route,
     ),
   )
@@ -221,6 +237,17 @@ const DashboardTeacherManageDefenseScheduleLazyRoute =
     ),
   )
 
+const DashboardTeacherDefenseSelctionLazyRoute =
+  DashboardTeacherDefenseSelctionLazyImport.update({
+    id: '/defense-selction',
+    path: '/defense-selction',
+    getParentRoute: () => DashboardTeacherLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/teacher/defense-selction.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
 const DashboardTeacherDashboardLazyRoute =
   DashboardTeacherDashboardLazyImport.update({
     id: '/dashboard',
@@ -228,6 +255,15 @@ const DashboardTeacherDashboardLazyRoute =
     getParentRoute: () => DashboardTeacherLazyRoute,
   } as any).lazy(() =>
     import('./routes/dashboard/teacher/dashboard.lazy').then((d) => d.Route),
+  )
+
+const DashboardTeacherArchiveLazyRoute =
+  DashboardTeacherArchiveLazyImport.update({
+    id: '/archive',
+    path: '/archive',
+    getParentRoute: () => DashboardTeacherLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/teacher/archive.lazy').then((d) => d.Route),
   )
 
 const DashboardAdminUserManagmentLazyRoute =
@@ -305,6 +341,14 @@ const DashboardAdminDashboardLazyRoute =
   } as any).lazy(() =>
     import('./routes/dashboard/admin/dashboard.lazy').then((d) => d.Route),
   )
+
+const DashboardAdminArchiveLazyRoute = DashboardAdminArchiveLazyImport.update({
+  id: '/archive',
+  path: '/archive',
+  getParentRoute: () => DashboardAdminLazyRoute,
+} as any).lazy(() =>
+  import('./routes/dashboard/admin/archive.lazy').then((d) => d.Route),
+)
 
 const DashboardAdminAddUserLazyRoute = DashboardAdminAddUserLazyImport.update({
   id: '/add-user',
@@ -395,6 +439,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardTeacherLazyImport
       parentRoute: typeof DashboardLazyImport
     }
+    '/owner/owner': {
+      id: '/owner/owner'
+      path: '/owner/owner'
+      fullPath: '/owner/owner'
+      preLoaderRoute: typeof OwnerOwnerLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/dashboard/': {
       id: '/dashboard/'
       path: '/'
@@ -407,6 +458,13 @@ declare module '@tanstack/react-router' {
       path: '/add-user'
       fullPath: '/dashboard/admin/add-user'
       preLoaderRoute: typeof DashboardAdminAddUserLazyImport
+      parentRoute: typeof DashboardAdminLazyImport
+    }
+    '/dashboard/admin/archive': {
+      id: '/dashboard/admin/archive'
+      path: '/archive'
+      fullPath: '/dashboard/admin/archive'
+      preLoaderRoute: typeof DashboardAdminArchiveLazyImport
       parentRoute: typeof DashboardAdminLazyImport
     }
     '/dashboard/admin/dashboard': {
@@ -465,11 +523,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAdminUserManagmentLazyImport
       parentRoute: typeof DashboardAdminLazyImport
     }
+    '/dashboard/teacher/archive': {
+      id: '/dashboard/teacher/archive'
+      path: '/archive'
+      fullPath: '/dashboard/teacher/archive'
+      preLoaderRoute: typeof DashboardTeacherArchiveLazyImport
+      parentRoute: typeof DashboardTeacherLazyImport
+    }
     '/dashboard/teacher/dashboard': {
       id: '/dashboard/teacher/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard/teacher/dashboard'
       preLoaderRoute: typeof DashboardTeacherDashboardLazyImport
+      parentRoute: typeof DashboardTeacherLazyImport
+    }
+    '/dashboard/teacher/defense-selction': {
+      id: '/dashboard/teacher/defense-selction'
+      path: '/defense-selction'
+      fullPath: '/dashboard/teacher/defense-selction'
+      preLoaderRoute: typeof DashboardTeacherDefenseSelctionLazyImport
       parentRoute: typeof DashboardTeacherLazyImport
     }
     '/dashboard/teacher/manage-defense-schedule': {
@@ -479,18 +551,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardTeacherManageDefenseScheduleLazyImport
       parentRoute: typeof DashboardTeacherLazyImport
     }
+    '/dashboard/teacher/my-supervised-projects': {
+      id: '/dashboard/teacher/my-supervised-projects'
+      path: '/my-supervised-projects'
+      fullPath: '/dashboard/teacher/my-supervised-projects'
+      preLoaderRoute: typeof DashboardTeacherMySupervisedProjectsLazyImport
+      parentRoute: typeof DashboardTeacherLazyImport
+    }
     '/dashboard/teacher/pending-revisions': {
       id: '/dashboard/teacher/pending-revisions'
       path: '/pending-revisions'
       fullPath: '/dashboard/teacher/pending-revisions'
       preLoaderRoute: typeof DashboardTeacherPendingRevisionsLazyImport
-      parentRoute: typeof DashboardTeacherLazyImport
-    }
-    '/dashboard/teacher/select-supervision': {
-      id: '/dashboard/teacher/select-supervision'
-      path: '/select-supervision'
-      fullPath: '/dashboard/teacher/select-supervision'
-      preLoaderRoute: typeof DashboardTeacherSelectSupervisionLazyImport
       parentRoute: typeof DashboardTeacherLazyImport
     }
     '/dashboard/teacher/submit-proposal': {
@@ -532,6 +604,7 @@ const AuthLazyRouteWithChildren = AuthLazyRoute._addFileChildren(
 
 interface DashboardAdminLazyRouteChildren {
   DashboardAdminAddUserLazyRoute: typeof DashboardAdminAddUserLazyRoute
+  DashboardAdminArchiveLazyRoute: typeof DashboardAdminArchiveLazyRoute
   DashboardAdminDashboardLazyRoute: typeof DashboardAdminDashboardLazyRoute
   DashboardAdminDefenseScheduleLazyRoute: typeof DashboardAdminDefenseScheduleLazyRoute
   DashboardAdminEmailScheduleLazyRoute: typeof DashboardAdminEmailScheduleLazyRoute
@@ -544,6 +617,7 @@ interface DashboardAdminLazyRouteChildren {
 
 const DashboardAdminLazyRouteChildren: DashboardAdminLazyRouteChildren = {
   DashboardAdminAddUserLazyRoute: DashboardAdminAddUserLazyRoute,
+  DashboardAdminArchiveLazyRoute: DashboardAdminArchiveLazyRoute,
   DashboardAdminDashboardLazyRoute: DashboardAdminDashboardLazyRoute,
   DashboardAdminDefenseScheduleLazyRoute:
     DashboardAdminDefenseScheduleLazyRoute,
@@ -560,22 +634,27 @@ const DashboardAdminLazyRouteWithChildren =
   DashboardAdminLazyRoute._addFileChildren(DashboardAdminLazyRouteChildren)
 
 interface DashboardTeacherLazyRouteChildren {
+  DashboardTeacherArchiveLazyRoute: typeof DashboardTeacherArchiveLazyRoute
   DashboardTeacherDashboardLazyRoute: typeof DashboardTeacherDashboardLazyRoute
+  DashboardTeacherDefenseSelctionLazyRoute: typeof DashboardTeacherDefenseSelctionLazyRoute
   DashboardTeacherManageDefenseScheduleLazyRoute: typeof DashboardTeacherManageDefenseScheduleLazyRoute
+  DashboardTeacherMySupervisedProjectsLazyRoute: typeof DashboardTeacherMySupervisedProjectsLazyRoute
   DashboardTeacherPendingRevisionsLazyRoute: typeof DashboardTeacherPendingRevisionsLazyRoute
-  DashboardTeacherSelectSupervisionLazyRoute: typeof DashboardTeacherSelectSupervisionLazyRoute
   DashboardTeacherSubmitProposalLazyRoute: typeof DashboardTeacherSubmitProposalLazyRoute
   DashboardTeacherSuperviseProjectsLazyRoute: typeof DashboardTeacherSuperviseProjectsLazyRoute
 }
 
 const DashboardTeacherLazyRouteChildren: DashboardTeacherLazyRouteChildren = {
+  DashboardTeacherArchiveLazyRoute: DashboardTeacherArchiveLazyRoute,
   DashboardTeacherDashboardLazyRoute: DashboardTeacherDashboardLazyRoute,
+  DashboardTeacherDefenseSelctionLazyRoute:
+    DashboardTeacherDefenseSelctionLazyRoute,
   DashboardTeacherManageDefenseScheduleLazyRoute:
     DashboardTeacherManageDefenseScheduleLazyRoute,
+  DashboardTeacherMySupervisedProjectsLazyRoute:
+    DashboardTeacherMySupervisedProjectsLazyRoute,
   DashboardTeacherPendingRevisionsLazyRoute:
     DashboardTeacherPendingRevisionsLazyRoute,
-  DashboardTeacherSelectSupervisionLazyRoute:
-    DashboardTeacherSelectSupervisionLazyRoute,
   DashboardTeacherSubmitProposalLazyRoute:
     DashboardTeacherSubmitProposalLazyRoute,
   DashboardTeacherSuperviseProjectsLazyRoute:
@@ -617,8 +696,10 @@ export interface FileRoutesByFullPath {
   '/dashboard/company': typeof DashboardCompanyLazyRoute
   '/dashboard/student': typeof DashboardStudentLazyRoute
   '/dashboard/teacher': typeof DashboardTeacherLazyRouteWithChildren
+  '/owner/owner': typeof OwnerOwnerLazyRoute
   '/dashboard/': typeof DashboardIndexLazyRoute
   '/dashboard/admin/add-user': typeof DashboardAdminAddUserLazyRoute
+  '/dashboard/admin/archive': typeof DashboardAdminArchiveLazyRoute
   '/dashboard/admin/dashboard': typeof DashboardAdminDashboardLazyRoute
   '/dashboard/admin/defense-schedule': typeof DashboardAdminDefenseScheduleLazyRoute
   '/dashboard/admin/email-schedule': typeof DashboardAdminEmailScheduleLazyRoute
@@ -627,10 +708,12 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/project-managment': typeof DashboardAdminProjectManagmentLazyRoute
   '/dashboard/admin/supervision': typeof DashboardAdminSupervisionLazyRoute
   '/dashboard/admin/user-managment': typeof DashboardAdminUserManagmentLazyRoute
+  '/dashboard/teacher/archive': typeof DashboardTeacherArchiveLazyRoute
   '/dashboard/teacher/dashboard': typeof DashboardTeacherDashboardLazyRoute
+  '/dashboard/teacher/defense-selction': typeof DashboardTeacherDefenseSelctionLazyRoute
   '/dashboard/teacher/manage-defense-schedule': typeof DashboardTeacherManageDefenseScheduleLazyRoute
+  '/dashboard/teacher/my-supervised-projects': typeof DashboardTeacherMySupervisedProjectsLazyRoute
   '/dashboard/teacher/pending-revisions': typeof DashboardTeacherPendingRevisionsLazyRoute
-  '/dashboard/teacher/select-supervision': typeof DashboardTeacherSelectSupervisionLazyRoute
   '/dashboard/teacher/submit-proposal': typeof DashboardTeacherSubmitProposalLazyRoute
   '/dashboard/teacher/supervise-projects': typeof DashboardTeacherSuperviseProjectsLazyRoute
 }
@@ -646,8 +729,10 @@ export interface FileRoutesByTo {
   '/dashboard/company': typeof DashboardCompanyLazyRoute
   '/dashboard/student': typeof DashboardStudentLazyRoute
   '/dashboard/teacher': typeof DashboardTeacherLazyRouteWithChildren
+  '/owner/owner': typeof OwnerOwnerLazyRoute
   '/dashboard': typeof DashboardIndexLazyRoute
   '/dashboard/admin/add-user': typeof DashboardAdminAddUserLazyRoute
+  '/dashboard/admin/archive': typeof DashboardAdminArchiveLazyRoute
   '/dashboard/admin/dashboard': typeof DashboardAdminDashboardLazyRoute
   '/dashboard/admin/defense-schedule': typeof DashboardAdminDefenseScheduleLazyRoute
   '/dashboard/admin/email-schedule': typeof DashboardAdminEmailScheduleLazyRoute
@@ -656,10 +741,12 @@ export interface FileRoutesByTo {
   '/dashboard/admin/project-managment': typeof DashboardAdminProjectManagmentLazyRoute
   '/dashboard/admin/supervision': typeof DashboardAdminSupervisionLazyRoute
   '/dashboard/admin/user-managment': typeof DashboardAdminUserManagmentLazyRoute
+  '/dashboard/teacher/archive': typeof DashboardTeacherArchiveLazyRoute
   '/dashboard/teacher/dashboard': typeof DashboardTeacherDashboardLazyRoute
+  '/dashboard/teacher/defense-selction': typeof DashboardTeacherDefenseSelctionLazyRoute
   '/dashboard/teacher/manage-defense-schedule': typeof DashboardTeacherManageDefenseScheduleLazyRoute
+  '/dashboard/teacher/my-supervised-projects': typeof DashboardTeacherMySupervisedProjectsLazyRoute
   '/dashboard/teacher/pending-revisions': typeof DashboardTeacherPendingRevisionsLazyRoute
-  '/dashboard/teacher/select-supervision': typeof DashboardTeacherSelectSupervisionLazyRoute
   '/dashboard/teacher/submit-proposal': typeof DashboardTeacherSubmitProposalLazyRoute
   '/dashboard/teacher/supervise-projects': typeof DashboardTeacherSuperviseProjectsLazyRoute
 }
@@ -677,8 +764,10 @@ export interface FileRoutesById {
   '/dashboard/company': typeof DashboardCompanyLazyRoute
   '/dashboard/student': typeof DashboardStudentLazyRoute
   '/dashboard/teacher': typeof DashboardTeacherLazyRouteWithChildren
+  '/owner/owner': typeof OwnerOwnerLazyRoute
   '/dashboard/': typeof DashboardIndexLazyRoute
   '/dashboard/admin/add-user': typeof DashboardAdminAddUserLazyRoute
+  '/dashboard/admin/archive': typeof DashboardAdminArchiveLazyRoute
   '/dashboard/admin/dashboard': typeof DashboardAdminDashboardLazyRoute
   '/dashboard/admin/defense-schedule': typeof DashboardAdminDefenseScheduleLazyRoute
   '/dashboard/admin/email-schedule': typeof DashboardAdminEmailScheduleLazyRoute
@@ -687,10 +776,12 @@ export interface FileRoutesById {
   '/dashboard/admin/project-managment': typeof DashboardAdminProjectManagmentLazyRoute
   '/dashboard/admin/supervision': typeof DashboardAdminSupervisionLazyRoute
   '/dashboard/admin/user-managment': typeof DashboardAdminUserManagmentLazyRoute
+  '/dashboard/teacher/archive': typeof DashboardTeacherArchiveLazyRoute
   '/dashboard/teacher/dashboard': typeof DashboardTeacherDashboardLazyRoute
+  '/dashboard/teacher/defense-selction': typeof DashboardTeacherDefenseSelctionLazyRoute
   '/dashboard/teacher/manage-defense-schedule': typeof DashboardTeacherManageDefenseScheduleLazyRoute
+  '/dashboard/teacher/my-supervised-projects': typeof DashboardTeacherMySupervisedProjectsLazyRoute
   '/dashboard/teacher/pending-revisions': typeof DashboardTeacherPendingRevisionsLazyRoute
-  '/dashboard/teacher/select-supervision': typeof DashboardTeacherSelectSupervisionLazyRoute
   '/dashboard/teacher/submit-proposal': typeof DashboardTeacherSubmitProposalLazyRoute
   '/dashboard/teacher/supervise-projects': typeof DashboardTeacherSuperviseProjectsLazyRoute
 }
@@ -709,8 +800,10 @@ export interface FileRouteTypes {
     | '/dashboard/company'
     | '/dashboard/student'
     | '/dashboard/teacher'
+    | '/owner/owner'
     | '/dashboard/'
     | '/dashboard/admin/add-user'
+    | '/dashboard/admin/archive'
     | '/dashboard/admin/dashboard'
     | '/dashboard/admin/defense-schedule'
     | '/dashboard/admin/email-schedule'
@@ -719,10 +812,12 @@ export interface FileRouteTypes {
     | '/dashboard/admin/project-managment'
     | '/dashboard/admin/supervision'
     | '/dashboard/admin/user-managment'
+    | '/dashboard/teacher/archive'
     | '/dashboard/teacher/dashboard'
+    | '/dashboard/teacher/defense-selction'
     | '/dashboard/teacher/manage-defense-schedule'
+    | '/dashboard/teacher/my-supervised-projects'
     | '/dashboard/teacher/pending-revisions'
-    | '/dashboard/teacher/select-supervision'
     | '/dashboard/teacher/submit-proposal'
     | '/dashboard/teacher/supervise-projects'
   fileRoutesByTo: FileRoutesByTo
@@ -737,8 +832,10 @@ export interface FileRouteTypes {
     | '/dashboard/company'
     | '/dashboard/student'
     | '/dashboard/teacher'
+    | '/owner/owner'
     | '/dashboard'
     | '/dashboard/admin/add-user'
+    | '/dashboard/admin/archive'
     | '/dashboard/admin/dashboard'
     | '/dashboard/admin/defense-schedule'
     | '/dashboard/admin/email-schedule'
@@ -747,10 +844,12 @@ export interface FileRouteTypes {
     | '/dashboard/admin/project-managment'
     | '/dashboard/admin/supervision'
     | '/dashboard/admin/user-managment'
+    | '/dashboard/teacher/archive'
     | '/dashboard/teacher/dashboard'
+    | '/dashboard/teacher/defense-selction'
     | '/dashboard/teacher/manage-defense-schedule'
+    | '/dashboard/teacher/my-supervised-projects'
     | '/dashboard/teacher/pending-revisions'
-    | '/dashboard/teacher/select-supervision'
     | '/dashboard/teacher/submit-proposal'
     | '/dashboard/teacher/supervise-projects'
   id:
@@ -766,8 +865,10 @@ export interface FileRouteTypes {
     | '/dashboard/company'
     | '/dashboard/student'
     | '/dashboard/teacher'
+    | '/owner/owner'
     | '/dashboard/'
     | '/dashboard/admin/add-user'
+    | '/dashboard/admin/archive'
     | '/dashboard/admin/dashboard'
     | '/dashboard/admin/defense-schedule'
     | '/dashboard/admin/email-schedule'
@@ -776,10 +877,12 @@ export interface FileRouteTypes {
     | '/dashboard/admin/project-managment'
     | '/dashboard/admin/supervision'
     | '/dashboard/admin/user-managment'
+    | '/dashboard/teacher/archive'
     | '/dashboard/teacher/dashboard'
+    | '/dashboard/teacher/defense-selction'
     | '/dashboard/teacher/manage-defense-schedule'
+    | '/dashboard/teacher/my-supervised-projects'
     | '/dashboard/teacher/pending-revisions'
-    | '/dashboard/teacher/select-supervision'
     | '/dashboard/teacher/submit-proposal'
     | '/dashboard/teacher/supervise-projects'
   fileRoutesById: FileRoutesById
@@ -789,12 +892,14 @@ export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   AuthLazyRoute: typeof AuthLazyRouteWithChildren
   DashboardLazyRoute: typeof DashboardLazyRouteWithChildren
+  OwnerOwnerLazyRoute: typeof OwnerOwnerLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AuthLazyRoute: AuthLazyRouteWithChildren,
   DashboardLazyRoute: DashboardLazyRouteWithChildren,
+  OwnerOwnerLazyRoute: OwnerOwnerLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -809,7 +914,8 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/auth",
-        "/dashboard"
+        "/dashboard",
+        "/owner/owner"
       ]
     },
     "/": {
@@ -855,6 +961,7 @@ export const routeTree = rootRoute
       "parent": "/dashboard",
       "children": [
         "/dashboard/admin/add-user",
+        "/dashboard/admin/archive",
         "/dashboard/admin/dashboard",
         "/dashboard/admin/defense-schedule",
         "/dashboard/admin/email-schedule",
@@ -877,13 +984,18 @@ export const routeTree = rootRoute
       "filePath": "dashboard/teacher.lazy.tsx",
       "parent": "/dashboard",
       "children": [
+        "/dashboard/teacher/archive",
         "/dashboard/teacher/dashboard",
+        "/dashboard/teacher/defense-selction",
         "/dashboard/teacher/manage-defense-schedule",
+        "/dashboard/teacher/my-supervised-projects",
         "/dashboard/teacher/pending-revisions",
-        "/dashboard/teacher/select-supervision",
         "/dashboard/teacher/submit-proposal",
         "/dashboard/teacher/supervise-projects"
       ]
+    },
+    "/owner/owner": {
+      "filePath": "owner/owner.lazy.tsx"
     },
     "/dashboard/": {
       "filePath": "dashboard/index.lazy.tsx",
@@ -891,6 +1003,10 @@ export const routeTree = rootRoute
     },
     "/dashboard/admin/add-user": {
       "filePath": "dashboard/admin/add-user.lazy.tsx",
+      "parent": "/dashboard/admin"
+    },
+    "/dashboard/admin/archive": {
+      "filePath": "dashboard/admin/archive.lazy.tsx",
       "parent": "/dashboard/admin"
     },
     "/dashboard/admin/dashboard": {
@@ -925,20 +1041,28 @@ export const routeTree = rootRoute
       "filePath": "dashboard/admin/user-managment.lazy.tsx",
       "parent": "/dashboard/admin"
     },
+    "/dashboard/teacher/archive": {
+      "filePath": "dashboard/teacher/archive.lazy.tsx",
+      "parent": "/dashboard/teacher"
+    },
     "/dashboard/teacher/dashboard": {
       "filePath": "dashboard/teacher/dashboard.lazy.tsx",
+      "parent": "/dashboard/teacher"
+    },
+    "/dashboard/teacher/defense-selction": {
+      "filePath": "dashboard/teacher/defense-selction.lazy.tsx",
       "parent": "/dashboard/teacher"
     },
     "/dashboard/teacher/manage-defense-schedule": {
       "filePath": "dashboard/teacher/manage-defense-schedule.lazy.tsx",
       "parent": "/dashboard/teacher"
     },
-    "/dashboard/teacher/pending-revisions": {
-      "filePath": "dashboard/teacher/pending-revisions.lazy.tsx",
+    "/dashboard/teacher/my-supervised-projects": {
+      "filePath": "dashboard/teacher/my-supervised-projects.lazy.tsx",
       "parent": "/dashboard/teacher"
     },
-    "/dashboard/teacher/select-supervision": {
-      "filePath": "dashboard/teacher/select-supervision.lazy.tsx",
+    "/dashboard/teacher/pending-revisions": {
+      "filePath": "dashboard/teacher/pending-revisions.lazy.tsx",
       "parent": "/dashboard/teacher"
     },
     "/dashboard/teacher/submit-proposal": {

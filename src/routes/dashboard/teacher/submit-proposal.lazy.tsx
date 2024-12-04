@@ -53,7 +53,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="container my-4 bg-white rounded p-5">
+    <div className="container my-3 bg-white rounded p-3" style={{width:"90%"}}>
       <h3>Submit PFE Proposal</h3>
       {submissionReminder && (
         <div className="alert alert-warning">
@@ -63,6 +63,7 @@ function RouteComponent() {
       <form
         onSubmit={handleSubmit}
         className="d-flex flex-wrap justify-content-between"
+        
       >
         {/* <div className="mb-3" style={{width:"49%"}}>
               <label className="form-label">Supervisor First Name</label>

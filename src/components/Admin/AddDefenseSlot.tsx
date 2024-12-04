@@ -8,20 +8,22 @@ interface AddDefenseSlotProps {
 
 
 const formDataSchema = z.object({
-  date: z.string().date().min(1),
-  time: z.string().time().min(1),
-  room: z.string().min(1),
-  participants: z.string().min(1),
+  startDate: z.string().date().min(1),
+  endDate: z.string().date().min(1),
+  startTime: z.string().time().min(1),
+  endTime: z.string().time().min(1),
+  rooms: z.string().min(1),
 });
 
 type FormData = z.infer<typeof formDataSchema>;
 
 const AddDefenseSlot: React.FC<AddDefenseSlotProps> = ({ onAdd, onCancel }) => {
   const [formData, setFormData] = useState<FormData>({
-    date: '',
-    time: '',
-    room: '',
-    participants: '',
+    startDate: '',
+    endDate: '',
+    startTime: '',
+    endTime: '',
+    rooms: '',
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +33,6 @@ const AddDefenseSlot: React.FC<AddDefenseSlotProps> = ({ onAdd, onCancel }) => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onAdd(formData);
-    setFormData({ date: '', time: '', room: '', participants: '' });
   };
 
   const handleCancel = () => {
@@ -43,47 +44,58 @@ const AddDefenseSlot: React.FC<AddDefenseSlotProps> = ({ onAdd, onCancel }) => {
       <h3>Add Jurie Slot</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label className="form-label">Date</label>
+          <label className="form-label">First Day</label>
           <input
             type="date"
             className="form-control"
             name="date"
-            value={formData.date}
+            value={formData.startDate}
             onChange={handleChange}
             required
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Time</label>
+          <label className="form-label">Last Day</label>
+          <input
+            type="date"
+            className="form-control"
+            name="date"
+            value={formData.endDate}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Starting Time</label>
           <input
             type="time"
             className="form-control"
             name="time"
-            value={formData.time}
+            value={formData.startTime}
             onChange={handleChange}
             required
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Room</label>
+          <label className="form-label">Ending Time</label>
           <input
-            type="text"
+            type="time"
             className="form-control"
-            name="room"
-            value={formData.room}
+            name="time"
+            value={formData.endTime}
             onChange={handleChange}
             required
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Participants</label>
+          <label className="form-label">Rooms (Comma-separated)</label>
           <input
             type="text"
             className="form-control"
-            name="participants"
-            value={formData.participants}
+            name="rooms"
+            value={formData.rooms}
             onChange={handleChange}
-            placeholder="e.g., John Doe, Jane Smith"
+            placeholder="e.g., N101, N102, N103"
             required
           />
         </div>
