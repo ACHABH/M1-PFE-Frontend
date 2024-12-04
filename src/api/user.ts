@@ -1,23 +1,26 @@
+import type { Prettier } from "../types/util";
 import type { FetchResponse } from "../types/http";
 import type { Admin, Company, Student, Teacher, User } from "../types/db";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { request } from "../utils/request";
 import { QUERY } from "../constant/query";
 
-type FullUser = User &
-  Partial<{
-    student: Student | null;
-    teacher: Teacher | null;
-    company: Company | null;
-    admin: Admin | null;
-  }>;
+export type FullUser = Prettier<
+  User &
+    Partial<{
+      student: Student | null;
+      teacher: Teacher | null;
+      company: Company | null;
+      admin: Admin | null;
+    }>
+>;
 
 export function useGetAll() {
   return useQuery({
     queryKey: QUERY.USER.ALL(),
     async queryFn(context) {
       const res = await request("/api/user/all", { signal: context.signal });
-      const json = (await res.json()) as FetchResponse<FullUser[]>;
+      const json = (await res.json()) as FetchResponse<{ users: FullUser[] }>;
       return json;
     },
   });
@@ -28,7 +31,7 @@ export function useProfile() {
     queryKey: QUERY.USER.KEY,
     async queryFn(context) {
       const res = await request("/api/user", { signal: context.signal });
-      const json = (await res.json()) as FetchResponse<FullUser>;
+      const json = (await res.json()) as FetchResponse<{ user: FullUser }>;
       return json;
     },
   });
