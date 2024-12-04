@@ -33,4 +33,14 @@ export const QUERY = {
     ALL: () => [...QUERY.ROOM.KEY, "all"] as const,
     ONE: (id: number) => [...QUERY.ROOM.KEY, id] as const,
   },
+  EMAIL: {
+    KEY: ["email"],
+    ALL: () => [...QUERY.EMAIL.KEY, "all"] as const,
+    ONE: (id: number) => [...QUERY.EMAIL.KEY, id] as const,
+    TEMPLATE: {
+      KEY: ["template"],
+      ALL: () => [...QUERY.EMAIL.TEMPLATE.KEY, "all"] as const,
+      ONE: (id: number) => [...QUERY.EMAIL.TEMPLATE.KEY, id] as const,
+    },
+  },
 } as const;

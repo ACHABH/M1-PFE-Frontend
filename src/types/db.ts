@@ -25,7 +25,7 @@ type ForeignKeys = {
   StudentId: { student_id: number };
   TeacherId: { teacher_id: number };
   CompanyId: { company_id: number };
-  AdminId: { Admin_id: number };
+  AdminId: { admin_id: number };
   ProjectId: { project_id: number };
   RoomId: { room_id: number };
   ValidatedBy: { validated_by: number }; // admin
