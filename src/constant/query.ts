@@ -28,4 +28,9 @@ export const QUERY = {
     ALL: () => [...QUERY.PROJECT.KEY, "all"] as const,
     ONE: (id: number) => [...QUERY.PROJECT.KEY, id] as const,
   },
+  ROOM: {
+    KEY: ["room"],
+    ALL: () => [...QUERY.ROOM.KEY, "all"] as const,
+    ONE: (id: number) => [...QUERY.ROOM.KEY, id] as const,
+  },
 } as const;
