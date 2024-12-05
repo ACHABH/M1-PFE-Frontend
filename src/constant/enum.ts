@@ -3,7 +3,7 @@ export const USER_ROLE = [
   "teacher",
   "company",
   "admin",
-  // "owner",
+  "owner",
 ] as const;
 export type UserRole = (typeof USER_ROLE)[number];
 

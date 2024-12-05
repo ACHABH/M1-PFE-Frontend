@@ -12,6 +12,7 @@ import {
   TEACHER_GRADE,
   USER_ROLE,
 } from "../../../constant/enum";
+import { useCreate as useCreateUser } from "../../../api/user";
 
 const FormSchema = z.object({
   first_name: z.string().trim().min(1),
@@ -38,6 +39,8 @@ export const Route = createLazyFileRoute("/dashboard/admin/add-user")({
 });
 
 function Component() {
+  const { mutateAsync: createUser } = useCreateUser();
+
   const form = useForm<ZodFormSchema>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -63,9 +66,7 @@ function Component() {
 
   return (
     <Form
-      onSubmit={form.onSubmit(async (data) => {
-        console.log(data);
-      })}
+      onSubmit={form.onSubmit((data) => createUser(data))}
       className="justify-content-center bg-white p-4 shadow my-4"
       style={{
         width: "30%",
@@ -93,15 +94,17 @@ function Component() {
           required
           value={USER_ROLE[0]}
         >
-          {USER_ROLE.map((user) => (
-            <option
-              key={user}
-              value={user}
-              style={{ textTransform: "capitalize" }}
-            >
-              {user}
-            </option>
-          ))}
+          {USER_ROLE.map((role) =>
+            role === "owner" || role === "admin" ? null : (
+              <option
+                key={role}
+                value={role}
+                style={{ textTransform: "capitalize" }}
+              >
+                {role}
+              </option>
+            )
+          )}
         </Form.Select>
       </Form.Group>
       <Form.Group className="mb-3">
