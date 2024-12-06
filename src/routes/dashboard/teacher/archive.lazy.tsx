@@ -31,9 +31,23 @@ function RouteComponent() {
         },
       ]);
     
-      const [selectedProject, setSelectedProject] = useState(null);
+      const [selectedProject, setSelectedProject] = useState<{
+        title: string;
+        participants: string[];
+        status: string;
+        defenseDate: string;
+        details: string;
+      } | null>(null);
     
-      const handleRowClick = (project) => {
+      interface Project {
+        title: string;
+        participants: string[];
+        status: string;
+        defenseDate: string;
+        details: string;
+      }
+
+      const handleRowClick = (project: Project) => {
         setSelectedProject(project);
       };
     

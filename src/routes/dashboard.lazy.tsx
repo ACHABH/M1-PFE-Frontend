@@ -8,18 +8,18 @@ export const Route = createLazyFileRoute("/dashboard")({
 });
 
 function Component() {
-  const navigate = useNavigate();
-  const user = useAuth((user) => {
-    if (user) return;
-  navigate({ to: "/auth/login" });
-  });
+  // const navigate = useNavigate();
+  // const user = useAuth((user) => {
+  //   if (user) return;
+  // navigate({ to: "/auth/login" });
+  // });
 
   return (
     true && (
       <Container as="main" style={{ width: "100vw", minHeight: "100vh", paddingLeft:"0"}} fluid>
           <div style={{ display: 'flex', height: '100vh' }}>
             <div style={{ width: '18vw', height:'100vh'}} className="bg-white">
-              <SideMenu userRole={user} />
+              <SideMenu userRole="teacher" />
             </div>
             <div style={{ width: '78vw', height: '100vh'}} className="mx-auto">
               <Outlet />

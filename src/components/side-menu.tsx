@@ -73,7 +73,7 @@ const SideMenu: React.FC<SidebarProps> = ({
       async function fetchPendingAmount() {
         try {
           const response = await fetch('/api/pending-amount');
-          const data = await response.json();
+          const data = await response.json() as { pendingAmount: number };
           setPendingAmount(data.pendingAmount);
         } catch (error) {
           console.error('Error fetching pending amount:', error);

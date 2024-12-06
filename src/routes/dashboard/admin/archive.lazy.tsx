@@ -38,7 +38,15 @@ function RouteComponent() {
       ]);
     
       // State for modal
-      const [selectedProject, setSelectedProject] = useState(null);
+      const [selectedProject, setSelectedProject] = useState<{
+        title: string;
+        proposer: string;
+        dateProposed: string;
+        status: string;
+        description: string;
+        technologies: string;
+        needs: string;
+      } | null>(null);
     
       // Status colors for badges
       const statusBadgeClass = {
@@ -47,7 +55,17 @@ function RouteComponent() {
         Pending: 'bg-warning',
       };
     
-      const handleProjectClick = (project) => {
+      interface Project {
+        title: string;
+        proposer: string;
+        dateProposed: string;
+        status: string;
+        description: string;
+        technologies: string;
+        needs: string;
+      }
+
+      const handleProjectClick = (project: Project) => {
         setSelectedProject(project);
       };
     
@@ -75,7 +93,7 @@ function RouteComponent() {
                   <td>{project.proposer}</td>
                   <td>{project.dateProposed}</td>
                   <td>
-                    <span className={`badge ${statusBadgeClass[project.status]}`}>
+                    <span className={`badge ${statusBadgeClass[project.status as keyof typeof statusBadgeClass]}`}>
                       {project.status}
                     </span>
                   </td>

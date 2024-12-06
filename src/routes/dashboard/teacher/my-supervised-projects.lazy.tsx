@@ -29,9 +29,16 @@ function RouteComponent() {
     },
   ])
 
-  const handleApproval = (studentName, presentationDate) => {
+  interface Project {
+    title: string;
+    student: string;
+    status: string;
+    presentationDate: string | null;
+  }
+
+  const handleApproval = (studentName: string, presentationDate: string): void => {
     setSupervisedProjects(
-      supervisedProjects.map((project) =>
+      supervisedProjects.map((project: Project) =>
         project.student === studentName
           ? {
               ...project,

@@ -8,15 +8,27 @@ export const Route = createLazyFileRoute('/dashboard/teacher/defense-selction')(
 )
 
 function RouteComponent() {
-  const [projects, setProjects] = useState([
+  const [projects, setProjects] = useState<Project[]>([
     { title: 'AI Research', status: 'Available', students: 'John Doe', priority: null },
     { title: 'Robotics Design', status: 'Available', students: 'Jane Smith', priority: null },
     { title: 'Blockchain Security', status: 'Available', students: 'Emily Brown', priority: null },
   ]);
 
-  const [selectedProjects, setSelectedProjects] = useState([]);
+  const [selectedProjects, setSelectedProjects] = useState<SelectedProject[]>([]);
 
-  const handleSelectProject = (title) => {
+  interface Project {
+    title: string;
+    status: string;
+    students: string;
+    priority: number | null;
+  }
+
+  interface SelectedProject {
+    title: string;
+    priority: number;
+  }
+
+  const handleSelectProject = (title: string) => {
     if (selectedProjects.length >= projects.length) {
       alert('All projects have been selected.');
       return;

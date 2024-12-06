@@ -32,15 +32,29 @@ function RouteComponent() {
     },
   ])
 
-  const [currentProposal, setCurrentProposal] = useState(null)
+  const [currentProposal, setCurrentProposal] = useState<Proposal | null>(null)
   const [showEditForm, setShowEditForm] = useState(false)
 
-  const handleEdit = (proposal) => {
+  interface Proposal {
+    title: string
+    feedback: string
+    status: string
+    description: string
+  }
+
+  const handleEdit = (proposal: Proposal) => {
     setCurrentProposal(proposal)
     setShowEditForm(true)
   }
 
-  const handleSaveChanges = (updatedProposal) => {
+  interface UpdatedProposal {
+    title: string
+    feedback: string
+    status: string
+    description: string
+  }
+
+  const handleSaveChanges = (updatedProposal: UpdatedProposal) => {
     setProposals(
       proposals.map((proposal) =>
         proposal.title === updatedProposal.title ? updatedProposal : proposal,
