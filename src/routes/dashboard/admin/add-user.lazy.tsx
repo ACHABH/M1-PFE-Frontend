@@ -75,7 +75,7 @@ function Component() {
         border: "1.5px solid #ccc",
       }}
     >
-      <Form.Group className="mb-3">
+      <Form.Group className="mb-3" style={{width: "47%"}}>
         <Form.Label htmlFor="role">Who Is He?</Form.Label>
         <Form.Select
           {...form.register("role", { required: true })}
@@ -107,7 +107,7 @@ function Component() {
           )}
         </Form.Select>
       </Form.Group>
-      <Form.Group className="mb-3">
+      <Form.Group className="mb-3" style={{width: "47%"}}>
         <Form.Label htmlFor="first-name">First name</Form.Label>
         <Form.Control
           {...form.register("first_name", { required: true })}
@@ -120,7 +120,7 @@ function Component() {
           <Form.Text>{form.formState.errors.first_name?.message}</Form.Text>
         )}
       </Form.Group>
-      <Form.Group className="mb-3">
+      <Form.Group className="mb-3" style={{width: "47%"}}>
         <Form.Label htmlFor="last-name">Last name</Form.Label>
         <Form.Control
           {...form.register("last_name", { required: true })}
@@ -133,7 +133,7 @@ function Component() {
           <Form.Text>{form.formState.errors.last_name?.message}</Form.Text>
         )}
       </Form.Group>
-      <Form.Group className="mb-3">
+      <Form.Group className="mb-3" style={{width: "47%"}}>
         <Form.Label htmlFor="email">Email address</Form.Label>
         <Form.Control
           {...form.register("email", { required: true })}
@@ -235,7 +235,7 @@ function Component() {
       )}
       {form.watch("role") === "company" && (
         <>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" style={{width: "47%"}}>
             <Form.Label htmlFor="company_name">Company Name</Form.Label>
             <Form.Control
               {...form.register("company_name")}
@@ -249,7 +249,7 @@ function Component() {
               </Form.Text>
             )}
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" style={{width: "47%"}}>
             <Form.Label htmlFor="company_number">Company number</Form.Label>
             <Form.Control
               {...form.register("company_number", { required: true })}
@@ -265,7 +265,7 @@ function Component() {
           </Form.Group>
         </>
       )}
-      <Form.Group className="mb-3">
+      <Form.Group className="mb-3" style={{width: "47%"}}>
         <Form.Label htmlFor="password">Password</Form.Label>
         <Form.Control
           {...form.register("password", { required: true })}
@@ -280,7 +280,7 @@ function Component() {
           <Form.Text>Make sure to create a strong password</Form.Text>
         )}
       </Form.Group>
-      <Form.Group className="mb-3">
+      <Form.Group className="mb-3" style={{width: "47%"}}>
         <Form.Label htmlFor="password-confirmation">
           Confirm Password
         </Form.Label>
@@ -302,6 +302,9 @@ function Component() {
       <Stack direction="horizontal" style={{ justifyContent: "space-between" }}>
         <Button variant="primary" type="submit" disabled={form.disabled}>
           Create User
+        </Button>
+        <Button variant="secondary" className='mx-2' type="reset" onClick={() => window.history.back()}>
+          Cancel
         </Button>
       </Stack>
     </Form>

@@ -44,32 +44,28 @@ function Component() {
 
   return (
     <>
-      <Navbar expand="lg">
+      <Navbar expand="lg" className="bg-white myBorder-bottom">
         <Container>
-          <Navbar.Brand as="span">
-            <Link to="/">PFE</Link>
+          <Navbar.Brand as={Link} to="/">
+            PFE
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link as="span">
-                <Link to="/">Home</Link>
+              <Nav.Link as={Link} to="/">
+                Home
               </Nav.Link>
-              {/* <Nav.Link>
+              <Nav.Link as={Link} to="/about">
                 About
-              </Nav.Link> */}
+              </Nav.Link>
             </Nav>
-            <Nav style={{ alignItems: "center" }}>
+            <Nav>
               {user ? (
                 <>
-                  <Nav.Link as="span">
-                    <Link to="/dashboard">
-                      {user.first_name} {user.last_name}
-                    </Link>
+                  <Nav.Link as={Link}>
+                    {user.first_name} {user.last_name}
                   </Nav.Link>
-                  <Nav.Link as={Button} onClick={() => logout()}>
-                    Log out
-                  </Nav.Link>
+                  <Nav.Link as={Link}>Log out</Nav.Link>
                   <ThemeMode />
                 </>
               ) : (
@@ -77,8 +73,8 @@ function Component() {
                   direction="horizontal"
                   style={{ justifyContent: "space-between" }}
                 >
-                  <Nav.Link as="span">
-                    <Link to="/auth/login">Login</Link>
+                  <Nav.Link as={Link} to="/login">
+                    <Button type="button">Login</Button>
                   </Nav.Link>
                   <ThemeMode />
                 </Stack>
@@ -98,11 +94,12 @@ function Component() {
         as="footer"
         style={{
           marginTop: "auto",
-          position: "fixed",
+          position: "sticky",
           bottom: "0",
           width: "100%",
           borderTop: "2px outset",
         }}
+        className="bg-white"
         fluid
       >
         <p className="text-center p-2" style={{ margin: "0" }}>
