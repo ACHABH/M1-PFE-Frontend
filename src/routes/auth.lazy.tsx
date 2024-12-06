@@ -15,5 +15,5 @@ function Component() {
     if (!user) return;
     navigate({ to: "/dashboard" });
   });
-  return !user && <Outlet />;
+  return (import.meta.env.DEV ? true : !user) && <Outlet />;
 }

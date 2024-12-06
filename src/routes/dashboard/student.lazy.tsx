@@ -1,16 +1,20 @@
-import { createLazyFileRoute, Outlet, useNavigate } from '@tanstack/react-router'
-import { useAuth } from '../../api/auth'
+import {
+  createLazyFileRoute,
+  Outlet,
+  useNavigate,
+} from "@tanstack/react-router";
+import { useAuth } from "../../api/auth";
 
-export const Route = createLazyFileRoute('/dashboard/student')({
+export const Route = createLazyFileRoute("/dashboard/student")({
   component: Component,
-})
+});
 
 function Component() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const user = useAuth((user) => {
-    if (user?.role === "student") return
-    navigate({ to: "/dashboard" })
-  })
+    if (user?.role === "student") return;
+    navigate({ to: "/dashboard" });
+  });
 
-  return user && <Outlet />
+  return (import.meta.env.DEV ? true : user) && <Outlet />;
 }
