@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Nav } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { div } from "framer-motion/client";
 
 interface SidebarProps {
   userRole: string;
@@ -26,13 +25,6 @@ const SideMenu: React.FC<SidebarProps> = ({ userRole }) => {
   }, []);
 
   return (
-    // <div className={`side-menu ${isSidebarCollapsed ? "collapsed" : ""}`}>
-    //   <button
-    //     className="collapse-toggle btn btn-primary"
-    //     onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} // Toggle the state
-    //   >
-    //     <i className={`bi ${isSidebarCollapsed ? "bi-list" : "bi-x-lg"}`}></i>
-    //   </button>
       <Nav className="d-flex flex-column">
         {userRole === "teacher" && (
           <Nav className="flex-column">
