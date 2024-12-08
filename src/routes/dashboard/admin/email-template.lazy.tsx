@@ -53,40 +53,42 @@ function RouteComponent() {
       >
         Add New Template
       </button>
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Subject</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {templates.map((template) => (
-            <tr key={template.id}>
-              <td>{template.title}</td>
-              <td>{template.subject}</td>
-              <td>
-                <button
-                  className="btn btn-warning btn-sm me-2"
-                  onClick={() => {
-                    setCurrentTemplate(template)
-                    setShowForm(true)
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDeleteTemplate(template.id)}
-                >
-                  Delete
-                </button>
-              </td>
+      <div style={{overflowX:"auto"}}>
+        <table className="table table-bordered" style={{whiteSpace:"nowrap"}}>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Subject</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {templates.map((template) => (
+              <tr key={template.id}>
+                <td>{template.title}</td>
+                <td>{template.subject}</td>
+                <td>
+                  <button
+                    className="btn btn-warning btn-sm me-2"
+                    onClick={() => {
+                      setCurrentTemplate(template)
+                      setShowForm(true)
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDeleteTemplate(template.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {showForm && (
         <div

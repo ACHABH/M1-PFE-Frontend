@@ -59,39 +59,40 @@ function RouteComponent() {
         <div className="container mt-4">
           <h3>Project Archive</h3>
           <p>This page contains all the projects you have supervised or participated in.</p>
-          <table className="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th>Project Title</th>
-                <th>Participants</th>
-                <th>Status</th>
-                <th>Defense Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {projects.map((project, index) => (
-                <tr
-                  key={index}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => handleRowClick(project)}
-                >
-                  <td>{project.title}</td>
-                  <td>{project.participants.join(', ')}</td>
-                  <td>
-                    <span
-                      className={`badge ${
-                        project.status === 'Completed' ? 'bg-success' : 'bg-warning'
-                      }`}
-                    >
-                      {project.status}
-                    </span>
-                  </td>
-                  <td>{project.defenseDate}</td>
+          <div style={{overflowX:"auto"}}>
+            <table className="table table-bordered table-striped" style={{whiteSpace:"nowrap"}}>
+              <thead>
+                <tr>
+                  <th>Project Title</th>
+                  <th>Participants</th>
+                  <th>Status</th>
+                  <th>Defense Date</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-    
+              </thead>
+              <tbody>
+                {projects.map((project, index) => (
+                  <tr
+                    key={index}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => handleRowClick(project)}
+                  >
+                    <td>{project.title}</td>
+                    <td>{project.participants.join(', ')}</td>
+                    <td>
+                      <span
+                        className={`badge ${
+                          project.status === 'Completed' ? 'bg-success' : 'bg-warning'
+                        }`}
+                      >
+                        {project.status}
+                      </span>
+                    </td>
+                    <td>{project.defenseDate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>     
           {/* Modal for Project Details */}
           {selectedProject && (
             <Modal show onHide={closeModal} centered>

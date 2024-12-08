@@ -9,7 +9,7 @@ import { useTheme } from "../contexts/theme";
 import NavigationMotionLayout from "../layout/navigation-motion";
 import NotFound from "../not-found";
 import { useAuth, useLogout } from "../api/auth";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import Loading from "../loading";
 
 function ThemeMode() {
@@ -41,6 +41,7 @@ export const Route = createRootRoute({
 function Component() {
   const user = useAuth();
   const { mutateAsync: logout } = useLogout();
+  
 
   return (
     <>
@@ -84,7 +85,7 @@ function Component() {
         </Container>
       </Navbar>
       <NavigationMotionLayout>
-        <Container as="main" style={{ width: "100vw", height: "100vh" }}>
+        <Container as="main" style={{ width: "100vw", height: "100vh", padding:"0" }} fluid>
           <Suspense fallback={<Loading />}>
             <Outlet />
           </Suspense>

@@ -259,3 +259,40 @@ html[data-bs-theme="dark"] .side-menu-btn {
   color: rgb(200, 200, 200);
 }
 
+
+
+/* Side Menu */
+
+.side-menu {
+  width: 250px;
+  transition: width 0.3s ease;
+}
+
+.side-menu.collapsed {
+  width: 70px;
+}
+
+.collapse-toggle {
+  display: block;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1100; /* Ensure it is above other elements */
+}
+
+@media (max-width: 768px) {
+  .side-menu {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    background: #f8f9fa;
+    z-index: 1000;
+    overflow-y: auto;
+  }
+
+  .side-menu.collapsed {
+    width: 0;
+    overflow: hidden;
+  }
+}

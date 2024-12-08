@@ -68,47 +68,49 @@ function RouteComponent() {
     <div className="container mt-4">
       <h3>Validate Subjects</h3>
       {!showEditForm ? (
-        <table className="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Feedback</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {proposals.map((proposal, index) => (
-              <tr key={index}>
-                <td>{proposal.title}</td>
-                <td>{proposal.description}</td>
-                <td>
-                  <span
-                    className={`badge ${
-                      proposal.status === 'Needs Revision'
-                        ? 'bg-warning'
-                        : 'bg-success'
-                    }`}
-                  >
-                    {proposal.status}
-                  </span>
-                </td>
-                <td>{proposal.feedback || 'No feedback'}</td>
-                <td>
-                  {proposal.status === 'Needs Revision' && (
-                    <button
-                      className="btn btn-primary btn-sm"
-                      onClick={() => handleEdit(proposal)}
-                    >
-                      Edit
-                    </button>
-                  )}
-                </td>
+        <div style={{overflowX:"auto"}}>
+          <table className="table table-bordered table-striped" style={{whiteSpace:"nowrap"}}>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Feedback</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {proposals.map((proposal, index) => (
+                <tr key={index}>
+                  <td>{proposal.title}</td>
+                  <td>{proposal.description}</td>
+                  <td>
+                    <span
+                      className={`badge ${
+                        proposal.status === 'Needs Revision'
+                          ? 'bg-warning'
+                          : 'bg-success'
+                      }`}
+                    >
+                      {proposal.status}
+                    </span>
+                  </td>
+                  <td>{proposal.feedback || 'No feedback'}</td>
+                  <td>
+                    {proposal.status === 'Needs Revision' && (
+                      <button
+                        className="btn btn-primary btn-sm"
+                        onClick={() => handleEdit(proposal)}
+                      >
+                        Edit
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : (
         <EditProposalForm
           proposal={currentProposal}

@@ -114,45 +114,46 @@ function RouteComponent() {
       </div>
 
       {/* Schedule Table */}
-      <table className="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredSchedules.map((schedule) => (
-            <tr key={schedule.id}>
-              <td>{schedule.title}</td>
-              <td>{schedule.description}</td>
-              <td>{schedule.date}</td>
-              <td>{schedule.time}</td>
-              <td>
-                <button
-                  className="btn btn-warning btn-sm me-2"
-                  onClick={() => {
-                    setEditingSchedule(schedule)
-                    setShowEditModal(true)
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDeleteSchedule(schedule.id)}
-                >
-                  Delete
-                </button>
-              </td>
+      <div style={{overflowX:"auto"}}>
+        <table className="table table-bordered table-striped" style={{whiteSpace:"nowrap"}}>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
+          </thead>
+          <tbody>
+            {filteredSchedules.map((schedule) => (
+              <tr key={schedule.id}>
+                <td>{schedule.title}</td>
+                <td>{schedule.description}</td>
+                <td>{schedule.date}</td>
+                <td>{schedule.time}</td>
+                <td>
+                  <button
+                    className="btn btn-warning btn-sm me-2"
+                    onClick={() => {
+                      setEditingSchedule(schedule)
+                      setShowEditModal(true)
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDeleteSchedule(schedule.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       {/* Add Schedule Modal */}
       {showAddModal && (
         <div

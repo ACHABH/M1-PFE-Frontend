@@ -118,61 +118,63 @@ const handleReject = (title: string) => {
       </div>
 
       {/* Table */}
-      <table className="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Submitted By</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedProjects.map((project, index) => (
-            <tr key={index}>
-              <td>{project.title}</td>
-              <td>{project.type}</td>
-              <td>{project.description}</td>
-              <td>{project.submittedBy}</td>
-              <td>
-              <span
-                className={`badge ${
-                  project.status === 'Pending'
-                    ? 'bg-warning'
-                    : project.status === 'Validated'
-                    ? 'bg-success'
-                    : project.status === 'Rejected'
-                    ? 'bg-danger'
-                    : 'bg-info'
-                }`}
-              >
-                {project.status}
-              </span>
-              </td>
-              <td>
-                {project.status === 'Pending' && (
-                  <>
-                    <button
-                      className="btn btn-success btn-sm me-2"
-                      onClick={() => handleValidate(project.title)}
-                    >
-                      Validate
-                    </button>
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => handleReject(project.title)}
-                    >
-                      Reject
-                    </button>
-                  </>
-                )}
-              </td>
+      <div style={{overflowX:"auto"}}>
+        <table className="table table-bordered table-striped" style={{whiteSpace:"nowrap"}}>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Submitted By</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {paginatedProjects.map((project, index) => (
+              <tr key={index}>
+                <td>{project.title}</td>
+                <td>{project.type}</td>
+                <td>{project.description}</td>
+                <td>{project.submittedBy}</td>
+                <td>
+                <span
+                  className={`badge ${
+                    project.status === 'Pending'
+                      ? 'bg-warning'
+                      : project.status === 'Validated'
+                      ? 'bg-success'
+                      : project.status === 'Rejected'
+                      ? 'bg-danger'
+                      : 'bg-info'
+                  }`}
+                >
+                  {project.status}
+                </span>
+                </td>
+                <td>
+                  {project.status === 'Pending' && (
+                    <>
+                      <button
+                        className="btn btn-success btn-sm me-2"
+                        onClick={() => handleValidate(project.title)}
+                      >
+                        Validate
+                      </button>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleReject(project.title)}
+                      >
+                        Reject
+                      </button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Pagination */}
       <div className="d-flex justify-content-between align-items-center mt-3">

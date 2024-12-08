@@ -67,9 +67,9 @@ function Component() {
   return (
     <Form
       onSubmit={form.onSubmit((data) => createUser(data))}
-      className="justify-content-center bg-white p-4 shadow my-4"
+      className="d-flex justify-content-between flex-wrap bg-white p-4 shadow my-4"
       style={{
-        width: "30%",
+        width: "60%",
         margin: "auto",
         borderRadius: "20px",
         border: "1.5px solid #ccc",
@@ -92,7 +92,7 @@ function Component() {
             form.register("role").onChange(e);
           }}
           required
-          value={USER_ROLE[0]}
+          // value={USER_ROLE[0]}
         >
           {USER_ROLE.map((role) =>
             role === "owner" || role === "admin" ? null : (
@@ -150,7 +150,7 @@ function Component() {
       {/* Specific Fields Based On The Role */}
       {form.watch("role") === "student" && (
         <>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" style={{width: "47%"}}>
             <Form.Label htmlFor="student_major">Master's Option</Form.Label>
             <Form.Select
               {...form.register("student_major", { required: true })}
@@ -173,7 +173,7 @@ function Component() {
               </Form.Text>
             )}
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" style={{width: "47%"}}>
             <Form.Label htmlFor="student_average_score">
               Average Score (Master's 1)
             </Form.Label>
@@ -193,7 +193,7 @@ function Component() {
       )}
       {form.watch("role") === "teacher" && (
         <>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" style={{width: "47%"}}>
             <Form.Label htmlFor="teacher_recruitment_date">
               Recruitment Date
             </Form.Label>
@@ -208,7 +208,7 @@ function Component() {
               </Form.Text>
             )}
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" style={{width: "47%"}}>
             <Form.Label htmlFor="teacher_grade">Grade</Form.Label>
             <Form.Select
               {...form.register("teacher_grade", { required: true })}

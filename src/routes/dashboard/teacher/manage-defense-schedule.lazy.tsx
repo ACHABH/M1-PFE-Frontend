@@ -32,40 +32,42 @@ function RouteComponent() {
     <div className="container mt-4">
       <h3>Jurie Schedule</h3>
       <p className='h6 my-3 text-secondary'>Assigned Defense Roles</p>
-      <table className="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>Student</th>
-            <th>Project</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Role</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {defenseSchedules.map((schedule, index) => (
-            <tr key={index}>
-              <td>{schedule.student}</td>
-              <td>{schedule.project}</td>
-              <td>{schedule.date}</td>
-              <td>{schedule.time}</td>
-              <td>{schedule.role}</td>
-              <td>
-                <span
-                  className={`badge ${
-                    schedule.status === 'Confirmed'
-                      ? 'bg-success'
-                      : 'bg-danger'
-                  }`}
-                >
-                  {schedule.status}
-                </span>
-              </td>
+      <div style={{overflowX:"auto"}}>
+        <table className="table table-bordered table-striped" style={{whiteSpace:"nowrap"}}>
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Project</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Role</th>
+              <th>Status</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {defenseSchedules.map((schedule, index) => (
+              <tr key={index}>
+                <td>{schedule.student}</td>
+                <td>{schedule.project}</td>
+                <td>{schedule.date}</td>
+                <td>{schedule.time}</td>
+                <td>{schedule.role}</td>
+                <td>
+                  <span
+                    className={`badge ${
+                      schedule.status === 'Confirmed'
+                        ? 'bg-success'
+                        : 'bg-danger'
+                    }`}
+                  >
+                    {schedule.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

@@ -148,65 +148,68 @@ function RouteComponent() {
       </div>
 
       {/* User Table */}
-      <table className="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>
-              <input
-                type="checkbox"
-                onChange={(e) => {
-                  setSelectedUsers(
-                    e.target.checked ? users.map((user) => user.email) : [],
-                  )
-                }}
-              />
-            </th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedUsers.map((user) => (
-            <tr key={user.email}>
-              <td>
+      <div style={{overflowX:"auto"}}>
+        <table className="table table-bordered table-striped" style={{whiteSpace:"nowrap"}}>
+          <thead>
+            <tr>
+              <th>
                 <input
                   type="checkbox"
-                  checked={selectedUsers.includes(user.email)}
-                  onChange={(e) =>
-                    setSelectedUsers((prev) =>
-                      e.target.checked
-                        ? [...prev, user.email]
-                        : prev.filter((email) => email !== user.email),
+                  onChange={(e) => {
+                    setSelectedUsers(
+                      e.target.checked ? users.map((user) => user.email) : [],
                     )
-                  }
-                />
-              </td>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>{user.role}</td>
-              <td>
-                <button
-                  className="btn btn-warning btn-sm me-2"
-                  onClick={() => {
-                    setEditingUser(user)
-                    setShowEditModal(true)
                   }}
-                >
-                  Edit
-                </button>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDeleteUser(user.email)}
-                >
-                  Delete
-                </button>
-              </td>
+                />
+              </th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {paginatedUsers.map((user) => (
+              <tr key={user.email}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedUsers.includes(user.email)}
+                    onChange={(e) =>
+                      setSelectedUsers((prev) =>
+                        e.target.checked
+                          ? [...prev, user.email]
+                          : prev.filter((email) => email !== user.email),
+                      )
+                    }
+                  />
+                </td>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.role}</td>
+                <td>
+                  <button
+                    className="btn btn-warning btn-sm me-2"
+                    onClick={() => {
+                      setEditingUser(user)
+                      setShowEditModal(true)
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDeleteUser(user.email)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      
 
       {/* Pagination */}
       <div className="d-flex justify-content-between align-items-center mt-3">

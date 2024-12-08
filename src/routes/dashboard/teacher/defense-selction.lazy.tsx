@@ -63,47 +63,47 @@ function RouteComponent() {
     <div className="container mt-4">
       <h3>Supervise Projects</h3>
       <p className='h6 text-secondary my-3'>Select projects based on your preference.</p>
-
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Priority</th>
-            <th>Title</th>
-            <th>Students</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {projects.map((project, index) => (
-            <tr key={index}>
-              <td>{project.priority || '-'}</td>
-              <td>{project.title}</td>
-              <td>{project.students}</td>
-              <td>
-                <span
-                  className={`badge ${
-                    project.status === 'Available' ? 'bg-success' : 'bg-warning'
-                  }`}
-                >
-                  {project.status}
-                </span>
-              </td>
-              <td>
-                {project.status === 'Available' && (
-                  <button
-                    className="btn btn-primary btn-sm"
-                    onClick={() => handleSelectProject(project.title)}
-                  >
-                    Select
-                  </button>
-                )}
-              </td>
+      <div style={{overflowX:"auto"}}>
+        <table className="table table-bordered" style={{whiteSpace:"nowrap"}}>
+          <thead>
+            <tr>
+              <th>Priority</th>
+              <th>Title</th>
+              <th>Students</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
+          </thead>
+          <tbody>
+            {projects.map((project, index) => (
+              <tr key={index}>
+                <td>{project.priority || '-'}</td>
+                <td>{project.title}</td>
+                <td>{project.students}</td>
+                <td>
+                  <span
+                    className={`badge ${
+                      project.status === 'Available' ? 'bg-success' : 'bg-warning'
+                    }`}
+                  >
+                    {project.status}
+                  </span>
+                </td>
+                <td>
+                  {project.status === 'Available' && (
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={() => handleSelectProject(project.title)}
+                    >
+                      Select
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div className="mt-4">
         {selectedProjects.length > 0 && (
           <>

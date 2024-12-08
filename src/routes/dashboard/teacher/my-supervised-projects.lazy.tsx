@@ -64,57 +64,59 @@ function RouteComponent() {
       <p className='h6 text-secondary my-3'>
         A student cannot present until you approve their work.
       </p>
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Project Title</th>
-            <th>Student Name</th>
-            <th>Status</th>
-            <th>Presentation Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {supervisedProjects.map((project, index) => (
-            <tr key={index}>
-              <td>{project.title}</td>
-              <td>{project.student}</td>
-              <td>
-                <span
-                  className={`badge ${
-                    project.status.includes('Approved')
-                      ? 'bg-success'
-                      : 'bg-warning'
-                  }`}
-                >
-                  {project.status}
-                </span>
-              </td>
-              <td>{project.presentationDate || 'Not Assigned'}</td>
-              <td>
-                {project.status === 'Pending Approval' && (
-                  <>
-                    <button
-                      className="btn btn-primary btn-sm me-2"
-                      onClick={() => handleApproval(project.student, 'June')}
-                    >
-                      Approve for June
-                    </button>
-                    <button
-                      className="btn btn-warning btn-sm"
-                      onClick={() =>
-                        handleApproval(project.student, 'September')
-                      }
-                    >
-                      Defer to September
-                    </button>
-                  </>
-                )}
-              </td>
+      <div style={{overflowX:"auto"}}>
+        <table className="table table-bordered" style={{whiteSpace:"nowrap"}}>
+          <thead>
+            <tr>
+              <th>Project Title</th>
+              <th>Student Name</th>
+              <th>Status</th>
+              <th>Presentation Date</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {supervisedProjects.map((project, index) => (
+              <tr key={index}>
+                <td>{project.title}</td>
+                <td>{project.student}</td>
+                <td>
+                  <span
+                    className={`badge ${
+                      project.status.includes('Approved')
+                        ? 'bg-success'
+                        : 'bg-warning'
+                    }`}
+                  >
+                    {project.status}
+                  </span>
+                </td>
+                <td>{project.presentationDate || 'Not Assigned'}</td>
+                <td>
+                  {project.status === 'Pending Approval' && (
+                    <>
+                      <button
+                        className="btn btn-primary btn-sm me-2"
+                        onClick={() => handleApproval(project.student, 'June')}
+                      >
+                        Approve for June
+                      </button>
+                      <button
+                        className="btn btn-warning btn-sm"
+                        onClick={() =>
+                          handleApproval(project.student, 'September')
+                        }
+                      >
+                        Defer to September
+                      </button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

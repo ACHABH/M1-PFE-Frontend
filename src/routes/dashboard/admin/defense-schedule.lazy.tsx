@@ -88,28 +88,30 @@ function RouteComponent() {
         </button>
       </div>
 
-      <table className="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Room</th>
-            <th>Teachers</th>
-            <th>Students</th>
-          </tr>
-        </thead>
-        <tbody>
-          {JuriesSlots.map((slot, index) => (
-            <tr key={index}>
-              <td>{slot.date}</td>
-              <td>{slot.time}</td>
-              <td>{slot.room}</td>
-              <td>{slot.teachers}</td>
-              <td>{slot.students}</td>
+      <div style={{overflowX:"auto"}}>
+        <table className="table table-bordered table-striped" style={{whiteSpace:"nowrap"}}>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Room</th>
+              <th>Teachers</th>
+              <th>Students</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {JuriesSlots.map((slot, index) => (
+              <tr key={index}>
+                <td>{slot.date}</td>
+                <td>{slot.time}</td>
+                <td>{slot.room}</td>
+                <td>{slot.teachers}</td>
+                <td>{slot.students}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Add Juries Slot Modal */}
       {showAddModal && (
