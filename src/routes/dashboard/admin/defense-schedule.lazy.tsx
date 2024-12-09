@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { createLazyFileRoute } from '@tanstack/react-router'
-import AddDefenseSlot from '../../../components/Admin/AddDefenseSlot'
-import { z } from 'zod'
+import * as React from "react";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import AddDefenseSlot from "../../../components/Admin/AddDefenseSlot";
+import { z } from "zod";
 
 const JuriesSlotSchema = z.object({
   date: z.string().date(),
@@ -9,48 +9,48 @@ const JuriesSlotSchema = z.object({
   room: z.string().min(1),
   teachers: z.string().min(1),
   students: z.string().min(1),
-})
+});
 
-type JuriesSlot = z.infer<typeof JuriesSlotSchema>
+type JuriesSlot = z.infer<typeof JuriesSlotSchema>;
 
-export const Route = createLazyFileRoute('/dashboard/admin/defense-schedule')({
+export const Route = createLazyFileRoute("/dashboard/admin/defense-schedule")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
   const [JuriesSlots, setJuriesSlots] = React.useState<JuriesSlot[]>([
     {
-      date: '2024-01-20',
-      time: '10:00 AM',
-      room: 'S101',
-      teachers: 'John Doe, Jane Smith',
-      students: 'Alice Brown, Bob Green',
+      date: "2024-01-20",
+      time: "10:00 AM",
+      room: "S101",
+      teachers: "John Doe, Jane Smith",
+      students: "Alice Brown, Bob Green",
     },
     {
-      date: '2024-01-21',
-      time: '02:00 PM',
-      room: 'N102',
-      teachers: 'Alice Green, Mark Brown',
-      students: 'Bob Johnson, Sarah White',
+      date: "2024-01-21",
+      time: "02:00 PM",
+      room: "N102",
+      teachers: "Alice Green, Mark Brown",
+      students: "Bob Johnson, Sarah White",
     },
-  ])
-  const [showAddModal, setShowAddModal] = React.useState(false)
+  ]);
+  const [showAddModal, setShowAddModal] = React.useState(false);
 
   // Add Juries Slot
-  const handleAddSlot = (newSlot: JuriesSlot) => {
-    setJuriesSlots([...JuriesSlots, newSlot])
-    setShowAddModal(false)
-  }
+  const handleAddSlot = () => {
+    // setJuriesSlots([...JuriesSlots, newSlot]) // handled by query
+    setShowAddModal(false);
+  };
 
   // Cancel Add Juries Slot
   const handleCancelAdd = () => {
-    setShowAddModal(false)
-  }
+    setShowAddModal(false);
+  };
 
   // Export Schedule
   const handleExportSchedule = () => {
     const csvContent = [
-      ['Date', 'Time', 'Room', 'Participants'], // Headers
+      ["Date", "Time", "Room", "Participants"], // Headers
       ...JuriesSlots.map((slot) => [
         slot.date,
         slot.time,
@@ -59,19 +59,20 @@ function RouteComponent() {
         slot.students,
       ]),
     ]
-      .map((row) => row.join(','))
-      .join('\n')
+      .map((row) => row.join(","))
+      .join("\n");
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = 'Juries_schedule.csv'
-    link.click()
-    URL.revokeObjectURL(url)
-  }
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "Juries_schedule.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
-    <div className="mx-auto mt-4" style={{ width: '95%', minHeight: '100vh' }}>
+    <div className="mx-auto mt-4" style={{ width: "95%", minHeight: "100vh" }}>
       <h2>Juries Management</h2>
       <div className="mb-3">
         <button
@@ -88,8 +89,11 @@ function RouteComponent() {
         </button>
       </div>
 
-      <div style={{overflowX:"auto"}}>
-        <table className="table table-bordered table-striped" style={{whiteSpace:"nowrap"}}>
+      <div style={{ overflowX: "auto" }}>
+        <table
+          className="table table-bordered table-striped"
+          style={{ whiteSpace: "nowrap" }}
+        >
           <thead>
             <tr>
               <th>Date</th>
@@ -123,5 +127,5 @@ function RouteComponent() {
         </div>
       )}
     </div>
-  )
+  );
 }
