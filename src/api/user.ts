@@ -21,7 +21,8 @@ export function useGetAll() {
     async queryFn(context) {
       const res = await request("/api/user/all", { signal: context.signal });
       const json = (await res.json()) as FetchResponse<{ users: FullUser[] }>;
-      return json;
+      if (!json.ok) throw new Error(json?.message ?? "Request failed");
+      return json.data.users;
     },
   });
 }
@@ -32,7 +33,8 @@ export function useProfile() {
     async queryFn(context) {
       const res = await request("/api/user", { signal: context.signal });
       const json = (await res.json()) as FetchResponse<{ user: FullUser }>;
-      return json;
+      if (!json.ok) throw new Error(json?.message ?? "Request failed");
+      return json.data.user;
     },
   });
 }

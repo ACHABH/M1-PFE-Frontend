@@ -1,106 +1,110 @@
-import { createLazyFileRoute, Link } from '@tanstack/react-router'
-import EditUser from '../../../components/Admin/EditUser'
-import UploadCSV2 from '../../../components/Admin/UploadCSV2'
-import { useState } from 'react'
-import { z } from 'zod'
+import { useMemo, useState } from "react";
+import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import EditUser from "../../../components/Admin/EditUser";
+import UploadCSV2 from "../../../components/Admin/UploadCSV2";
+import { useGetAll as useGetAllUsers } from "../../../api/user";
 
-export const Route = createLazyFileRoute('/dashboard/admin/user-managment')({
+export const Route = createLazyFileRoute("/dashboard/admin/user-managment")({
   component: RouteComponent,
-})
-
-const UserSchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
-  role: z.string(),
-})
-
-type User = z.infer<typeof UserSchema>
+});
 
 function RouteComponent() {
-  const [users, setUsers] = useState([
-    { name: 'John Doe', email: 'john.doe@example.com', role: 'Teacher' },
-    { name: 'Jane Smith', email: 'jane.smith@example.com', role: 'Student' },
-  ])
+  const { data: users } = useGetAllUsers();
 
-  const [showEditModal, setShowEditModal] = useState(false)
-  const [editingUser, setEditingUser] = useState<User | null>(null)
-  const [showUploadModal, setShowUploadModal] = useState(false)
+  // const [users, setUsers] = useState([
+  //   { name: "John Doe", email: "john.doe@example.com", role: "Teacher" },
+  //   { name: "Jane Smith", email: "jane.smith@example.com", role: "Student" },
+  // ]);
 
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedRole, setSelectedRole] = useState('All')
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 5
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedRole, setSelectedRole] = useState("All");
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   // Filtered and Paginated Users
-  const filteredUsers = users.filter(
-    (user) =>
-      (selectedRole === 'All' || user.role === selectedRole) &&
-      (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.role.toLowerCase().includes(searchTerm.toLowerCase())),
-  )
+  const filteredUsers = useMemo(() => {
+    return (
+      users?.filter(
+        (user) =>
+          (selectedRole === "All" || user.role === selectedRole) &&
+          (user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.role.toLowerCase().includes(searchTerm.toLowerCase()))
+      ) ?? []
+    );
+  }, [searchTerm, selectedRole, users]);
 
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage)
-  const paginatedUsers = filteredUsers.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  )
+  const totalPages = useMemo(
+    () => Math.ceil(filteredUsers.length / itemsPerPage),
+    [filteredUsers.length]
+  );
+  const paginatedUsers = useMemo(() => {
+    return filteredUsers.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    );
+  }, [currentPage, filteredUsers]);
 
   const handleEditUser = (updatedUser: User) => {
     setUsers(
       users.map((user) =>
-        user.email === updatedUser.email ? updatedUser : user,
-      ),
-    )
-    setShowEditModal(false)
-  }
+        user.email === updatedUser.email ? updatedUser : user
+      )
+    );
+    setShowEditModal(false);
+  };
 
   const handleDeleteUser = (email: string) => {
-    setUsers(users.filter((user) => user.email !== email))
-  }
+    setUsers(users.filter((user) => user.email !== email));
+  };
 
   const handleUploadCSV = (file: File) => {
-    alert(`File ${file.name} uploaded! Users will be processed.`)
-    setShowUploadModal(false)
-  }
+    alert(`File ${file.name} uploaded! Users will be processed.`);
+    setShowUploadModal(false);
+  };
 
   const handleBulkDelete = () => {
-    if (window.confirm('Are you sure you want to delete selected users?')) {
-      setUsers(users.filter((user) => !selectedUsers.includes(user.email)))
-      setSelectedUsers([])
+    if (window.confirm("Are you sure you want to delete selected users?")) {
+      setUsers(users.filter((user) => !selectedUsers.includes(user.email)));
+      setSelectedUsers([]);
     }
-  }
+  };
 
   const handleExportUsers = () => {
     const csvContent = [
-      ['Name', 'Email', 'Role'],
+      ["Name", "Email", "Role"],
       ...filteredUsers.map((user) => [user.name, user.email, user.role]),
     ]
-      .map((row) => row.join(','))
-      .join('\n')
+      .map((row) => row.join(","))
+      .join("\n");
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = 'user_list.csv'
-    link.click()
-    URL.revokeObjectURL(url)
-  }
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "user_list.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   const handleCancelUpload = () => {
-    setShowUploadModal(false)
-  }
+    setShowUploadModal(false);
+  };
 
   const handleCancelEdit = () => {
-    setShowEditModal(false)
-    setEditingUser(null)
-  }
+    setShowEditModal(false);
+    setEditingUser(null);
+  };
 
   return (
     // <div className="container mt-4">
-    <div className=" mx-auto mt-4" style={{ width: '95%', minHeight: '100vh' }}>
+    <div className=" mx-auto mt-4" style={{ width: "95%", minHeight: "100vh" }}>
       <h2>User Management</h2>
 
       {/* Search and Filters */}
@@ -148,8 +152,11 @@ function RouteComponent() {
       </div>
 
       {/* User Table */}
-      <div style={{overflowX:"auto"}}>
-        <table className="table table-bordered table-striped" style={{whiteSpace:"nowrap"}}>
+      <div style={{ overflowX: "auto" }}>
+        <table
+          className="table table-bordered table-striped"
+          style={{ whiteSpace: "nowrap" }}
+        >
           <thead>
             <tr>
               <th>
@@ -157,8 +164,8 @@ function RouteComponent() {
                   type="checkbox"
                   onChange={(e) => {
                     setSelectedUsers(
-                      e.target.checked ? users.map((user) => user.email) : [],
-                    )
+                      e.target.checked ? users.map((user) => user.email) : []
+                    );
                   }}
                 />
               </th>
@@ -179,7 +186,7 @@ function RouteComponent() {
                       setSelectedUsers((prev) =>
                         e.target.checked
                           ? [...prev, user.email]
-                          : prev.filter((email) => email !== user.email),
+                          : prev.filter((email) => email !== user.email)
                       )
                     }
                   />
@@ -191,8 +198,8 @@ function RouteComponent() {
                   <button
                     className="btn btn-warning btn-sm me-2"
                     onClick={() => {
-                      setEditingUser(user)
-                      setShowEditModal(true)
+                      setEditingUser(user);
+                      setShowEditModal(true);
                     }}
                   >
                     Edit
@@ -209,7 +216,6 @@ function RouteComponent() {
           </tbody>
         </table>
       </div>
-      
 
       {/* Pagination */}
       <div className="d-flex justify-content-between align-items-center mt-3">
@@ -258,5 +264,5 @@ function RouteComponent() {
         </div>
       )}
     </div>
-  )
+  );
 }

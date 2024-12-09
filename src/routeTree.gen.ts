@@ -55,6 +55,27 @@ const DashboardTeacherDashboardLazyImport = createFileRoute(
 const DashboardTeacherArchiveLazyImport = createFileRoute(
   '/dashboard/teacher/archive',
 )()
+const DashboardStudentSuggestedTopicsLazyImport = createFileRoute(
+  '/dashboard/student/suggested-topics',
+)()
+const DashboardStudentProposeTopicLazyImport = createFileRoute(
+  '/dashboard/student/propose-topic',
+)()
+const DashboardStudentMyProjectsLazyImport = createFileRoute(
+  '/dashboard/student/my-projects',
+)()
+const DashboardStudentHomepageLazyImport = createFileRoute(
+  '/dashboard/student/homepage',
+)()
+const DashboardCompanyProposeTopicsLazyImport = createFileRoute(
+  '/dashboard/company/propose-topics',
+)()
+const DashboardCompanyMyProjectsLazyImport = createFileRoute(
+  '/dashboard/company/my-projects',
+)()
+const DashboardCompanyHomepageLazyImport = createFileRoute(
+  '/dashboard/company/homepage',
+)()
 const DashboardAdminUserManagmentLazyImport = createFileRoute(
   '/dashboard/admin/user-managment',
 )()
@@ -264,6 +285,75 @@ const DashboardTeacherArchiveLazyRoute =
     getParentRoute: () => DashboardTeacherLazyRoute,
   } as any).lazy(() =>
     import('./routes/dashboard/teacher/archive.lazy').then((d) => d.Route),
+  )
+
+const DashboardStudentSuggestedTopicsLazyRoute =
+  DashboardStudentSuggestedTopicsLazyImport.update({
+    id: '/suggested-topics',
+    path: '/suggested-topics',
+    getParentRoute: () => DashboardStudentLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/student/suggested-topics.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const DashboardStudentProposeTopicLazyRoute =
+  DashboardStudentProposeTopicLazyImport.update({
+    id: '/propose-topic',
+    path: '/propose-topic',
+    getParentRoute: () => DashboardStudentLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/student/propose-topic.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const DashboardStudentMyProjectsLazyRoute =
+  DashboardStudentMyProjectsLazyImport.update({
+    id: '/my-projects',
+    path: '/my-projects',
+    getParentRoute: () => DashboardStudentLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/student/my-projects.lazy').then((d) => d.Route),
+  )
+
+const DashboardStudentHomepageLazyRoute =
+  DashboardStudentHomepageLazyImport.update({
+    id: '/homepage',
+    path: '/homepage',
+    getParentRoute: () => DashboardStudentLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/student/homepage.lazy').then((d) => d.Route),
+  )
+
+const DashboardCompanyProposeTopicsLazyRoute =
+  DashboardCompanyProposeTopicsLazyImport.update({
+    id: '/propose-topics',
+    path: '/propose-topics',
+    getParentRoute: () => DashboardCompanyLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/company/propose-topics.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const DashboardCompanyMyProjectsLazyRoute =
+  DashboardCompanyMyProjectsLazyImport.update({
+    id: '/my-projects',
+    path: '/my-projects',
+    getParentRoute: () => DashboardCompanyLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/company/my-projects.lazy').then((d) => d.Route),
+  )
+
+const DashboardCompanyHomepageLazyRoute =
+  DashboardCompanyHomepageLazyImport.update({
+    id: '/homepage',
+    path: '/homepage',
+    getParentRoute: () => DashboardCompanyLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/company/homepage.lazy').then((d) => d.Route),
   )
 
 const DashboardAdminUserManagmentLazyRoute =
@@ -523,6 +613,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAdminUserManagmentLazyImport
       parentRoute: typeof DashboardAdminLazyImport
     }
+    '/dashboard/company/homepage': {
+      id: '/dashboard/company/homepage'
+      path: '/homepage'
+      fullPath: '/dashboard/company/homepage'
+      preLoaderRoute: typeof DashboardCompanyHomepageLazyImport
+      parentRoute: typeof DashboardCompanyLazyImport
+    }
+    '/dashboard/company/my-projects': {
+      id: '/dashboard/company/my-projects'
+      path: '/my-projects'
+      fullPath: '/dashboard/company/my-projects'
+      preLoaderRoute: typeof DashboardCompanyMyProjectsLazyImport
+      parentRoute: typeof DashboardCompanyLazyImport
+    }
+    '/dashboard/company/propose-topics': {
+      id: '/dashboard/company/propose-topics'
+      path: '/propose-topics'
+      fullPath: '/dashboard/company/propose-topics'
+      preLoaderRoute: typeof DashboardCompanyProposeTopicsLazyImport
+      parentRoute: typeof DashboardCompanyLazyImport
+    }
+    '/dashboard/student/homepage': {
+      id: '/dashboard/student/homepage'
+      path: '/homepage'
+      fullPath: '/dashboard/student/homepage'
+      preLoaderRoute: typeof DashboardStudentHomepageLazyImport
+      parentRoute: typeof DashboardStudentLazyImport
+    }
+    '/dashboard/student/my-projects': {
+      id: '/dashboard/student/my-projects'
+      path: '/my-projects'
+      fullPath: '/dashboard/student/my-projects'
+      preLoaderRoute: typeof DashboardStudentMyProjectsLazyImport
+      parentRoute: typeof DashboardStudentLazyImport
+    }
+    '/dashboard/student/propose-topic': {
+      id: '/dashboard/student/propose-topic'
+      path: '/propose-topic'
+      fullPath: '/dashboard/student/propose-topic'
+      preLoaderRoute: typeof DashboardStudentProposeTopicLazyImport
+      parentRoute: typeof DashboardStudentLazyImport
+    }
+    '/dashboard/student/suggested-topics': {
+      id: '/dashboard/student/suggested-topics'
+      path: '/suggested-topics'
+      fullPath: '/dashboard/student/suggested-topics'
+      preLoaderRoute: typeof DashboardStudentSuggestedTopicsLazyImport
+      parentRoute: typeof DashboardStudentLazyImport
+    }
     '/dashboard/teacher/archive': {
       id: '/dashboard/teacher/archive'
       path: '/archive'
@@ -633,6 +772,40 @@ const DashboardAdminLazyRouteChildren: DashboardAdminLazyRouteChildren = {
 const DashboardAdminLazyRouteWithChildren =
   DashboardAdminLazyRoute._addFileChildren(DashboardAdminLazyRouteChildren)
 
+interface DashboardCompanyLazyRouteChildren {
+  DashboardCompanyHomepageLazyRoute: typeof DashboardCompanyHomepageLazyRoute
+  DashboardCompanyMyProjectsLazyRoute: typeof DashboardCompanyMyProjectsLazyRoute
+  DashboardCompanyProposeTopicsLazyRoute: typeof DashboardCompanyProposeTopicsLazyRoute
+}
+
+const DashboardCompanyLazyRouteChildren: DashboardCompanyLazyRouteChildren = {
+  DashboardCompanyHomepageLazyRoute: DashboardCompanyHomepageLazyRoute,
+  DashboardCompanyMyProjectsLazyRoute: DashboardCompanyMyProjectsLazyRoute,
+  DashboardCompanyProposeTopicsLazyRoute:
+    DashboardCompanyProposeTopicsLazyRoute,
+}
+
+const DashboardCompanyLazyRouteWithChildren =
+  DashboardCompanyLazyRoute._addFileChildren(DashboardCompanyLazyRouteChildren)
+
+interface DashboardStudentLazyRouteChildren {
+  DashboardStudentHomepageLazyRoute: typeof DashboardStudentHomepageLazyRoute
+  DashboardStudentMyProjectsLazyRoute: typeof DashboardStudentMyProjectsLazyRoute
+  DashboardStudentProposeTopicLazyRoute: typeof DashboardStudentProposeTopicLazyRoute
+  DashboardStudentSuggestedTopicsLazyRoute: typeof DashboardStudentSuggestedTopicsLazyRoute
+}
+
+const DashboardStudentLazyRouteChildren: DashboardStudentLazyRouteChildren = {
+  DashboardStudentHomepageLazyRoute: DashboardStudentHomepageLazyRoute,
+  DashboardStudentMyProjectsLazyRoute: DashboardStudentMyProjectsLazyRoute,
+  DashboardStudentProposeTopicLazyRoute: DashboardStudentProposeTopicLazyRoute,
+  DashboardStudentSuggestedTopicsLazyRoute:
+    DashboardStudentSuggestedTopicsLazyRoute,
+}
+
+const DashboardStudentLazyRouteWithChildren =
+  DashboardStudentLazyRoute._addFileChildren(DashboardStudentLazyRouteChildren)
+
 interface DashboardTeacherLazyRouteChildren {
   DashboardTeacherArchiveLazyRoute: typeof DashboardTeacherArchiveLazyRoute
   DashboardTeacherDashboardLazyRoute: typeof DashboardTeacherDashboardLazyRoute
@@ -666,16 +839,16 @@ const DashboardTeacherLazyRouteWithChildren =
 
 interface DashboardLazyRouteChildren {
   DashboardAdminLazyRoute: typeof DashboardAdminLazyRouteWithChildren
-  DashboardCompanyLazyRoute: typeof DashboardCompanyLazyRoute
-  DashboardStudentLazyRoute: typeof DashboardStudentLazyRoute
+  DashboardCompanyLazyRoute: typeof DashboardCompanyLazyRouteWithChildren
+  DashboardStudentLazyRoute: typeof DashboardStudentLazyRouteWithChildren
   DashboardTeacherLazyRoute: typeof DashboardTeacherLazyRouteWithChildren
   DashboardIndexLazyRoute: typeof DashboardIndexLazyRoute
 }
 
 const DashboardLazyRouteChildren: DashboardLazyRouteChildren = {
   DashboardAdminLazyRoute: DashboardAdminLazyRouteWithChildren,
-  DashboardCompanyLazyRoute: DashboardCompanyLazyRoute,
-  DashboardStudentLazyRoute: DashboardStudentLazyRoute,
+  DashboardCompanyLazyRoute: DashboardCompanyLazyRouteWithChildren,
+  DashboardStudentLazyRoute: DashboardStudentLazyRouteWithChildren,
   DashboardTeacherLazyRoute: DashboardTeacherLazyRouteWithChildren,
   DashboardIndexLazyRoute: DashboardIndexLazyRoute,
 }
@@ -693,8 +866,8 @@ export interface FileRoutesByFullPath {
   '/auth/one-time-password': typeof AuthOneTimePasswordLazyRoute
   '/auth/reset-password': typeof AuthResetPasswordLazyRoute
   '/dashboard/admin': typeof DashboardAdminLazyRouteWithChildren
-  '/dashboard/company': typeof DashboardCompanyLazyRoute
-  '/dashboard/student': typeof DashboardStudentLazyRoute
+  '/dashboard/company': typeof DashboardCompanyLazyRouteWithChildren
+  '/dashboard/student': typeof DashboardStudentLazyRouteWithChildren
   '/dashboard/teacher': typeof DashboardTeacherLazyRouteWithChildren
   '/owner/owner': typeof OwnerOwnerLazyRoute
   '/dashboard/': typeof DashboardIndexLazyRoute
@@ -708,6 +881,13 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/project-managment': typeof DashboardAdminProjectManagmentLazyRoute
   '/dashboard/admin/supervision': typeof DashboardAdminSupervisionLazyRoute
   '/dashboard/admin/user-managment': typeof DashboardAdminUserManagmentLazyRoute
+  '/dashboard/company/homepage': typeof DashboardCompanyHomepageLazyRoute
+  '/dashboard/company/my-projects': typeof DashboardCompanyMyProjectsLazyRoute
+  '/dashboard/company/propose-topics': typeof DashboardCompanyProposeTopicsLazyRoute
+  '/dashboard/student/homepage': typeof DashboardStudentHomepageLazyRoute
+  '/dashboard/student/my-projects': typeof DashboardStudentMyProjectsLazyRoute
+  '/dashboard/student/propose-topic': typeof DashboardStudentProposeTopicLazyRoute
+  '/dashboard/student/suggested-topics': typeof DashboardStudentSuggestedTopicsLazyRoute
   '/dashboard/teacher/archive': typeof DashboardTeacherArchiveLazyRoute
   '/dashboard/teacher/dashboard': typeof DashboardTeacherDashboardLazyRoute
   '/dashboard/teacher/defense-selction': typeof DashboardTeacherDefenseSelctionLazyRoute
@@ -726,8 +906,8 @@ export interface FileRoutesByTo {
   '/auth/one-time-password': typeof AuthOneTimePasswordLazyRoute
   '/auth/reset-password': typeof AuthResetPasswordLazyRoute
   '/dashboard/admin': typeof DashboardAdminLazyRouteWithChildren
-  '/dashboard/company': typeof DashboardCompanyLazyRoute
-  '/dashboard/student': typeof DashboardStudentLazyRoute
+  '/dashboard/company': typeof DashboardCompanyLazyRouteWithChildren
+  '/dashboard/student': typeof DashboardStudentLazyRouteWithChildren
   '/dashboard/teacher': typeof DashboardTeacherLazyRouteWithChildren
   '/owner/owner': typeof OwnerOwnerLazyRoute
   '/dashboard': typeof DashboardIndexLazyRoute
@@ -741,6 +921,13 @@ export interface FileRoutesByTo {
   '/dashboard/admin/project-managment': typeof DashboardAdminProjectManagmentLazyRoute
   '/dashboard/admin/supervision': typeof DashboardAdminSupervisionLazyRoute
   '/dashboard/admin/user-managment': typeof DashboardAdminUserManagmentLazyRoute
+  '/dashboard/company/homepage': typeof DashboardCompanyHomepageLazyRoute
+  '/dashboard/company/my-projects': typeof DashboardCompanyMyProjectsLazyRoute
+  '/dashboard/company/propose-topics': typeof DashboardCompanyProposeTopicsLazyRoute
+  '/dashboard/student/homepage': typeof DashboardStudentHomepageLazyRoute
+  '/dashboard/student/my-projects': typeof DashboardStudentMyProjectsLazyRoute
+  '/dashboard/student/propose-topic': typeof DashboardStudentProposeTopicLazyRoute
+  '/dashboard/student/suggested-topics': typeof DashboardStudentSuggestedTopicsLazyRoute
   '/dashboard/teacher/archive': typeof DashboardTeacherArchiveLazyRoute
   '/dashboard/teacher/dashboard': typeof DashboardTeacherDashboardLazyRoute
   '/dashboard/teacher/defense-selction': typeof DashboardTeacherDefenseSelctionLazyRoute
@@ -761,8 +948,8 @@ export interface FileRoutesById {
   '/auth/one-time-password': typeof AuthOneTimePasswordLazyRoute
   '/auth/reset-password': typeof AuthResetPasswordLazyRoute
   '/dashboard/admin': typeof DashboardAdminLazyRouteWithChildren
-  '/dashboard/company': typeof DashboardCompanyLazyRoute
-  '/dashboard/student': typeof DashboardStudentLazyRoute
+  '/dashboard/company': typeof DashboardCompanyLazyRouteWithChildren
+  '/dashboard/student': typeof DashboardStudentLazyRouteWithChildren
   '/dashboard/teacher': typeof DashboardTeacherLazyRouteWithChildren
   '/owner/owner': typeof OwnerOwnerLazyRoute
   '/dashboard/': typeof DashboardIndexLazyRoute
@@ -776,6 +963,13 @@ export interface FileRoutesById {
   '/dashboard/admin/project-managment': typeof DashboardAdminProjectManagmentLazyRoute
   '/dashboard/admin/supervision': typeof DashboardAdminSupervisionLazyRoute
   '/dashboard/admin/user-managment': typeof DashboardAdminUserManagmentLazyRoute
+  '/dashboard/company/homepage': typeof DashboardCompanyHomepageLazyRoute
+  '/dashboard/company/my-projects': typeof DashboardCompanyMyProjectsLazyRoute
+  '/dashboard/company/propose-topics': typeof DashboardCompanyProposeTopicsLazyRoute
+  '/dashboard/student/homepage': typeof DashboardStudentHomepageLazyRoute
+  '/dashboard/student/my-projects': typeof DashboardStudentMyProjectsLazyRoute
+  '/dashboard/student/propose-topic': typeof DashboardStudentProposeTopicLazyRoute
+  '/dashboard/student/suggested-topics': typeof DashboardStudentSuggestedTopicsLazyRoute
   '/dashboard/teacher/archive': typeof DashboardTeacherArchiveLazyRoute
   '/dashboard/teacher/dashboard': typeof DashboardTeacherDashboardLazyRoute
   '/dashboard/teacher/defense-selction': typeof DashboardTeacherDefenseSelctionLazyRoute
@@ -812,6 +1006,13 @@ export interface FileRouteTypes {
     | '/dashboard/admin/project-managment'
     | '/dashboard/admin/supervision'
     | '/dashboard/admin/user-managment'
+    | '/dashboard/company/homepage'
+    | '/dashboard/company/my-projects'
+    | '/dashboard/company/propose-topics'
+    | '/dashboard/student/homepage'
+    | '/dashboard/student/my-projects'
+    | '/dashboard/student/propose-topic'
+    | '/dashboard/student/suggested-topics'
     | '/dashboard/teacher/archive'
     | '/dashboard/teacher/dashboard'
     | '/dashboard/teacher/defense-selction'
@@ -844,6 +1045,13 @@ export interface FileRouteTypes {
     | '/dashboard/admin/project-managment'
     | '/dashboard/admin/supervision'
     | '/dashboard/admin/user-managment'
+    | '/dashboard/company/homepage'
+    | '/dashboard/company/my-projects'
+    | '/dashboard/company/propose-topics'
+    | '/dashboard/student/homepage'
+    | '/dashboard/student/my-projects'
+    | '/dashboard/student/propose-topic'
+    | '/dashboard/student/suggested-topics'
     | '/dashboard/teacher/archive'
     | '/dashboard/teacher/dashboard'
     | '/dashboard/teacher/defense-selction'
@@ -877,6 +1085,13 @@ export interface FileRouteTypes {
     | '/dashboard/admin/project-managment'
     | '/dashboard/admin/supervision'
     | '/dashboard/admin/user-managment'
+    | '/dashboard/company/homepage'
+    | '/dashboard/company/my-projects'
+    | '/dashboard/company/propose-topics'
+    | '/dashboard/student/homepage'
+    | '/dashboard/student/my-projects'
+    | '/dashboard/student/propose-topic'
+    | '/dashboard/student/suggested-topics'
     | '/dashboard/teacher/archive'
     | '/dashboard/teacher/dashboard'
     | '/dashboard/teacher/defense-selction'
@@ -974,11 +1189,22 @@ export const routeTree = rootRoute
     },
     "/dashboard/company": {
       "filePath": "dashboard/company.lazy.tsx",
-      "parent": "/dashboard"
+      "parent": "/dashboard",
+      "children": [
+        "/dashboard/company/homepage",
+        "/dashboard/company/my-projects",
+        "/dashboard/company/propose-topics"
+      ]
     },
     "/dashboard/student": {
       "filePath": "dashboard/student.lazy.tsx",
-      "parent": "/dashboard"
+      "parent": "/dashboard",
+      "children": [
+        "/dashboard/student/homepage",
+        "/dashboard/student/my-projects",
+        "/dashboard/student/propose-topic",
+        "/dashboard/student/suggested-topics"
+      ]
     },
     "/dashboard/teacher": {
       "filePath": "dashboard/teacher.lazy.tsx",
@@ -1040,6 +1266,34 @@ export const routeTree = rootRoute
     "/dashboard/admin/user-managment": {
       "filePath": "dashboard/admin/user-managment.lazy.tsx",
       "parent": "/dashboard/admin"
+    },
+    "/dashboard/company/homepage": {
+      "filePath": "dashboard/company/homepage.lazy.tsx",
+      "parent": "/dashboard/company"
+    },
+    "/dashboard/company/my-projects": {
+      "filePath": "dashboard/company/my-projects.lazy.tsx",
+      "parent": "/dashboard/company"
+    },
+    "/dashboard/company/propose-topics": {
+      "filePath": "dashboard/company/propose-topics.lazy.tsx",
+      "parent": "/dashboard/company"
+    },
+    "/dashboard/student/homepage": {
+      "filePath": "dashboard/student/homepage.lazy.tsx",
+      "parent": "/dashboard/student"
+    },
+    "/dashboard/student/my-projects": {
+      "filePath": "dashboard/student/my-projects.lazy.tsx",
+      "parent": "/dashboard/student"
+    },
+    "/dashboard/student/propose-topic": {
+      "filePath": "dashboard/student/propose-topic.lazy.tsx",
+      "parent": "/dashboard/student"
+    },
+    "/dashboard/student/suggested-topics": {
+      "filePath": "dashboard/student/suggested-topics.lazy.tsx",
+      "parent": "/dashboard/student"
     },
     "/dashboard/teacher/archive": {
       "filePath": "dashboard/teacher/archive.lazy.tsx",
