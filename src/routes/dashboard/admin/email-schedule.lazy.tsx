@@ -44,8 +44,8 @@ function RouteComponent() {
   const [dateFilter, setDateFilter] = React.useState('')
 
   // Add Schedule Handler
-  const handleAddSchedule = (newSchedule: Omit<Schedule, 'id'>) => {
-    setSchedules([...schedules, { ...newSchedule, id: Date.now() }])
+  const handleAddSchedule = (/* newSchedule: Omit<Schedule, 'id'> */) => {
+    // setSchedules([...schedules, { ...newSchedule, id: Date.now() }])
     setShowAddModal(false)
     alert('Schedule added successfully!')
   }

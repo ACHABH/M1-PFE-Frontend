@@ -37,7 +37,7 @@ function RouteComponent() {
   const [showAddModal, setShowAddModal] = React.useState(false);
 
   // Add Juries Slot
-  const handleAddSlot = () => {
+  const handleAddSlot = (/* newSlot: JuriesSlot */) => {
     // setJuriesSlots([...JuriesSlots, newSlot]) // handled by query
     setShowAddModal(false);
   };
