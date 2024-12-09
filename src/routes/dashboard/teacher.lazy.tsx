@@ -10,11 +10,14 @@ export const Route = createLazyFileRoute("/dashboard/teacher")({
 });
 
 function Component() {
-  const navigate = useNavigate();
-  const user = useAuth((user) => {
-    if (user?.role === "teacher") return;
-    navigate({ to: "/dashboard" });
-  });
+  // const navigate = useNavigate();
+  // const user = useAuth((user) => {
+  //   if (user?.role === "teacher") return;
+  //   navigate({ to: "/dashboard" });
+  // });
 
-  return (import.meta.env.DEV ? true : user) && <Outlet />;
+  // return (import.meta.env.DEV ? true : user) && <Outlet />;
+  
+  // (import.meta.env.DEV ? true : user)
+  return true && <Outlet />;
 }
