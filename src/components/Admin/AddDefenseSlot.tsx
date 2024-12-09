@@ -64,7 +64,7 @@ export default function AddDefenseSlot({ onAdd, onCancel }: Props) {
         <div className="mb-3">
           <label className="form-label">First Day</label>
           <input
-            {...form.register("startDate")}
+            {...form.register("startDate", { required: true })}
             type="date"
             className="form-control"
             name="date"
@@ -76,7 +76,7 @@ export default function AddDefenseSlot({ onAdd, onCancel }: Props) {
         <div className="mb-3">
           <label className="form-label">Last Day</label>
           <input
-            {...form.register("endDate")}
+            {...form.register("endDate", { required: true })}
             type="date"
             className="form-control"
             name="date"
@@ -88,7 +88,7 @@ export default function AddDefenseSlot({ onAdd, onCancel }: Props) {
         <div className="mb-3">
           <label className="form-label">Starting Time</label>
           <input
-            {...form.register("startTime")}
+            {...form.register("startTime", { required: true })}
             type="time"
             className="form-control"
             name="time"
@@ -100,7 +100,7 @@ export default function AddDefenseSlot({ onAdd, onCancel }: Props) {
         <div className="mb-3">
           <label className="form-label">Ending Time</label>
           <input
-            {...form.register("endTime")}
+            {...form.register("endTime", { required: true })}
             type="time"
             className="form-control"
             name="time"
@@ -112,7 +112,7 @@ export default function AddDefenseSlot({ onAdd, onCancel }: Props) {
         <div className="mb-3">
           <label className="form-label">Rooms (Comma-separated)</label>
           <input
-            {...form.register("rooms")}
+            {...form.register("rooms", { required: true })}
             type="text"
             className="form-control"
             name="rooms"

@@ -77,7 +77,7 @@ export default function AddEmailSchedule({ onAdd, onCancel }: Props) {
         <div className="mb-3">
           <label className="form-label">Receiver</label>
           <select
-            {...form.register("receiver")}
+            {...form.register("receiver", { required: true })}
             className="form-select"
             name="receiver"
             // value={formData.receiver}
@@ -94,7 +94,7 @@ export default function AddEmailSchedule({ onAdd, onCancel }: Props) {
         <div className="mb-3">
           <label className="form-label">Title</label>
           <input
-            {...form.register("title")}
+            {...form.register("title", { required: true })}
             type="text"
             className="form-control"
             name="title"
@@ -106,7 +106,7 @@ export default function AddEmailSchedule({ onAdd, onCancel }: Props) {
         <div className="mb-3">
           <label className="form-label">Description</label>
           <textarea
-            {...form.register("description")}
+            {...form.register("description", { required: true })}
             className="form-control"
             name="description"
             // value={formData.description}
@@ -117,7 +117,7 @@ export default function AddEmailSchedule({ onAdd, onCancel }: Props) {
         <div className="mb-3">
           <label className="form-label">Send When</label>
           <select
-            {...form.register("sendWhen")}
+            {...form.register("sendWhen", { required: true })}
             className="form-select"
             name="sendWhen"
             // value={formData.sendWhen}
@@ -148,7 +148,7 @@ export default function AddEmailSchedule({ onAdd, onCancel }: Props) {
             <div className="mb-3" style={{ width: "47%" }}>
               <label className="form-label">Time</label>
               <input
-                {...form.register("time")}
+                {...form.register("time", { required: true })}
                 type="time"
                 className="form-control"
                 name="time"
