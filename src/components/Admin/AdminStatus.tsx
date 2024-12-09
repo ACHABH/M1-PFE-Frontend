@@ -1,8 +1,4 @@
-import React from 'react';
-
-interface AdminStatusProps {}
-
-const AdminStatus: React.FC<AdminStatusProps> = () => {
+export default function AdminStatus() {
   return (
     <div className="container mt-4">
       <div className="row">
@@ -33,6 +29,4 @@ const AdminStatus: React.FC<AdminStatusProps> = () => {
       </div>
     </div>
   );
-};
-
-export default AdminStatus;
+}
