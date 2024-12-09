@@ -6,7 +6,7 @@ import {
 import { useAuth } from "../api/auth";
 import Container from "react-bootstrap/esm/Container";
 import SideMenu from "../components/side-menu";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const Route = createLazyFileRoute("/dashboard")({
   component: Component,
@@ -24,6 +24,20 @@ function Component() {
   ) => {
     setter((prev) => !prev);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 769) {
+        setIsSidebarCollapsed(true);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     (import.meta.env.DEV ? true : user) && (

@@ -9,10 +9,10 @@ type Props = {
 
 export default function SideMenu({ userRole }: Props) {
   const [menuOpen, setMenuOpen] = useState({
-    isUserManagement: false,
-    isScheduleManagement: false,
-    isProjectManagement: false,
-    isTeacherScheduleManagement: false,
+    isUserManagement: true,
+    isScheduleManagement: true,
+    isProjectManagement: true,
+    isTeacherScheduleManagement: true,
   });
   // const [isUserManagementMenuOpen, setIsUserManagementMenuOpen] =
   //   useState(true);
@@ -255,6 +255,128 @@ export default function SideMenu({ userRole }: Props) {
             )}
           </div>
         </Nav>
+      )}
+      {userRole === "student" && (
+        <Nav className="flex-column">
+        <div className="dashboard py-3 px-2 myBorder-bottom">
+          <Link to="/dashboard/student/homepage" className="aside-option">
+            <i className="bi-house me-2"></i>
+            Dashboard
+          </Link>
+        </div>
+
+        <div className="project-management py-3 px-2 myBorder-bottom">
+          <button
+            className="side-menu-btn btn d-flex justify-content-between align-items-center px-3"
+            style={{ width: "100%" }}
+            onClick={() =>
+              setMenuOpen((prev) => ({
+                ...prev,
+                isProjectManagement: !prev.isProjectManagement,
+              }))
+            }
+          >
+            <h6 className="text-left">Project Management</h6>
+            <i
+              className={`bi ${menuOpen.isProjectManagement ? "bi-chevron-up" : "bi-chevron-down"}`}
+            ></i>
+          </button>
+          {menuOpen.isProjectManagement && (
+            <div className="project-management-menu">
+              <Link
+                to="/dashboard/student/my-projects"
+                className="aside-option"
+              >
+                <i className="bi bi-collection me-2"></i>
+                My Projects
+              </Link>
+              <Link
+                to="/dashboard/student/propose-topic"
+                className="aside-option"
+              >
+                <i className="bi bi-person-check me-2"></i>
+                Propose Topic
+              </Link>
+            </div>
+          )}
+        </div>
+
+        <div className="schedule-management py-3 px-2">
+          <button
+            className="side-menu-btn btn d-flex justify-content-between align-items-center px-3"
+            style={{ width: "100%" }}
+            onClick={() =>
+              setMenuOpen((prev) => ({
+                ...prev,
+                isTeacherScheduleManagement:
+                  !prev.isTeacherScheduleManagement,
+              }))
+            }
+          >
+            <h6 className="text-left">Schedule</h6>
+            <i
+              className={`bi ${menuOpen.isTeacherScheduleManagement ? "bi-chevron-up" : "bi-chevron-down"}`}
+            ></i>
+          </button>
+          {menuOpen.isTeacherScheduleManagement && (
+            <div className="schedule-management-menu">
+              <Link
+                to="/dashboard/student/suggested-topics"
+                className="aside-option"
+              >
+                <i className="bi-calendar-event me-2"></i>
+                Suggested Topics
+              </Link>
+            </div>
+          )}
+        </div>
+      </Nav>
+      )}
+      {userRole === "company" && (
+        <Nav className="flex-column">
+        <div className="dashboard py-3 px-2 myBorder-bottom">
+          <Link to="/dashboard/company/homepage" className="aside-option">
+            <i className="bi-house me-2"></i>
+            Dashboard
+          </Link>
+        </div>
+
+        <div className="project-management py-3 px-2 myBorder-bottom">
+          <button
+            className="side-menu-btn btn d-flex justify-content-between align-items-center px-3"
+            style={{ width: "100%" }}
+            onClick={() =>
+              setMenuOpen((prev) => ({
+                ...prev,
+                isProjectManagement: !prev.isProjectManagement,
+              }))
+            }
+          >
+            <h6 className="text-left">Project Management</h6>
+            <i
+              className={`bi ${menuOpen.isProjectManagement ? "bi-chevron-up" : "bi-chevron-down"}`}
+            ></i>
+          </button>
+          {menuOpen.isProjectManagement && (
+            <div className="project-management-menu">
+              <Link
+                to="/dashboard/company/my-projects"
+                className="aside-option"
+              >
+                <i className="bi bi-collection me-2"></i>
+                My Projects
+              </Link>
+              <Link
+                to="/dashboard/company/propose-topics"
+                className="aside-option"
+              >
+                <i className="bi bi-person-check me-2"></i>
+                Propose Topic
+              </Link>
+            </div>
+          )}
+        </div>
+      </Nav>
       )}
     </Nav>
     //  </div>

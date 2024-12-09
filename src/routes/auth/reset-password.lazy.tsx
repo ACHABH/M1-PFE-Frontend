@@ -36,11 +36,12 @@ function RouteComponent() {
   });
 
   return (
+    
+    <>
     <Form
       onSubmit={form.onSubmit((data) => mutateAsync(data))}
-      className="justify-content-center p-4 shadow mt-5"
+      className="justify-content-center p-4 shadow mt-5 login-form bg-white"
       style={{
-        width: "30%",
         margin: "auto",
         borderRadius: "20px",
         border: "1.5px solid #ccc",
@@ -92,5 +93,24 @@ function RouteComponent() {
         Reset Password
       </Button>
     </Form>
+    <style>{`
+        @media (min-width: 769px) {
+          .login-form{
+            width: 30vw;
+          }
+        }
+        @media (min-width:478px) and (max-width: 768px) {
+          .login-form{
+            width: 70vw;
+          }
+        }
+        @media (max-width:477px){
+          .login-form{
+            width: 95vw;
+          }
+        }
+      `}
+      </style>
+    </>
   );
 }

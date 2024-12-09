@@ -16,5 +16,5 @@ function Component() {
     navigate({ to: "/dashboard" });
   });
 
-  return  (import.meta.env.DEV ? true : user) && <Outlet />;
+  return  (import.meta.env.DEV ? true : user)  && <Outlet />;
 }
