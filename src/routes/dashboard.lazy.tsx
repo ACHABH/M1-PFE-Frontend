@@ -15,11 +15,13 @@ export const Route = createLazyFileRoute("/dashboard")({
 function Component() {
   const navigate = useNavigate();
   const user = useAuth((user) => {
-    if (user) return;
+    if (user || import.meta.env.DEV) return;
     navigate({ to: "/auth/login" });
   });
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const toggleMenu = (setter: React.Dispatch<React.SetStateAction<boolean>>) => {
+  const toggleMenu = (
+    setter: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
     setter((prev) => !prev);
   };
 
@@ -31,18 +33,20 @@ function Component() {
       >
         <div style={{ display: "flex", height: "100vh" }}>
           <div style={{ height: "100vh" }} className="bg-white">
-            {isSidebarCollapsed && <SideMenu userRole={user?.role} />}
+            {isSidebarCollapsed && <SideMenu userRole={user?.role ?? ""} />}
           </div>
           <div style={{ height: "100vh" }} className="mx-auto content">
             <button
               onClick={() => toggleMenu(setIsSidebarCollapsed)}
               className="collapse-toggle btn btn-primary"
             >
-              <i className={` bi ${isSidebarCollapsed ? "bi-x" : "bi-list"}`}></i>
+              <i
+                className={` bi ${isSidebarCollapsed ? "bi-x" : "bi-list"}`}
+              ></i>
             </button>
             <Outlet />
           </div>
-        <style>{`
+          <style>{`
           @media (max-width: 768px) {
             .content {
               width: 100vw;

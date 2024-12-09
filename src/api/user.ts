@@ -1,4 +1,4 @@
-import type { Prettier } from "../types/util";
+import type { Prettier, StrictPick } from "../types/util";
 import type { FetchResponse } from "../types/http";
 import type { Admin, Company, Student, Teacher, User } from "../types/db";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -24,6 +24,7 @@ export function useGetAll() {
       if (!json.ok) throw new Error(json?.message ?? "Request failed");
       return json.data.users;
     },
+    initialData: [],
   });
 }
 
@@ -50,14 +51,22 @@ export function useCreate() {
   });
 }
 
+type UseUpdateArgs = {
+  user_id?: number;
+  body: object;
+};
+
 export function useUpdate() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn(body: object) {
-      return request("/api/user", {
-        method: "PUT",
-        body: JSON.stringify(body),
-      });
+    mutationFn(args: UseUpdateArgs) {
+      return request(
+        `/api/user?user_id=${encodeURIComponent(args.user_id ?? 0)}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(args.body),
+        }
+      );
     },
     async onSuccess(res) {
       if (!res.ok) return;
@@ -73,8 +82,8 @@ export function useUpdate() {
 export function useDelete() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn() {
-      return request("/api/user", {
+    mutationFn(user_id?: number) {
+      return request(`/api/user?user_id=${encodeURIComponent(user_id ?? 0)}`, {
         method: "DELETE",
       });
     },

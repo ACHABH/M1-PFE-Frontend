@@ -1,20 +1,107 @@
+import type { ColumnDef } from "@tanstack/react-table";
+import type { User } from "../../../types/db";
 import { useMemo, useState } from "react";
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import EditUser from "../../../components/Admin/EditUser";
 import UploadCSV2 from "../../../components/Admin/UploadCSV2";
-import { useGetAll as useGetAllUsers } from "../../../api/user";
+import {
+  useGetAll as useGetAllUsers,
+  useDelete as useDeleteUser,
+} from "../../../api/user";
+import Table from "../../../components/Table";
 
 export const Route = createLazyFileRoute("/dashboard/admin/user-managment")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { data: users } = useGetAllUsers();
+  const { mutateAsync: deleteUser } = useDeleteUser();
+  const [users, setUsers] = useState([
+    {
+      id: 1,
+      first_name: "John",
+      last_name: "Doe",
+      email: "john.doe@example.com",
+      role: "Teacher",
+    },
+    {
+      id: 2,
+      first_name: "Jane",
+      last_name: "Smith",
+      email: "jane.smith@example.com",
+      role: "Student",
+    },
+  ]);
 
-  // const [users, setUsers] = useState([
-  //   { name: "John Doe", email: "john.doe@example.com", role: "Teacher" },
-  //   { name: "Jane Smith", email: "jane.smith@example.com", role: "Student" },
-  // ]);
+  // const { data: users } = useGetAllUsers();
+
+  // const handleEditUser = (updatedUser: User) => {
+  //   setUsers(
+  //     users.map((user) =>
+  //       user.email === updatedUser.email ? updatedUser : user
+  //     )
+  //   );
+  //   setShowEditModal(false);
+  // };
+
+  // const handleDeleteUser = (email: string) => {
+  //   setUsers(users.filter((user) => user.email !== email));
+  // };
+
+  const columns = useMemo<ColumnDef<User>[]>(() => {
+    return [
+      {
+        accessorKey: "first_name",
+        header: "First name",
+        // cell: (info) => info.getValue(),
+      },
+      {
+        accessorKey: "last_name",
+        header: "Last name",
+        // cell: (info) => info.getValue(),
+      },
+      {
+        accessorKey: "email",
+        header: "Email",
+        // cell: (info) => info.getValue(),
+      },
+      {
+        accessorKey: "role",
+        header: "Role",
+      },
+      {
+        accessorKey: "id",
+        header: "Actions",
+        cell(props) {
+          const userId = props.getValue<number>();
+
+          return (
+            <>
+              <button
+                type="button"
+                className="btn btn-warning btn-sm me-2"
+                onClick={() => {
+                  // setEditingUser(user)
+                  // setShowEditModal(true);
+                }}
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger btn-sm"
+                onClick={() => {
+                  deleteUser(userId);
+                }}
+              >
+                Delete
+              </button>
+            </>
+          );
+        },
+      },
+    ];
+  }, [deleteUser]);
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -23,8 +110,8 @@ function RouteComponent() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRole, setSelectedRole] = useState("All");
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const itemsPerPage = 5;
 
   // Filtered and Paginated Users
   const filteredUsers = useMemo(() => {
@@ -40,29 +127,17 @@ function RouteComponent() {
     );
   }, [searchTerm, selectedRole, users]);
 
-  const totalPages = useMemo(
-    () => Math.ceil(filteredUsers.length / itemsPerPage),
-    [filteredUsers.length]
-  );
-  const paginatedUsers = useMemo(() => {
-    return filteredUsers.slice(
-      (currentPage - 1) * itemsPerPage,
-      currentPage * itemsPerPage
-    );
-  }, [currentPage, filteredUsers]);
+  // const totalPages = useMemo(
+  //   () => Math.ceil(filteredUsers.length / itemsPerPage),
+  //   [filteredUsers.length]
+  // );
 
-  const handleEditUser = (updatedUser: User) => {
-    setUsers(
-      users.map((user) =>
-        user.email === updatedUser.email ? updatedUser : user
-      )
-    );
-    setShowEditModal(false);
-  };
-
-  const handleDeleteUser = (email: string) => {
-    setUsers(users.filter((user) => user.email !== email));
-  };
+  // const paginatedUsers = useMemo(() => {
+  //   return filteredUsers.slice(
+  //     (currentPage - 1) * itemsPerPage,
+  //     currentPage * itemsPerPage
+  //   );
+  // }, [currentPage, filteredUsers]);
 
   const handleUploadCSV = (file: File) => {
     alert(`File ${file.name} uploaded! Users will be processed.`);
@@ -79,7 +154,12 @@ function RouteComponent() {
   const handleExportUsers = () => {
     const csvContent = [
       ["Name", "Email", "Role"],
-      ...filteredUsers.map((user) => [user.name, user.email, user.role]),
+      ...filteredUsers.map((user) => [
+        user.first_name,
+        user.last_name,
+        user.email,
+        user.role,
+      ]),
     ]
       .map((row) => row.join(","))
       .join("\n");
@@ -152,93 +232,7 @@ function RouteComponent() {
       </div>
 
       {/* User Table */}
-      <div style={{ overflowX: "auto" }}>
-        <table
-          className="table table-bordered table-striped"
-          style={{ whiteSpace: "nowrap" }}
-        >
-          <thead>
-            <tr>
-              <th>
-                <input
-                  type="checkbox"
-                  onChange={(e) => {
-                    setSelectedUsers(
-                      e.target.checked ? users.map((user) => user.email) : []
-                    );
-                  }}
-                />
-              </th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedUsers.map((user) => (
-              <tr key={user.email}>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={selectedUsers.includes(user.email)}
-                    onChange={(e) =>
-                      setSelectedUsers((prev) =>
-                        e.target.checked
-                          ? [...prev, user.email]
-                          : prev.filter((email) => email !== user.email)
-                      )
-                    }
-                  />
-                </td>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.role}</td>
-                <td>
-                  <button
-                    className="btn btn-warning btn-sm me-2"
-                    onClick={() => {
-                      setEditingUser(user);
-                      setShowEditModal(true);
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDeleteUser(user.email)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pagination */}
-      <div className="d-flex justify-content-between align-items-center mt-3">
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <div>
-          <button
-            className="btn btn-secondary btn-sm me-2"
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage(currentPage - 1)}
-          >
-            Previous
-          </button>
-          <button
-            className="btn btn-secondary btn-sm"
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage(currentPage + 1)}
-          >
-            Next
-          </button>
-        </div>
-      </div>
+      <Table data={users} columns={columns} />
 
       {showEditModal && editingUser && (
         <div
@@ -247,7 +241,8 @@ function RouteComponent() {
         >
           <EditUser
             user={editingUser}
-            onUpdate={handleEditUser}
+            // onUpdate={handleEditUser}
+            onUpdate={() => {}}
             onCancel={handleCancelEdit}
           />
         </div>
