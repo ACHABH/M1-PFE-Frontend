@@ -92,7 +92,11 @@ export default function Table<
           {virtualizer.getVirtualItems().map((virtualRow) => {
             const row = rows[virtualRow.index];
             return (
-              <tr key={row.id}>
+              <tr
+                data-index={virtualRow.index}
+                key={row.id}
+                ref={(node) => virtualizer.measureElement(node)}
+              >
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

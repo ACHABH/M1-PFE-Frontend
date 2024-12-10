@@ -9,9 +9,7 @@ import { USER_ROLE, type UserRole } from "../../../constant/enum";
 import EditUser from "../../../components/Admin/EditUser";
 import UploadCSV2 from "../../../components/Admin/UploadCSV2";
 import Table from "../../../components/table";
-import {
-  useDelete as useDeleteUser,
-} from "../../../api/user";
+import { useDelete as useDeleteUser } from "../../../api/user";
 
 export const Route = createLazyFileRoute("/dashboard/admin/user-management")({
   component: Component,
@@ -19,22 +17,37 @@ export const Route = createLazyFileRoute("/dashboard/admin/user-management")({
 
 function Component() {
   const { mutateAsync: deleteUser } = useDeleteUser();
-  const [users] = useState([
-    {
-      id: 1,
-      first_name: "John",
-      last_name: "Doe",
-      email: "john.doe@example.com",
-      role: "teacher",
-    },
-    {
-      id: 2,
-      first_name: "Jane",
-      last_name: "Smith",
-      email: "jane.smith@example.com",
-      role: "student",
-    },
-  ]);
+
+  const users = useMemo(() => {
+    const newUsers = [];
+    for (let i = 0; i <= 1000; i++) {
+      newUsers.push({
+        id: i,
+        first_name: `First${i}`,
+        last_name: `Last${i}`,
+        email: `user${i}@example.com`,
+        role: i % 2 === 0 ? "teacher" : "student",
+      });
+    }
+    return newUsers;
+  }, []);
+
+  // const [users] = useState([
+  //   {
+  //     id: 1,
+  //     first_name: "John",
+  //     last_name: "Doe",
+  //     email: "john.doe@example.com",
+  //     role: "teacher",
+  //   },
+  //   {
+  //     id: 2,
+  //     first_name: "Jane",
+  //     last_name: "Smith",
+  //     email: "jane.smith@example.com",
+  //     role: "student",
+  //   },
+  // ]);
 
   // const { data: users } = useGetAllUsers();
 
