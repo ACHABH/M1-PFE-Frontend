@@ -51,7 +51,7 @@ export default defineConfig({
         ],
       },
       devOptions: {
-        enabled: true, // Enable PWA in development mode
+        enabled: false, // Enable PWA in development mode
       },
     }),
   ],
