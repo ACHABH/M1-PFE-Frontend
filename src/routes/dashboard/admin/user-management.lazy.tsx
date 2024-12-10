@@ -3,22 +3,24 @@ import type { User } from "../../../types/db";
 import { useMemo, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import { USER_ROLE, type UserRole } from "../../../constant/enum";
 import EditUser from "../../../components/Admin/EditUser";
 import UploadCSV2 from "../../../components/Admin/UploadCSV2";
+import Table from "../../../components/table";
 import {
   useGetAll as useGetAllUsers,
   useDelete as useDeleteUser,
 } from "../../../api/user";
-import Table from "../../../components/table";
 
-export const Route = createLazyFileRoute("/dashboard/admin/user-managment")({
-  component: RouteComponent,
+export const Route = createLazyFileRoute("/dashboard/admin/user-management")({
+  component: Component,
 });
 
-function RouteComponent() {
+function Component() {
   const { mutateAsync: deleteUser } = useDeleteUser();
-  const [users, setUsers] = useState([
+  const [users] = useState([
     {
       id: 1,
       first_name: "John",
@@ -100,7 +102,8 @@ function RouteComponent() {
                 variant="danger"
                 size="sm"
                 onClick={() => {
-                  deleteUser(userId);
+                  const confirmation = window.confirm("Confirm delete action?");
+                  if (confirmation) deleteUser(userId);
                 }}
               >
                 Delete
@@ -117,14 +120,14 @@ function RouteComponent() {
   const [showUploadModal, setShowUploadModal] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedRole, setSelectedRole] = useState("All");
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
+  // const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 
   const filteredUsers = useMemo(() => {
     return (
       users?.filter(
         (user) =>
-          (selectedRole === "All" || user.role === selectedRole) &&
+          (selectedRole === null || user.role === selectedRole) &&
           (user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -138,12 +141,12 @@ function RouteComponent() {
     setShowUploadModal(false);
   };
 
-  const handleBulkDelete = () => {
-    if (window.confirm("Are you sure you want to delete selected users?")) {
-      setUsers(users.filter((user) => !selectedUsers.includes(user.email)));
-      setSelectedUsers([]);
-    }
-  };
+  // const handleBulkDelete = () => {
+  //   if (window.confirm("Are you sure you want to delete selected users?")) {
+  //     setUsers(users.filter((user) => !selectedUsers.includes(user.email)));
+  //     setSelectedUsers([]);
+  //   }
+  // };
 
   const handleExportUsers = () => {
     const csvContent = [
@@ -177,55 +180,68 @@ function RouteComponent() {
   };
 
   return (
-    // <div className="container mt-4">
-    <div className=" mx-auto mt-4" style={{ width: "95%", minHeight: "100vh" }}>
-      <h2>User Management</h2>
+    <Container as="div" style={{ width: "95%", minHeight: "100vh" }}>
+      <h1>User Management</h1>
 
       {/* Search and Filters */}
-      <div className="mb-3">
-        <input
+      <Container as="div" style={{ display: "flex", gap: 5, marginBottom: 3 }}>
+        <Form.Control
           type="text"
-          className="form-control mb-2"
+          className="mb-2"
+          style={{ width: "70%" }}
           placeholder="Search by name, email, or role"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <select
-          className="form-select w-auto d-inline mb-2"
-          value={selectedRole}
-          onChange={(e) => setSelectedRole(e.target.value)}
+        <Form.Select
+          className="mb-2"
+          style={{ width: "30%" }}
+          value={selectedRole ?? ""}
+          onChange={(e) =>
+            setSelectedRole((e.target.value as UserRole) || null)
+          }
         >
-          <option value="All">All</option>
-          <option value="Student">Student</option>
-          <option value="Teacher">Teacher</option>
-          <option value="Company">Company</option>
-        </select>
-        <button
-          className="btn btn-danger ms-2"
+          <option value="">All</option>
+          {USER_ROLE.map((role) =>
+            role === "admin" || role === "owner" ? null : (
+              <option key={role} value={role}>
+                {role}
+              </option>
+            )
+          )}
+        </Form.Select>
+      </Container>
+      <Container as="div" style={{ display: "flex", gap: 5, marginBottom: 3 }}>
+        {/* <Button
+          type="button"
+          variant="danger"
+          className="ms-2"
           onClick={handleBulkDelete}
           disabled={selectedUsers.length === 0}
         >
           Delete Selected
-        </button>
-        <button className="btn btn-secondary ms-2" onClick={handleExportUsers}>
-          Export User List
-        </button>
-      </div>
-
-      {/* Actions */}
-      <div className="mb-3">
+        </Button> */}
         <Link className="btn btn-primary" to="/dashboard/admin/add-user">
           Add User
         </Link>
-        <button
-          className="btn btn-secondary ms-2"
+        <Button
+          type="button"
+          variant="secondary"
+          className="ms-2"
+          onClick={handleExportUsers}
+        >
+          Export User List
+        </Button>
+        <Button
+          type="button"
+          variant="secondary"
+          className="ms-2"
           onClick={() => setShowUploadModal(true)}
         >
           Upload CSV
-        </button>
-      </div>
+        </Button>
+      </Container>
 
-      {/* User Table */}
       <Table data={filteredUsers} columns={columns} />
 
       {showEditModal && editingUser && (
@@ -252,6 +268,6 @@ function RouteComponent() {
           />
         </div>
       )}
-    </div>
+    </Container>
   );
 }
