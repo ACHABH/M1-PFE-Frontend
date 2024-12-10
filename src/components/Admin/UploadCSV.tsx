@@ -22,7 +22,7 @@ export default function UploadCSV(props: Props) {
   };
 
   return (
-    <div style={style} className="bg-white shadow p-4">
+    <div style={style} className="component-bg shadow p-4">
       <div>
         <p className="test-left">Upload a CSV file</p>
       </div>

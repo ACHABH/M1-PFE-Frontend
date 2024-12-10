@@ -30,7 +30,7 @@ const UploadCSV2: React.FC<UploadCSV2Props> = ({ onUpload, onCancel }) => {
   };
 
   return (
-    <div className="container mt-4 mb-4 bg-white shadow p-3 rounded" style={{ width: '400px' }}>
+    <div className="container mt-4 mb-4 component-bg shadow p-3 rounded" style={{ width: '400px' }}>
       <h3>Upload CSV</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

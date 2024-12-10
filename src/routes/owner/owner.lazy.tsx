@@ -161,7 +161,7 @@ function Component() {
         >
           <form
             onSubmit={handleSubmit}
-            className="bg-white p-4 rounded shadow"
+            className="component-bg p-4 rounded shadow"
             style={{ width: "400px" }}
           >
             <h4>{editing ? "Edit Admin" : "Add Admin"}</h4>

@@ -17,7 +17,7 @@ const EditUser = ({ user, onUpdate, onCancel }) => {
   };
 
   return (
-    <div className="container mt-4 bg-white shadow my-3 p-3" style={{borderRadius:"15px", width:"400px"}}>
+    <div className="container mt-4 component-bg shadow my-3 p-3" style={{borderRadius:"15px", width:"400px"}}>
       <h3>Edit User</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

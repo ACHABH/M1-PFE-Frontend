@@ -15,7 +15,7 @@ const EmailTemplateForm = ({ template, onSave, onCancel }) => {
   };
 
   return (
-    <div className="container my-4 bg-white shadow p-3 rounded" style={{ width: '550px' }}>
+    <div className="container my-4 component-bg shadow p-3 rounded" style={{ width: '550px' }}>
       <h4>{template ? 'Edit Template' : 'Add New Template'}</h4>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

@@ -48,7 +48,7 @@ function RouteComponent() {
     setSelectedProject(null)
   }
 
-  
+
 
   return (
     <div className="mx-auto mt-4" style={{ width: '95%', minHeight: '100vh' }}>
@@ -91,7 +91,7 @@ function RouteComponent() {
           style={{ zIndex: 1050 }}
         >
           <div
-            className="bg-white p-4 rounded shadow"
+            className="component-bg p-4 rounded shadow"
             style={{ width: '400px' }}
           >
             <h5>Assign Supervisor for "{selectedProject}"</h5>

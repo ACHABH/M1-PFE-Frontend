@@ -39,7 +39,7 @@ export default function SideMenu({ userRole }: Props) {
   }, []);
 
   return (
-    <Nav className="d-flex flex-column" style={{minHeight: "100vh", position: "sticky"}}>
+    <Nav className="d-flex flex-column component-bg" style={{minHeight: "100vh", position: "sticky"}}>
       {userRole === "teacher" && (
         <Nav className="flex-column">
           <div className="dashboard py-3 px-2 myBorder-bottom">

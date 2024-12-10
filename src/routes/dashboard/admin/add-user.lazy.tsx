@@ -67,7 +67,7 @@ function Component() {
   return (
     <Form
       onSubmit={form.onSubmit((data) => createUser(data))}
-      className="d-flex justify-content-between flex-wrap bg-white p-4 shadow my-4"
+      className="d-flex justify-content-between flex-wrap component-bg p-4 shadow my-4"
       style={{
         width: "60%",
         margin: "auto",

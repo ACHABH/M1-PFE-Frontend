@@ -51,7 +51,7 @@ export default function AddDefenseSlot({ onAdd, onCancel }: Props) {
 
   return (
     <div
-      className="container my-4 bg-white shadow p-3 rounded"
+      className="container my-4 component-bg shadow p-3 rounded"
       style={{ width: "500px" }}
     >
       <h3>Add Jurie Slot</h3>

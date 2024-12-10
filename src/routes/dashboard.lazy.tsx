@@ -47,7 +47,7 @@ function Component() {
         fluid
       >
         <div style={{ display: "flex", height: "100vh" }}>
-          <div style={{ height: "100vh" }} className="bg-white side-menu-container">
+          <div style={{ height: "100vh" }} className="side-menu-container">
             {isSidebarCollapsed && <SideMenu userRole={user?.role ?? "admin"} />}
           </div>
           <div style={{ height: "100vh" }} className="mx-auto content">
