@@ -32,3 +32,11 @@ export function useGetOne(id: number) {
     },
   });
 }
+
+export function useDelete() {
+  return {
+    mutateAsync: async (projectId: number) => {
+      // some async operation
+    }
+  };
+}

@@ -1,12 +1,19 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import type { Project } from "../../../types/db";
 import AddPFEProposal from "../../../components/Admin/AddPFEProposal";
+import { ColumnDef } from "@tanstack/react-table";
+import Container from "react-bootstrap/esm/Container";
+import Button from "react-bootstrap/esm/Button";
+import { useDelete as useDeleteProject } from "../../../api/project";
+import Table from "../../../components/table";
 
 export const Route = createLazyFileRoute("/dashboard/admin/pfe-proposals")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const { mutateAsync: deleteProject } = useDeleteProject();
   const [proposals, setProposals] = useState([
     {
       title: "AI Research",
@@ -38,6 +45,53 @@ function RouteComponent() {
     setShowAddModal(false);
   };
 
+  const columns = useMemo<ColumnDef<Project>[]>(() => {
+    return [
+      {
+        accessorKey: "title",
+        header: "Title",
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        accessorKey: "type",
+        header: "Type",
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        accessorKey: "description",
+        header: "Description",
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        accessorKey: "id",
+        header: "Actions",
+        enableSorting: false,
+        cell(props) {
+          const projectId = props.getValue<number>();
+          return (
+            <Container as="div" style={{ display: "flex", gap: 5 }}>
+              <Button
+                type="button"
+                variant="danger"
+                size="sm"
+                onClick={() => {
+                  const confirmation = window.confirm("Confirm delete action?");
+                  if (confirmation) deleteProject(projectId);
+                }}
+              >
+                Delete
+              </Button>
+            </Container>
+          );
+        },
+      },
+    ];
+  }, [deleteProject]);
+
+
   return (
     <div
       className=" mx-auto mt-2, mb-3"
@@ -50,7 +104,7 @@ function RouteComponent() {
       >
         Add PFE Proposal
       </button>
-      <table className="table table-bordered table-striped">
+      {/* <table className="table table-bordered table-striped">
         <thead>
           <tr>
             <th>Title</th>
@@ -76,7 +130,8 @@ function RouteComponent() {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
+      <Table columns={columns} data={proposals} />
 
       {showAddModal && (
         <div
