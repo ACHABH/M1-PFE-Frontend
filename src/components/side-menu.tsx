@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Nav } from "react-bootstrap";
 import { useState, useEffect } from "react";
+import { Sticky } from "react-bootstrap-icons";
 
 type Props = {
   userRole: string;
@@ -39,7 +40,7 @@ export default function SideMenu({ userRole }: Props) {
   }, []);
 
   return (
-    <Nav className="d-flex flex-column">
+    <Nav className="d-flex flex-column" style={{minHeight: "100vh", position: "sticky"}}>
       {userRole === "teacher" && (
         <Nav className="flex-column">
           <div className="dashboard py-3 px-2 myBorder-bottom">
