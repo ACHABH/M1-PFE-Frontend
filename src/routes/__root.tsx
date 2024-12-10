@@ -1,4 +1,5 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import { Suspense } from "react";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -9,7 +10,6 @@ import { useTheme } from "../contexts/theme";
 import NavigationMotionLayout from "../layout/navigation-motion";
 import NotFound from "../not-found";
 import { useAuth, useLogout } from "../api/auth";
-import { Suspense, useState } from "react";
 import Loading from "../loading";
 
 function ThemeMode() {

@@ -18,7 +18,7 @@ function Component() {
     if (user || import.meta.env.DEV) return;
     navigate({ to: "/auth/login" });
   });
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const toggleMenu = (
     setter: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
@@ -46,8 +46,8 @@ function Component() {
         fluid
       >
         <div style={{ display: "flex", height: "100vh" }}>
-          <div style={{ height: "100vh" }} className="bg-white">
-            {isSidebarCollapsed && <SideMenu userRole={user?.role ?? ""} />}
+          <div style={{ height: "100vh" }} className="bg-white side-menu-container">
+            {isSidebarCollapsed && <SideMenu userRole={user?.role ?? "admin"} />}
           </div>
           <div style={{ height: "100vh" }} className="mx-auto content">
             <button
