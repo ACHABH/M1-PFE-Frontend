@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Nav } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { Sticky } from "react-bootstrap-icons";
 
 type Props = {
   userRole: string;
@@ -203,7 +202,7 @@ export default function SideMenu({ userRole }: Props) {
                   Projects
                 </Link>
                 <Link
-                  to="/dashboard/admin/user-managment"
+                  to="/dashboard/admin/user-management"
                   className="aside-option"
                 >
                   <i className="bi bi-people-fill me-2"></i>

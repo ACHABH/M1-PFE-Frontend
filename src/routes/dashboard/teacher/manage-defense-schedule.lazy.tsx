@@ -9,7 +9,7 @@ export const Route = createLazyFileRoute(
 
 
 function RouteComponent() {
-  const [defenseSchedules, setDefenseSchedules] = useState([
+  const [defenseSchedules] = useState([
     {
       student: 'John Doe',
       project: 'AI Research',

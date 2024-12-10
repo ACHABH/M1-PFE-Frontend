@@ -9,7 +9,7 @@ import Stack from "react-bootstrap/Stack";
 import { useTheme } from "../contexts/theme";
 import NavigationMotionLayout from "../layout/navigation-motion";
 import NotFound from "../not-found";
-import { useAuth, useLogout } from "../api/auth";
+import { useAuth } from "../api/auth";
 import Loading from "../loading";
 
 function ThemeMode() {
@@ -40,8 +40,6 @@ export const Route = createRootRoute({
 
 function Component() {
   const user = useAuth();
-  const { mutateAsync: logout } = useLogout();
-  
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const SetDeadline = ({ onSetDeadline }) => {
   const [formData, setFormData] = useState({

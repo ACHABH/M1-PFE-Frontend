@@ -18,7 +18,7 @@ export const Route = createLazyFileRoute("/dashboard/admin/defense-schedule")({
 });
 
 function RouteComponent() {
-  const [JuriesSlots, setJuriesSlots] = React.useState<JuriesSlot[]>([
+  const [JuriesSlots] = React.useState<JuriesSlot[]>([
     {
       date: "2024-01-20",
       time: "10:00 AM",

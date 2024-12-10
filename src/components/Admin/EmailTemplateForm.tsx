@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const EmailTemplateForm = ({ template, onSave, onCancel }) => {
   const [formData, setFormData] = useState(
@@ -45,7 +45,7 @@ const EmailTemplateForm = ({ template, onSave, onCancel }) => {
           <textarea
             className="form-control"
             name="body"
-            rows="5"
+            rows={5}
             value={formData.body}
             onChange={handleChange}
             placeholder="You can use placeholders like {name} or {deadline}."

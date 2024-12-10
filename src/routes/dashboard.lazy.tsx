@@ -13,19 +13,12 @@ export const Route = createLazyFileRoute("/dashboard")({
 });
 
 function Component() {
-<<<<<<< HEAD
-  // const navigate = useNavigate();
-  // const user = useAuth((user) => {
-  //   if (user || import.meta.env.DEV) return;
-  //   navigate({ to: "/auth/login" });
-  // });
-=======
   const navigate = useNavigate();
   const user = useAuth((user) => {
     if (user || import.meta.env.DEV) return;
     navigate({ to: "/auth/login" });
   });
->>>>>>> 7ac5b4ebb6d8b22dde6f89adf1f7780e0d737134
+
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const toggleMenu = (
     setter: React.Dispatch<React.SetStateAction<boolean>>
@@ -54,13 +47,8 @@ function Component() {
         fluid
       >
         <div style={{ display: "flex", height: "100vh" }}>
-<<<<<<< HEAD
-          <div style={{ height: "100vh" }} className="bg-white">
-            {isSidebarCollapsed && <SideMenu userRole="teacher" />}
-=======
           <div style={{ height: "100vh" }} className="bg-white side-menu-container">
             {isSidebarCollapsed && <SideMenu userRole={user?.role ?? "admin"} />}
->>>>>>> 7ac5b4ebb6d8b22dde6f89adf1f7780e0d737134
           </div>
           <div style={{ height: "100vh" }} className="mx-auto content">
             <button

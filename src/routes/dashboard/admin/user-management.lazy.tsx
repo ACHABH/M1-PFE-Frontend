@@ -10,7 +10,6 @@ import EditUser from "../../../components/Admin/EditUser";
 import UploadCSV2 from "../../../components/Admin/UploadCSV2";
 import Table from "../../../components/table";
 import {
-  useGetAll as useGetAllUsers,
   useDelete as useDeleteUser,
 } from "../../../api/user";
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const EditUser = ({ user, onUpdate, onCancel }) => {
   const [formData, setFormData] = useState(user);

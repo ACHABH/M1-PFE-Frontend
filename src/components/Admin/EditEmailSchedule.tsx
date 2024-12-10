@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const EditEmailSchedule = ({ schedule, onUpdate, onCancel }) => {
   const [formData, setFormData] = useState(schedule);

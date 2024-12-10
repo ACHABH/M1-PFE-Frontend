@@ -1,4 +1,4 @@
-import type { Prettier, StrictPick } from "../types/util";
+import type { Prettier } from "../types/util";
 import type { FetchResponse } from "../types/http";
 import type { Admin, Company, Student, Teacher, User } from "../types/db";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
