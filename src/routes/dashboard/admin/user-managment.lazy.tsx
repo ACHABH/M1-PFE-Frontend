@@ -1,6 +1,8 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { User } from "../../../types/db";
 import { useMemo, useState } from "react";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import EditUser from "../../../components/Admin/EditUser";
 import UploadCSV2 from "../../../components/Admin/UploadCSV2";
@@ -8,7 +10,7 @@ import {
   useGetAll as useGetAllUsers,
   useDelete as useDeleteUser,
 } from "../../../api/user";
-import Table from "../../../components/Table";
+import Table from "../../../components/table";
 
 export const Route = createLazyFileRoute("/dashboard/admin/user-managment")({
   component: RouteComponent,
@@ -22,14 +24,14 @@ function RouteComponent() {
       first_name: "John",
       last_name: "Doe",
       email: "john.doe@example.com",
-      role: "Teacher",
+      role: "teacher",
     },
     {
       id: 2,
       first_name: "Jane",
       last_name: "Smith",
       email: "jane.smith@example.com",
-      role: "Student",
+      role: "student",
     },
   ]);
 
@@ -53,50 +55,57 @@ function RouteComponent() {
       {
         accessorKey: "first_name",
         header: "First name",
-        // cell: (info) => info.getValue(),
+        enableSorting: true,
+        cell: (props) => props.getValue(),
       },
       {
         accessorKey: "last_name",
         header: "Last name",
-        // cell: (info) => info.getValue(),
+        enableSorting: true,
+        cell: (props) => props.getValue(),
       },
       {
         accessorKey: "email",
         header: "Email",
-        // cell: (info) => info.getValue(),
+        enableSorting: true,
+        cell: (props) => props.getValue(),
       },
       {
         accessorKey: "role",
         header: "Role",
+        enableSorting: true,
+        cell: (props) => props.getValue(),
       },
       {
         accessorKey: "id",
         header: "Actions",
+        enableSorting: false,
         cell(props) {
           const userId = props.getValue<number>();
-
           return (
-            <>
-              <button
+            <Container as="div" style={{ display: "flex", gap: 5 }}>
+              <Button
                 type="button"
-                className="btn btn-warning btn-sm me-2"
+                variant="warning"
+                size="sm"
                 onClick={() => {
                   // setEditingUser(user)
                   // setShowEditModal(true);
                 }}
               >
                 Edit
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
-                className="btn btn-danger btn-sm"
+                variant="danger"
+                size="sm"
                 onClick={() => {
                   deleteUser(userId);
                 }}
               >
                 Delete
-              </button>
-            </>
+              </Button>
+            </Container>
           );
         },
       },
@@ -110,10 +119,7 @@ function RouteComponent() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRole, setSelectedRole] = useState("All");
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const itemsPerPage = 5;
 
-  // Filtered and Paginated Users
   const filteredUsers = useMemo(() => {
     return (
       users?.filter(
@@ -126,18 +132,6 @@ function RouteComponent() {
       ) ?? []
     );
   }, [searchTerm, selectedRole, users]);
-
-  // const totalPages = useMemo(
-  //   () => Math.ceil(filteredUsers.length / itemsPerPage),
-  //   [filteredUsers.length]
-  // );
-
-  // const paginatedUsers = useMemo(() => {
-  //   return filteredUsers.slice(
-  //     (currentPage - 1) * itemsPerPage,
-  //     currentPage * itemsPerPage
-  //   );
-  // }, [currentPage, filteredUsers]);
 
   const handleUploadCSV = (file: File) => {
     alert(`File ${file.name} uploaded! Users will be processed.`);
@@ -153,7 +147,7 @@ function RouteComponent() {
 
   const handleExportUsers = () => {
     const csvContent = [
-      ["Name", "Email", "Role"],
+      ["first name", "last name", "email", "role"],
       ...filteredUsers.map((user) => [
         user.first_name,
         user.last_name,
@@ -168,7 +162,7 @@ function RouteComponent() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "user_list.csv";
+    link.download = "users_list.csv";
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -232,7 +226,7 @@ function RouteComponent() {
       </div>
 
       {/* User Table */}
-      <Table data={users} columns={columns} />
+      <Table data={filteredUsers} columns={columns} />
 
       {showEditModal && editingUser && (
         <div

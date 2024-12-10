@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type ElementRef, useEffect, useRef, useState } from "react";
+import { type ElementRef, useRef, useState } from "react";
+import BootstrapTable from "react-bootstrap/Table";
+import Container from "react-bootstrap/Container";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import {
   type ColumnDef,
-  Row,
   type SortingState,
   flexRender,
   getCoreRowModel,
@@ -22,7 +23,6 @@ export default function Table<
 >({ data, columns }: Props<TData, TColumns>) {
   const parentRef = useRef<ElementRef<"div">>(null);
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [rows, setRows] = useState<Row<any>[]>([]);
 
   const table = useReactTable({
     data,
@@ -33,14 +33,10 @@ export default function Table<
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
-    manualSorting: true,
     debugTable: import.meta.env.DEV,
   });
 
-  useEffect(() => {
-    const { rows } = table.getRowModel();
-    setRows(rows);
-  }, [table]);
+  const { rows } = table.getRowModel();
 
   const virtualizer = useVirtualizer({
     count: rows.length,
@@ -55,38 +51,40 @@ export default function Table<
   });
 
   return (
-    <div ref={parentRef} style={{ overflowX: "auto" }}>
-      <table
-        className="table table-bordered table-striped"
-        style={{ whiteSpace: "nowrap" }}
-      >
+    <Container as="div" ref={parentRef} style={{ overflowX: "auto" }}>
+      <BootstrapTable striped bordered hover>
         <thead>
           {table.getHeaderGroups().map((group) => (
             <tr key={group.id}>
-              {group.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder ? null : (
-                    <div
-                      onClick={(e) => {
-                        if (!header.column.getCanSort()) return;
-                        header.column.getToggleSortingHandler()?.(e);
-                      }}
-                      style={{
-                        cursor: header.column.getCanSort() ? "pointer" : "auto",
-                      }}
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                      {{
-                        asc: " 🔼",
-                        desc: " 🔽",
-                      }[header.column.getIsSorted() as string] ?? null}
-                    </div>
-                  )}
-                </th>
-              ))}
+              {group.headers.map((header) => {
+                const canSort = header.column.getCanSort();
+                const isSorted = header.column.getIsSorted();
+                return (
+                  <th key={header.id}>
+                    {header.isPlaceholder ? null : (
+                      <div
+                        onClick={(e) => {
+                          if (!canSort) return;
+                          header.column.getToggleSortingHandler()?.(e);
+                        }}
+                        style={{
+                          cursor: canSort ? "pointer" : "auto",
+                        }}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {isSorted === "asc"
+                          ? " 🔼"
+                          : isSorted === "desc"
+                            ? " 🔽"
+                            : null}
+                      </div>
+                    )}
+                  </th>
+                );
+              })}
             </tr>
           ))}
         </thead>
@@ -104,7 +102,7 @@ export default function Table<
             );
           })}
         </tbody>
-      </table>
-    </div>
+      </BootstrapTable>
+    </Container>
   );
 }
