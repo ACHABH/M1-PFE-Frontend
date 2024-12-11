@@ -196,7 +196,7 @@ function Component() {
       <h1>User Management</h1>
 
       {/* Search and Filters */}
-      <Container as="div" style={{ display: "flex", gap: 5, marginBottom: 3 }}>
+      <Container as="div" style={{ display: "flex", gap: 5}}>
         <Form.Control
           type="text"
           className="mb-2"
@@ -223,7 +223,7 @@ function Component() {
           )}
         </Form.Select>
       </Container>
-      <Container as="div" style={{ display: "flex", gap: 5, marginBottom: 3 }}>
+      <Container as="div" style={{ display: "flex", gap: 5}} className="mb-2">
         {/* <Button
           type="button"
           variant="danger"

@@ -59,7 +59,7 @@ export default function table<
     <Container
       as="div"
       ref={parentRef}
-      style={{ height: "400px", overflow: "auto" }}
+      style={{ height: "427px", overflow: "auto" }}
     >
       <Container
         as="div"

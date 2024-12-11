@@ -1,6 +1,13 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import EmailTemplateForm from '../../../components/Admin/EmailTemplateForm'
+import Table from "../../../components/table";
+import type { EmailTemplate } from "../../../types/db";
+import { ColumnDef } from '@tanstack/react-table';
+import Button from 'react-bootstrap/esm/Button';
+import Container from 'react-bootstrap/esm/Container';
+import {useDelete as useDeleteTemplate} from '../../../api/email/template'
+
 
 export const Route = createLazyFileRoute('/dashboard/admin/email-template')({
   component: RouteComponent,
@@ -8,6 +15,7 @@ export const Route = createLazyFileRoute('/dashboard/admin/email-template')({
 
 
 function RouteComponent() {
+  const { mutateAsync: deleteTemplate } = useDeleteTemplate();
   const [templates, setTemplates] = useState([
     {
       id: 1,
@@ -26,7 +34,7 @@ function RouteComponent() {
 
   const handleSaveTemplate = (template: any) => {
     if (template.id) {
-      // this is used to update an existing template
+      //update an existing template
       setTemplates(templates.map((t) => (t.id === template.id ? template : t)))
     } else {
       // adding new template
@@ -41,9 +49,62 @@ function RouteComponent() {
     }
   }
 
+  const columns = useMemo<ColumnDef<EmailTemplate>[]>(() => {
+    return[
+      {
+        accessorKey: 'title',
+        header: 'Title',
+        enableSorting: true,
+        cell: (props) => props.getValue()
+      },
+      {
+        accessorKey: 'subject',
+        header: 'Subject',
+        enableSorting: true,
+        cell: (props) => props.getValue()
+      },
+      {
+        accessorKey: "id",
+        header: "Actions",
+        enableSorting: false,
+        cell(props) {
+          const userId = props.getValue<number>();
+          return (
+            <Container as="div" style={{ display: "flex", gap: 5 }}>
+              <Button
+                type="button"
+                variant="warning"
+                size="sm"
+                onClick={() => {
+                  // setCurrentTemplate(template);
+                  // setShowForm(true);
+                }}
+              >
+                Edit
+              </Button>
+              <Button
+                type="button"
+                variant="danger"
+                size="sm"
+                onClick={() => {
+                  const confirmation = window.confirm("Confirm delete action?");
+                  // if (confirmation) deleteTemplate(emailId);
+                }}
+              >
+                Delete
+              </Button>
+            </Container>
+          );
+        },
+      },
+    ]
+  },[deleteTemplate]);
+
+
   return (
     <div className="container mt-4">
       <h3>Email Template Manager</h3>
+      <p className='h6 text-secondary mb-3'>Create, Edit, Delete Email Templates from this page</p>
       <button
         className="btn btn-primary mb-3"
         onClick={() => {
@@ -53,7 +114,7 @@ function RouteComponent() {
       >
         Add New Template
       </button>
-      <div style={{overflowX:"auto"}}>
+      {/* <div style={{overflowX:"auto"}}>
         <table className="table table-bordered" style={{whiteSpace:"nowrap"}}>
           <thead>
             <tr>
@@ -88,7 +149,9 @@ function RouteComponent() {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
+
+      <Table columns={columns} data={templates} />
 
       {showForm && (
         <div

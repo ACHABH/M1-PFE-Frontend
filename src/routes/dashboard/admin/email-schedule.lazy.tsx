@@ -95,7 +95,7 @@ function RouteComponent() {
   return (
     <div className="container mt-4">
       <h2>Email Schedule</h2>
-
+      <p className='h6 text-secondary mb-3'> Schedule Email by adding, editing, and deleting them.</p>
       {/* Search and Filter */}
       <div className="mb-3 d-flex align-items-center">
         <input
