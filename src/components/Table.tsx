@@ -20,7 +20,7 @@ type Props<
   columns: TColumns;
 };
 
-export default function Table<
+export default function table<
   TData extends Array<any>,
   TColumns extends ColumnDef<any, any>[],
 >({ data, columns }: Props<TData, TColumns>) {
@@ -59,7 +59,7 @@ export default function Table<
     <Container
       as="div"
       ref={parentRef}
-      style={{ height: "500px", overflow: "auto" }}
+      style={{ height: "400px", overflow: "auto" }}
     >
       <Container
         as="div"
@@ -67,7 +67,7 @@ export default function Table<
           height: `${virtualizer.getTotalSize()}px`,
         }}
       >
-        <BootstrapTable striped bordered hover>
+        <BootstrapTable striped bordered hover style={{whiteSpace: "nowrap"}}>
           <thead>
             {table.getHeaderGroups().map((group) => (
               <tr key={group.id}>
