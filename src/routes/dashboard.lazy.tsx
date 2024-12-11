@@ -41,14 +41,19 @@ function Component() {
   }, []);
 
   return (
-    true && (
+    (import.meta.env.DEV ? true : user) && (
       <Container
         style={{ width: "100vw", minHeight: "100vh", paddingLeft: "0" }}
         fluid
       >
         <div style={{ display: "flex", height: "100vh" }}>
-          <div style={{ height: "100vh" }} className="bg-white side-menu-container">
-            {isSidebarCollapsed && <SideMenu userRole={user?.role ?? "admin"} />}
+          <div
+            style={{ height: "100vh" }}
+            className="bg-white side-menu-container"
+          >
+            {isSidebarCollapsed && (
+              <SideMenu userRole={user?.role ?? "admin"} />
+            )}
           </div>
           <div style={{ height: "100vh" }} className="mx-auto content">
             <button

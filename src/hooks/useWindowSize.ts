@@ -8,18 +8,21 @@ import {
 } from "react";
 
 export function useWindowSize(sizes: number[]) {
+  const reversedSize = useMemo(() => sizes.slice().reverse(), [sizes]);
   const [size, setSize] = useState(sizes[0]);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_isPending, startTransition] = useTransition();
   const deferredSize = useDeferredValue(size);
-  const descSizes = useMemo(() => sizes.slice().reverse(), [sizes]);
 
   const resizeCallback = useCallback(() => {
     startTransition(() => {
-      const newSize = descSizes.find((s) => s <= window.innerWidth);
+      const newSize = reversedSize.find((s) => s <= window.innerWidth);
       if (typeof newSize === "number") {
         setSize(newSize);
       }
     });
-  }, [descSizes]);
+  }, [reversedSize]);
 
   useEffect(() => {
     window.addEventListener("resize", resizeCallback);

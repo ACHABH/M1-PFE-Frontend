@@ -20,7 +20,7 @@ function Component() {
 
   const users = useMemo(() => {
     const newUsers = [];
-    for (let i = 0; i <= 1000; i++) {
+    for (let i = 0; i < 100; i++) {
       newUsers.push({
         id: i,
         first_name: `First${i}`,
