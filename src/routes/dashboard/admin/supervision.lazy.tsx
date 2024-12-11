@@ -52,7 +52,7 @@ function RouteComponent() {
 
   return (
     <div className="mx-auto mt-4" style={{ width: '95%', minHeight: '100vh' }}>
-      <h2>Supervision</h2>
+      <h2>Assign Supervision</h2>
       <p className='h6 text-secondary'>This's the list of project left without superviser, Assign a superviser for each project from the list of available Professors</p>
       <table className="table table-bordered table-striped">
         <thead>

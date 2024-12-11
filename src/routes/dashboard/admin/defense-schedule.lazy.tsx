@@ -2,6 +2,11 @@ import * as React from "react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import AddDefenseSlot from "../../../components/Admin/AddDefenseSlot";
 import { z } from "zod";
+import Table from "../../../components/table";
+import type { Room, Student, Teacher, User } from "../../../types/db";
+import { useMemo } from "react";
+import { ColumnDef } from "@tanstack/react-table";
+import { Prettier } from "../../../types/util";
 
 const JuriesSlotSchema = z.object({
   date: z.string().date(),
@@ -50,7 +55,7 @@ function RouteComponent() {
   // Export Schedule
   const handleExportSchedule = () => {
     const csvContent = [
-      ["Date", "Time", "Room", "Participants"], // Headers
+      ["Date", "Time", "Room", "Teachers", "Students"],
       ...JuriesSlots.map((slot) => [
         slot.date,
         slot.time,
@@ -71,9 +76,49 @@ function RouteComponent() {
     URL.revokeObjectURL(url);
   };
 
+  type DefenseSchedule = Prettier<User & Room & Student & Teacher>
+
+  const columns = useMemo<ColumnDef<DefenseSchedule>[]>(() => {
+    return [
+      {
+        accessorKey: "date",
+        header: "Date",
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        accessorKey: "time",
+        header: "Time",
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        accessorKey: "room",
+        header: "Room",
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        accessorKey: "teachers",
+        header: "Teachers",
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        accessorKey: "students",
+        header: "Students",
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+    ];
+  }, []);
+
   return (
     <div className="mx-auto mt-4" style={{ width: "95%", minHeight: "100vh" }}>
-      <h2>Juries Management</h2>
+      <h2>Juries Schedule</h2>
+      <p className="h6 text-secondary mb-3">
+        This page allows you to generate and view Jurie schedule.
+      </p>
       <div className="mb-3">
         <button
           className="btn btn-primary"
@@ -89,7 +134,7 @@ function RouteComponent() {
         </button>
       </div>
 
-      <div style={{ overflowX: "auto" }}>
+      {/* <div style={{ overflowX: "auto" }}>
         <table
           className="table table-bordered table-striped"
           style={{ whiteSpace: "nowrap" }}
@@ -115,7 +160,9 @@ function RouteComponent() {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
+
+      <Table columns={columns} data={JuriesSlots} />
 
       {/* Add Juries Slot Modal */}
       {showAddModal && (

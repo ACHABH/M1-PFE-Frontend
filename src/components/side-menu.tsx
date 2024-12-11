@@ -39,7 +39,7 @@ export default function SideMenu({ userRole }: Props) {
   }, []);
 
   return (
-    <Nav className="d-flex flex-column component-bg" style={{minHeight: "100vh", position: "sticky"}}>
+    <Nav className="d-flex flex-column component-bg justify-content-between" style={{minHeight: "100vh", position: "sticky"}}>
       {userRole === "teacher" && (
         <Nav className="flex-column">
           <div className="dashboard py-3 px-2 myBorder-bottom">
@@ -192,7 +192,7 @@ export default function SideMenu({ userRole }: Props) {
                   className="aside-option"
                 >
                   <i className="bi bi-person-check me-2"></i>
-                  Supervision
+                  Assign Supervisor
                 </Link>
                 <Link
                   to="/dashboard/admin/project-managment"
@@ -378,6 +378,13 @@ export default function SideMenu({ userRole }: Props) {
         </div>
       </Nav>
       )}
+
+      <div className="logout py-3 px-2 myBorder-top">
+        <Link to="/" className="aside-option">
+          <i className="bi bi-box-arrow-right me-2"></i>
+          Logout
+        </Link>
+      </div>
     </Nav>
     //  </div>
   );
