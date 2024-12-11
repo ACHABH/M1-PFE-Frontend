@@ -53,7 +53,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="container my-3 bg-white rounded p-3" style={{width:"90%"}}>
+    <div className="container my-3 component-bg rounded p-3" style={{width:"90%"}}>
       <h3>Submit PFE Proposal</h3>
       {submissionReminder && (
         <div className="alert alert-warning">

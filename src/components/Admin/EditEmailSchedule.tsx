@@ -17,7 +17,7 @@ const EditEmailSchedule = ({ schedule, onUpdate, onCancel }) => {
   };
 
   return (
-    <div className="container my-4 bg-white shadow p-3 rounded" style={{ width: '500px' }}>
+    <div className="container my-4 component-bg shadow p-3 rounded" style={{ width: '500px' }}>
       <h3>Edit Email Schedule</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

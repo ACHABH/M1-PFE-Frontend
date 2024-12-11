@@ -4,21 +4,29 @@
   box-sizing: border-box;
 }
 
-html, body, #root {
-  width: 100vw;
-  min-height: 100vh;
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-  background-color: #f3f4f6;
-}
-
 /* Color Palette */
 :root {
   --green: #0A7273;
   --beige: #E9E3D5;
   --oxford: #033043;
   --orange: #FDA521;
+  --backColor: #f3f4f6;
+  --textColor: #e0e0e0;
+  --compoBackColor: #fff;
 }
+html[data-bs-theme="dark"]:root{
+  --backColor: #212529;
+  --compoBackColor:#16181a;
+}
+
+html, body, #root {
+  width: 100vw;
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  background-color: var(--backColor);
+}
+
 
 /* Background Colors */
 .bg-green {
@@ -168,7 +176,6 @@ html, body, #root {
 
 .myBorder-bottom{
   border-bottom: 1px inset;
-  
 }
 
 .right-shadow {
@@ -177,10 +184,16 @@ box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1); /* Horizontal, Vertical, Blur Radius,
 
 
 /* Dark Mode */
-html[data-bs-theme="dark"] {
+/* html[data-bs-theme="dark"] {
   background-color: #1a1a1a;
   color: #e0e0e0;
+} */
+
+
+.component-bg{
+  background-color: var(--compoBackColor);
 }
+
 
 html[data-bs-theme="dark"] .bg-green {
   background-color: #064d4d !important;
@@ -257,42 +270,4 @@ html[data-bs-theme="dark"] .aside-option:hover {
 
 html[data-bs-theme="dark"] .side-menu-btn {
   color: rgb(200, 200, 200);
-}
-
-
-
-/* Side Menu */
-
-.side-menu {
-  width: 250px;
-  transition: width 0.3s ease;
-}
-
-.side-menu.collapsed {
-  width: 70px;
-}
-
-.collapse-toggle {
-  display: block;
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 1100; /* Ensure it is above other elements */
-}
-
-@media (max-width: 768px) {
-  .side-menu {
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    background: #f8f9fa;
-    z-index: 1000;
-    overflow-y: auto;
-  }
-
-  .side-menu.collapsed {
-    width: 0;
-    overflow: hidden;
-  }
 }

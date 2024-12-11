@@ -43,7 +43,7 @@ export default function AddUser({ onAdd }: Props) {
 
   return (
     <div
-      className="container mt-4 bg-white shadow my-3 p-3"
+      className="container mt-4 component-bg shadow my-3 p-3"
       style={{ borderRadius: "15px" }}
     >
       <h3>Add User</h3>

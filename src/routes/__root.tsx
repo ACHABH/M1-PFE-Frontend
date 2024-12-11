@@ -43,7 +43,7 @@ function Component() {
 
   return (
     <>
-      <Navbar expand="lg" className="bg-white myBorder-bottom">
+      <Navbar expand="lg" className="component-bg myBorder-bottom">
         <Container>
           <Navbar.Brand as={Link} to="/">
             PFE
@@ -98,7 +98,7 @@ function Component() {
           width: "100%",
           borderTop: "2px outset",
         }}
-        className="bg-white"
+        className="component-bg"
         fluid
       >
         <p className="text-center p-2" style={{ margin: "0" }}>

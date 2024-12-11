@@ -50,7 +50,7 @@ export default function AddPFEProposal({ onAdd, onCancel }: Props) {
 
   return (
     <div
-      className="container my-4 bg-white shadow p-3 rounded"
+      className="container my-4 component-bg shadow p-3 rounded"
       style={{ width: "400px" }}
     >
       <h3>Add PFE Proposal</h3>

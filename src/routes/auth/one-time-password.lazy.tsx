@@ -36,7 +36,7 @@ function Component() {
     <>
       <Form
         onSubmit={form.onSubmit((data) => mutateAsync(data))}
-        className="justify-content-center p-4 shadow mt-5 login-form bg-white"
+        className="justify-content-center p-4 shadow mt-5 login-form component-bg"
         style={{
           margin: "auto",
           borderRadius: "20px",

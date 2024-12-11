@@ -9,7 +9,7 @@ type Props = {
 export default function WelcomeCard(props: Props) {
   return (
     <div
-      className="bg-white d-flex justify-content-between p-2 rounded shadow mt-4 mx-3"
+      className="component-bg d-flex justify-content-between p-2 rounded shadow mt-4 mx-3"
       style={{ width: "fit-content" }}
     >
       <img

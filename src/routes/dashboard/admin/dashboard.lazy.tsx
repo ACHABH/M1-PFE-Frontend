@@ -58,7 +58,7 @@ function RouteComponent() {
       {/* Render SetDeadline or the rest of the components */}
       {isSetDeadlineOpen ? (
         <div className="position-relative">
-          <div className="position-absolute top-0 start-0 end-0 bg-white p-3 shadow rounded w-50 mx-auto">
+          <div className="position-absolute top-0 start-0 end-0 component-bg p-3 shadow rounded w-50 mx-auto">
             <SetDeadline
               onSetDeadline={(deadline: string) => console.log(deadline)}
             />
