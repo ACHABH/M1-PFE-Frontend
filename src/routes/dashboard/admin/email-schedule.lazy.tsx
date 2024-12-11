@@ -35,6 +35,13 @@ function RouteComponent() {
       time: '05:00 PM',
     },
   ])
+
+  const templates = [
+    { id: 1, title: "PFE Proposal Reminder", description: "Submit your PFE proposals now!" },
+    { id: 2, title: "Form Submission Deadline", description: "Don't forget to submit your forms!" },
+  ];
+
+
   const [showAddModal, setShowAddModal] = React.useState(false)
   const [showEditModal, setShowEditModal] = React.useState(false)
   const [editingSchedule, setEditingSchedule] = React.useState<Schedule | null>(
@@ -97,7 +104,7 @@ function RouteComponent() {
           placeholder="Search by title"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ width: '70.5%' }}
+          style={{ width: '69.5%' }}
         />
         <input
           type="date"
@@ -161,6 +168,7 @@ function RouteComponent() {
           style={{ zIndex: 1050 }}
         >
           <AddEmailSchedule
+            templates={templates}
             onAdd={handleAddSchedule}
             onCancel={handleCancelEmail}
           />

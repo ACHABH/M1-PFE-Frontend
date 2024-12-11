@@ -1,13 +1,26 @@
 import { useState } from 'react';
 
-const EditEmailSchedule = ({ schedule, onUpdate, onCancel }) => {
+interface Schedule {
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+}
+
+interface EditEmailScheduleProps {
+  schedule: Schedule;
+  onUpdate: (schedule: Schedule) => void;
+  onCancel: () => void;
+}
+
+const EditEmailSchedule = ({ schedule, onUpdate, onCancel }: EditEmailScheduleProps) => {
   const [formData, setFormData] = useState(schedule);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onUpdate(formData);
   };
