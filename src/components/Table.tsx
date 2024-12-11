@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type ElementRef, useRef, useState } from "react";
 import BootstrapTable from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
@@ -12,49 +13,16 @@ import {
 } from "@tanstack/react-table";
 
 type Props<
-  TData extends Array<object>,
-  TColumns extends ColumnDef<object>[],
+  TData extends Array<any>,
+  TColumns extends ColumnDef<any, any>[],
 > = {
   data: TData;
   columns: TColumns;
 };
 
-// export const VirtualTR = memo(
-//   ({
-//     virtualizer,
-//     virtualRow,
-//     rows,
-//   }: {
-//     virtualizer: Virtualizer<HTMLDivElement, Element>;
-//     virtualRow: VirtualItem;
-//     rows: Row<object>[];
-//   }) => {
-//     const row = rows[virtualRow.index];
-//     return (
-//       <tr
-//         data-index={virtualRow.index}
-//         key={row.id}
-//         ref={(el) => {
-//           // console.log(el);
-//           virtualizer.measureElement(el);
-//         }}
-//         style={{
-//           height: `${virtualRow.size}px`,
-//         }}
-//       >
-//         {row.getVisibleCells().map((cell) => (
-//           <td key={cell.id}>
-//             {flexRender(cell.column.columnDef.cell, cell.getContext())}
-//           </td>
-//         ))}
-//       </tr>
-//     );
-//   }
-// );
-
 export default function Table<
-  TData extends Array<object>,
-  TColumns extends ColumnDef<object>[],
+  TData extends Array<any>,
+  TColumns extends ColumnDef<any, any>[],
 >({ data, columns }: Props<TData, TColumns>) {
   const parentRef = useRef<ElementRef<"div">>(null);
   const [sorting, setSorting] = useState<SortingState>([]);
