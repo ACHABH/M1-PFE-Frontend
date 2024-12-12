@@ -1,106 +1,108 @@
-import { useState } from 'react'
-import { createLazyFileRoute } from '@tanstack/react-router'
+import { useState } from "react";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import Table from "../../../components/table";
 import type { Project, Teacher, User } from "../../../types/db";
 import { useMemo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Prettier } from "../../../types/util";
 
-export const Route = createLazyFileRoute('/dashboard/admin/supervision')({
+export const Route = createLazyFileRoute("/dashboard/admin/supervision")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
   const [projects, setProjects] = useState([
-    { title: 'AI Research', supervisor: 'Dr. Jane Doe', status: 'Assigned' },
-    { title: 'Robotics Design', supervisor: 'Unassigned', status: 'approved' },
+    { title: "AI Research", supervisor: "Dr. Jane Doe", status: "Assigned" },
+    { title: "Robotics Design", supervisor: "Unassigned", status: "approved" },
     {
-      title: 'Blockchain Security',
-      supervisor: 'Unassigned',
-      status: 'approved',
+      title: "Blockchain Security",
+      supervisor: "Unassigned",
+      status: "approved",
     },
-  ])
+  ]);
 
   const [availableTeachers] = useState([
-    'Dr. Jane Doe',
-    'Dr. John Smith',
-    'Dr. Alice Green',
-    'Dr. Mark Brown',
-  ])
+    "Dr. Jane Doe",
+    "Dr. John Smith",
+    "Dr. Alice Green",
+    "Dr. Mark Brown",
+  ]);
 
-  const [selectedProject, setSelectedProject] = useState<string | null>(null)
-  const [showTeacherList, setShowTeacherList] = useState(false)
+  const [selectedProject, setSelectedProject] = useState<string | null>(null);
+  const [showTeacherList, setShowTeacherList] = useState(false);
 
   const handleAssign = (title: string, supervisor: string) => {
     setProjects(
       projects.map((project) =>
         project.title === title
-          ? { ...project, supervisor, status: 'Assigned' }
-          : project,
-      ),
-    )
-    setShowTeacherList(false) // Hide the teacher list after assignment
-    setSelectedProject(null)
-  }
+          ? { ...project, supervisor, status: "Assigned" }
+          : project
+      )
+    );
+    setShowTeacherList(false); // Hide the teacher list after assignment
+    setSelectedProject(null);
+  };
 
   const openTeacherList = (projectTitle: string) => {
-    setSelectedProject(projectTitle)
-    setShowTeacherList(true)
-  }
+    setSelectedProject(projectTitle);
+    setShowTeacherList(true);
+  };
 
   const closeTeacherList = () => {
-    setShowTeacherList(false)
-    setSelectedProject(null)
-  }
+    setShowTeacherList(false);
+    setSelectedProject(null);
+  };
 
-  type Supervision = Prettier<Project & User & Teacher>
+  type Supervision = Prettier<Project & User & Teacher>;
 
   const columns = useMemo<ColumnDef<Supervision>[]>(() => {
     return [
       {
-      accessorKey: "title",
-      header: "Title",
-      enableSorting: true,
-      cell: (props) => props.getValue(),
+        accessorKey: "title",
+        header: "Title",
+        enableSorting: true,
+        cell: (props) => props.getValue(),
       },
       {
-      accessorKey: "supervisor",
-      header: "Supervisor",
-      enableSorting: true,
-      cell: (props) => props.getValue(),
+        accessorKey: "supervisor",
+        header: "Supervisor",
+        enableSorting: true,
+        cell: (props) => props.getValue(),
       },
       {
-      accessorKey: "status",
-      header: "Status",
-      enableSorting: true,
-      cell: (props) => {
-        const status = props.getValue() as string;
-        return status === "approved" ? "Pending" : status;
-      },
+        accessorKey: "status",
+        header: "Status",
+        enableSorting: true,
+        cell: (props) => {
+          const status = props.getValue() as string;
+          return status === "approved" ? "Pending" : status;
+        },
       },
       {
-      accessorKey: "actions",
-      header: "Actions",
-      cell: (props) => {
-        const project = props.row.original;
-        return project.status === "approved" ? (
-        <button
-          className="btn btn-success btn-sm"
-          onClick={() => openTeacherList(project.title)}
-        >
-          Assign Supervisor
-        </button>
-        ) : null;
-      },
+        accessorKey: "actions",
+        header: "Actions",
+        cell: (props) => {
+          const project = props.row.original;
+          return project.status === "approved" ? (
+            <button
+              className="btn btn-success btn-sm"
+              onClick={() => openTeacherList(project.title)}
+            >
+              Assign Supervisor
+            </button>
+          ) : null;
+        },
       },
     ];
   }, []);
 
-
   return (
-    <div className="mx-auto mt-4" style={{ width: '95%', minHeight: '100vh' }}>
+    <div className="mx-auto mt-4" style={{ width: "95%", minHeight: "100vh" }}>
       <h2>Assign Supervision</h2>
-      <p className='h6 text-secondary'>This's the list of project left without superviser, Assign a superviser for each project from the list of available Professors</p>
+      <p className="h6 text-secondary">
+        This's the list of project left without superviser, Assign a superviser
+        for each project from the list of available Professors
+      </p>
       {/* <table className="table table-bordered table-striped">
         <thead>
           <tr>
@@ -130,7 +132,7 @@ function RouteComponent() {
           ))}
         </tbody>
       </table> */}
-      <Table data={projects} columns={columns}/>
+      <Table data={projects} columns={columns} />
       {/* Modal for Selecting a Teacher */}
       {showTeacherList && selectedProject && (
         <div
@@ -139,7 +141,7 @@ function RouteComponent() {
         >
           <div
             className="component-bg p-4 rounded shadow"
-            style={{ width: '400px' }}
+            style={{ width: "400px" }}
           >
             <h5>Assign Supervisor for "{selectedProject}"</h5>
             <ul className="list-group mt-3">
@@ -168,5 +170,5 @@ function RouteComponent() {
         </div>
       )}
     </div>
-  )
+  );
 }

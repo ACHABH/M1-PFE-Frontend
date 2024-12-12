@@ -15,8 +15,8 @@ const FormSchema = z.object({
   sendWhen: z.string().min(1),
   title: z.string().optional(),
   description: z.string().optional(),
-  date: z.string().optional(),
-  time: z.string().optional(),
+  // date: z.string().optional(),
+  // time: z.string().optional(),
 });
 
 type ZodFormSchema = z.infer<typeof FormSchema>;
@@ -30,8 +30,8 @@ export default function AddEmailSchedule({ templates, onAdd, onCancel }: Props) 
       sendWhen: "Right Now",
       title: "",
       description: "",
-      date: "",
-      time: "",
+      // date: "",
+      // time: "",
     },
   });
 
@@ -125,7 +125,7 @@ export default function AddEmailSchedule({ templates, onAdd, onCancel }: Props) 
           </div>
 
           {/* Send When */}
-          <div className="mb-3">
+          {/* <div className="mb-3">
             <label className="form-label">Send When</label>
             <select
               {...form.register("sendWhen", { required: true })}
@@ -162,7 +162,7 @@ export default function AddEmailSchedule({ templates, onAdd, onCancel }: Props) 
                 />
               </div>
             </div>
-          )}
+          )} */}
 
           <button type="submit" className="btn btn-primary me-2">
             Add Schedule

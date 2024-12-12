@@ -83,6 +83,9 @@ const DashboardAdminUserManagementLazyImport = createFileRoute(
 const DashboardAdminSupervisionLazyImport = createFileRoute(
   '/dashboard/admin/supervision',
 )()
+const DashboardAdminRoomsLazyImport = createFileRoute(
+  '/dashboard/admin/rooms',
+)()
 const DashboardAdminProjectManagmentLazyImport = createFileRoute(
   '/dashboard/admin/project-managment',
 )()
@@ -383,6 +386,14 @@ const DashboardAdminSupervisionLazyRoute =
     import('./routes/dashboard/admin/supervision.lazy').then((d) => d.Route),
   )
 
+const DashboardAdminRoomsLazyRoute = DashboardAdminRoomsLazyImport.update({
+  id: '/rooms',
+  path: '/rooms',
+  getParentRoute: () => DashboardAdminLazyRoute,
+} as any).lazy(() =>
+  import('./routes/dashboard/admin/rooms.lazy').then((d) => d.Route),
+)
+
 const DashboardAdminProjectManagmentLazyRoute =
   DashboardAdminProjectManagmentLazyImport.update({
     id: '/project-managment',
@@ -615,6 +626,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAdminProjectManagmentLazyImport
       parentRoute: typeof DashboardAdminLazyImport
     }
+    '/dashboard/admin/rooms': {
+      id: '/dashboard/admin/rooms'
+      path: '/rooms'
+      fullPath: '/dashboard/admin/rooms'
+      preLoaderRoute: typeof DashboardAdminRoomsLazyImport
+      parentRoute: typeof DashboardAdminLazyImport
+    }
     '/dashboard/admin/supervision': {
       id: '/dashboard/admin/supervision'
       path: '/supervision'
@@ -766,6 +784,7 @@ interface DashboardAdminLazyRouteChildren {
   DashboardAdminEmailTemplateLazyRoute: typeof DashboardAdminEmailTemplateLazyRoute
   DashboardAdminPfeProposalsLazyRoute: typeof DashboardAdminPfeProposalsLazyRoute
   DashboardAdminProjectManagmentLazyRoute: typeof DashboardAdminProjectManagmentLazyRoute
+  DashboardAdminRoomsLazyRoute: typeof DashboardAdminRoomsLazyRoute
   DashboardAdminSupervisionLazyRoute: typeof DashboardAdminSupervisionLazyRoute
   DashboardAdminUserManagementLazyRoute: typeof DashboardAdminUserManagementLazyRoute
 }
@@ -781,6 +800,7 @@ const DashboardAdminLazyRouteChildren: DashboardAdminLazyRouteChildren = {
   DashboardAdminPfeProposalsLazyRoute: DashboardAdminPfeProposalsLazyRoute,
   DashboardAdminProjectManagmentLazyRoute:
     DashboardAdminProjectManagmentLazyRoute,
+  DashboardAdminRoomsLazyRoute: DashboardAdminRoomsLazyRoute,
   DashboardAdminSupervisionLazyRoute: DashboardAdminSupervisionLazyRoute,
   DashboardAdminUserManagementLazyRoute: DashboardAdminUserManagementLazyRoute,
 }
@@ -908,6 +928,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/email-template': typeof DashboardAdminEmailTemplateLazyRoute
   '/dashboard/admin/pfe-proposals': typeof DashboardAdminPfeProposalsLazyRoute
   '/dashboard/admin/project-managment': typeof DashboardAdminProjectManagmentLazyRoute
+  '/dashboard/admin/rooms': typeof DashboardAdminRoomsLazyRoute
   '/dashboard/admin/supervision': typeof DashboardAdminSupervisionLazyRoute
   '/dashboard/admin/user-management': typeof DashboardAdminUserManagementLazyRoute
   '/dashboard/company/homepage': typeof DashboardCompanyHomepageLazyRoute
@@ -949,6 +970,7 @@ export interface FileRoutesByTo {
   '/dashboard/admin/email-template': typeof DashboardAdminEmailTemplateLazyRoute
   '/dashboard/admin/pfe-proposals': typeof DashboardAdminPfeProposalsLazyRoute
   '/dashboard/admin/project-managment': typeof DashboardAdminProjectManagmentLazyRoute
+  '/dashboard/admin/rooms': typeof DashboardAdminRoomsLazyRoute
   '/dashboard/admin/supervision': typeof DashboardAdminSupervisionLazyRoute
   '/dashboard/admin/user-management': typeof DashboardAdminUserManagementLazyRoute
   '/dashboard/company/homepage': typeof DashboardCompanyHomepageLazyRoute
@@ -992,6 +1014,7 @@ export interface FileRoutesById {
   '/dashboard/admin/email-template': typeof DashboardAdminEmailTemplateLazyRoute
   '/dashboard/admin/pfe-proposals': typeof DashboardAdminPfeProposalsLazyRoute
   '/dashboard/admin/project-managment': typeof DashboardAdminProjectManagmentLazyRoute
+  '/dashboard/admin/rooms': typeof DashboardAdminRoomsLazyRoute
   '/dashboard/admin/supervision': typeof DashboardAdminSupervisionLazyRoute
   '/dashboard/admin/user-management': typeof DashboardAdminUserManagementLazyRoute
   '/dashboard/company/homepage': typeof DashboardCompanyHomepageLazyRoute
@@ -1036,6 +1059,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/email-template'
     | '/dashboard/admin/pfe-proposals'
     | '/dashboard/admin/project-managment'
+    | '/dashboard/admin/rooms'
     | '/dashboard/admin/supervision'
     | '/dashboard/admin/user-management'
     | '/dashboard/company/homepage'
@@ -1076,6 +1100,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/email-template'
     | '/dashboard/admin/pfe-proposals'
     | '/dashboard/admin/project-managment'
+    | '/dashboard/admin/rooms'
     | '/dashboard/admin/supervision'
     | '/dashboard/admin/user-management'
     | '/dashboard/company/homepage'
@@ -1117,6 +1142,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/email-template'
     | '/dashboard/admin/pfe-proposals'
     | '/dashboard/admin/project-managment'
+    | '/dashboard/admin/rooms'
     | '/dashboard/admin/supervision'
     | '/dashboard/admin/user-management'
     | '/dashboard/company/homepage'
@@ -1223,6 +1249,7 @@ export const routeTree = rootRoute
         "/dashboard/admin/email-template",
         "/dashboard/admin/pfe-proposals",
         "/dashboard/admin/project-managment",
+        "/dashboard/admin/rooms",
         "/dashboard/admin/supervision",
         "/dashboard/admin/user-management"
       ]
@@ -1298,6 +1325,10 @@ export const routeTree = rootRoute
     },
     "/dashboard/admin/project-managment": {
       "filePath": "dashboard/admin/project-managment.lazy.tsx",
+      "parent": "/dashboard/admin"
+    },
+    "/dashboard/admin/rooms": {
+      "filePath": "dashboard/admin/rooms.lazy.tsx",
       "parent": "/dashboard/admin"
     },
     "/dashboard/admin/supervision": {

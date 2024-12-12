@@ -17,19 +17,21 @@ import { useCreate as useCreateUser } from "../../../api/user";
 const FormSchema = z.object({
   first_name: z.string().trim().min(1),
   last_name: z.string().trim().min(1),
-  email: z.string().trim().min(1).email(),
-  password: z.string().trim().min(1),
-  password_confirmation: z.string().trim().min(1),
+  email: z.string().trim().min(1),
+  password: z.nullable(z.string().trim()).default(null),
+  password_confirmation: z.nullable(z.string().trim()).default(null),
   role: z.enum(USER_ROLE),
   // Student
-  student_major: z.enum(STUDENT_MAJOR).nullable(),
-  student_average_score: z.coerce.number().min(0).nullable(),
+  student_major: z.nullable(z.enum(STUDENT_MAJOR)).default(null),
+  student_average_score: z.nullable(z.coerce.number().min(0)).default(null),
   // Teacher
-  teacher_recruitment_date: z.string().trim().min(1).date().nullable(),
-  teacher_grade: z.enum(TEACHER_GRADE).nullable(),
+  teacher_recruitment_date: z
+    .nullable(z.string().trim().min(1).date())
+    .default(null),
+  teacher_grade: z.nullable(z.enum(TEACHER_GRADE)).default(null),
   // Company
-  company_name: z.string().trim().min(1).nullable(),
-  company_number: z.string().trim().min(1).nullable(),
+  company_name: z.nullable(z.string().trim().min(1)).default(null),
+  company_number: z.nullable(z.string().trim().min(1)).default(null),
 });
 
 export type ZodFormSchema = z.infer<typeof FormSchema>;
@@ -48,8 +50,8 @@ function Component() {
       last_name: "",
       email: "",
       role: "student",
-      password: "",
-      password_confirmation: "",
+      password: null,
+      password_confirmation: null,
       student_major: null,
       student_average_score: null,
       teacher_recruitment_date: null,
@@ -59,10 +61,12 @@ function Component() {
     },
   });
 
-  const isPasswordStrong = useMemo(
-    () => isStrongPassword(form.watch("password")),
-    [form]
-  );
+  console.log(form.getValues());
+
+  const isPasswordStrong = useMemo(() => {
+    const password = form.watch("password") ?? "";
+    return password.length === 0 ? true : isStrongPassword(password);
+  }, [form]);
 
   return (
     <Form
@@ -75,7 +79,7 @@ function Component() {
         border: "1.5px solid #ccc",
       }}
     >
-      <Form.Group className="mb-3" style={{width: "47%"}}>
+      <Form.Group className="mb-3" style={{ width: "47%" }}>
         <Form.Label htmlFor="role">Who Is He?</Form.Label>
         <Form.Select
           {...form.register("role", { required: true })}
@@ -107,11 +111,11 @@ function Component() {
           )}
         </Form.Select>
       </Form.Group>
-      <Form.Group className="mb-3" style={{width: "47%"}}>
+      <Form.Group className="mb-3" style={{ width: "47%" }}>
         <Form.Label htmlFor="first-name">First name</Form.Label>
         <Form.Control
           {...form.register("first_name", { required: true })}
-          name="first-name"
+          // name="first-name"
           type="text"
           placeholder="First name"
           required
@@ -120,11 +124,11 @@ function Component() {
           <Form.Text>{form.formState.errors.first_name?.message}</Form.Text>
         )}
       </Form.Group>
-      <Form.Group className="mb-3" style={{width: "47%"}}>
+      <Form.Group className="mb-3" style={{ width: "47%" }}>
         <Form.Label htmlFor="last-name">Last name</Form.Label>
         <Form.Control
           {...form.register("last_name", { required: true })}
-          name="last-name"
+          // name="last-name"
           type="text"
           placeholder="Last name"
           required
@@ -133,11 +137,11 @@ function Component() {
           <Form.Text>{form.formState.errors.last_name?.message}</Form.Text>
         )}
       </Form.Group>
-      <Form.Group className="mb-3" style={{width: "47%"}}>
+      <Form.Group className="mb-3" style={{ width: "47%" }}>
         <Form.Label htmlFor="email">Email address</Form.Label>
         <Form.Control
           {...form.register("email", { required: true })}
-          name="email"
+          // name="email"
           type="email"
           placeholder="Email"
           required
@@ -150,12 +154,12 @@ function Component() {
       {/* Specific Fields Based On The Role */}
       {form.watch("role") === "student" && (
         <>
-          <Form.Group className="mb-3" style={{width: "47%"}}>
+          <Form.Group className="mb-3" style={{ width: "47%" }}>
             <Form.Label htmlFor="student_major">Master's Option</Form.Label>
             <Form.Select
               {...form.register("student_major", { required: true })}
               required
-              value={STUDENT_MAJOR[0]}
+              defaultValue={STUDENT_MAJOR[0]}
             >
               {STUDENT_MAJOR.map((major) => (
                 <option
@@ -173,7 +177,7 @@ function Component() {
               </Form.Text>
             )}
           </Form.Group>
-          <Form.Group className="mb-3" style={{width: "47%"}}>
+          <Form.Group className="mb-3" style={{ width: "47%" }}>
             <Form.Label htmlFor="student_average_score">
               Average Score (Master's 1)
             </Form.Label>
@@ -193,7 +197,7 @@ function Component() {
       )}
       {form.watch("role") === "teacher" && (
         <>
-          <Form.Group className="mb-3" style={{width: "47%"}}>
+          <Form.Group className="mb-3" style={{ width: "47%" }}>
             <Form.Label htmlFor="teacher_recruitment_date">
               Recruitment Date
             </Form.Label>
@@ -208,7 +212,7 @@ function Component() {
               </Form.Text>
             )}
           </Form.Group>
-          <Form.Group className="mb-3" style={{width: "47%"}}>
+          <Form.Group className="mb-3" style={{ width: "47%" }}>
             <Form.Label htmlFor="teacher_grade">Grade</Form.Label>
             <Form.Select
               {...form.register("teacher_grade", { required: true })}
@@ -235,7 +239,7 @@ function Component() {
       )}
       {form.watch("role") === "company" && (
         <>
-          <Form.Group className="mb-3" style={{width: "47%"}}>
+          <Form.Group className="mb-3" style={{ width: "47%" }}>
             <Form.Label htmlFor="company_name">Company Name</Form.Label>
             <Form.Control
               {...form.register("company_name")}
@@ -249,7 +253,7 @@ function Component() {
               </Form.Text>
             )}
           </Form.Group>
-          <Form.Group className="mb-3" style={{width: "47%"}}>
+          <Form.Group className="mb-3" style={{ width: "47%" }}>
             <Form.Label htmlFor="company_number">Company number</Form.Label>
             <Form.Control
               {...form.register("company_number", { required: true })}
@@ -265,13 +269,12 @@ function Component() {
           </Form.Group>
         </>
       )}
-      <Form.Group className="mb-3" style={{width: "47%"}}>
+      <Form.Group className="mb-3" style={{ width: "47%" }}>
         <Form.Label htmlFor="password">Password</Form.Label>
         <Form.Control
-          {...form.register("password", { required: true })}
+          {...form.register("password")}
           type="password"
           placeholder="Password"
-          required
         />
         {form.formState.errors.password?.message && (
           <Form.Text>{form.formState.errors.password?.message}</Form.Text>
@@ -280,15 +283,14 @@ function Component() {
           <Form.Text>Make sure to create a strong password</Form.Text>
         )}
       </Form.Group>
-      <Form.Group className="mb-3" style={{width: "47%"}}>
+      <Form.Group className="mb-3" style={{ width: "47%" }}>
         <Form.Label htmlFor="password-confirmation">
           Confirm Password
         </Form.Label>
         <Form.Control
-          {...form.register("password_confirmation", { required: true })}
+          {...form.register("password_confirmation")}
           type="password"
           placeholder="Confirm password"
-          required
         />
         {form.formState.errors.password_confirmation?.message && (
           <Form.Text>
@@ -303,8 +305,8 @@ function Component() {
         <Button variant="primary" type="submit" disabled={form.disabled}>
           Create User
         </Button>
-        <Button variant="secondary" className='mx-2' type="reset" onClick={() => window.history.back()}>
-          Cancel
+        <Button variant="secondary" className="mx-2" type="reset">
+          Reset
         </Button>
       </Stack>
     </Form>

@@ -12,16 +12,13 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-type Props<
-  TData extends Array<any>,
-  TColumns extends ColumnDef<any, any>[],
-> = {
+type Props<TData extends any[], TColumns extends ColumnDef<any, any>[]> = {
   data: TData;
   columns: TColumns;
 };
 
 export default function table<
-  TData extends Array<any>,
+  TData extends any[],
   TColumns extends ColumnDef<any, any>[],
 >({ data, columns }: Props<TData, TColumns>) {
   const parentRef = useRef<ElementRef<"div">>(null);
@@ -67,7 +64,7 @@ export default function table<
           height: `${virtualizer.getTotalSize()}px`,
         }}
       >
-        <BootstrapTable striped bordered hover style={{whiteSpace: "nowrap"}}>
+        <BootstrapTable striped bordered hover style={{ whiteSpace: "nowrap" }}>
           <thead>
             {table.getHeaderGroups().map((group) => (
               <tr key={group.id}>

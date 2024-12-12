@@ -16,6 +16,7 @@ export function useGetAll() {
       if (!json.ok) throw new Error(json.message ?? "Request failed");
       return json.data.rooms;
     },
+    initialData: [],
   });
 }
 

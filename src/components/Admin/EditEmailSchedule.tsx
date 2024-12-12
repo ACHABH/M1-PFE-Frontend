@@ -3,8 +3,8 @@ import { useState } from 'react';
 interface Schedule {
   title: string;
   description: string;
-  date: string;
-  time: string;
+  // date: string;
+  // time: string;
 }
 
 interface EditEmailScheduleProps {
@@ -54,7 +54,7 @@ const EditEmailSchedule = ({ schedule, onUpdate, onCancel }: EditEmailSchedulePr
             required
           ></textarea>
         </div>
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <label className="form-label">Date</label>
           <input
             type="date"
@@ -75,7 +75,7 @@ const EditEmailSchedule = ({ schedule, onUpdate, onCancel }: EditEmailSchedulePr
             onChange={handleChange}
             required
           />
-        </div>
+        </div> */}
         <button type="submit" className="btn btn-success me-2">Update Schedule</button>
         <button
           type="reset"
