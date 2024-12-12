@@ -4,22 +4,13 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import { z } from "zod";
 import Table from "../../../components/table";
 import AddRoom from "../../../components/Admin/AddRoom";
 import {
   useGetAll as useGetAllRooms,
-  useCreate as useCreateRoom,
   useUpdate as useUPdateRoom,
   useDelete as useDeleteRoom,
 } from "../../../api/room";
-
-const FormSchema = z.object({
-  room: z.string().min(1),
-  // status: z.string().min(1),
-});
-
-type ZodFormSchema = z.infer<typeof FormSchema>;
 
 export const Route = createLazyFileRoute("/dashboard/admin/rooms")({
   component: Component,
@@ -27,23 +18,31 @@ export const Route = createLazyFileRoute("/dashboard/admin/rooms")({
 
 function Component() {
   const { data: rooms } = useGetAllRooms();
-  const { mutateAsync: createRoom } = useCreateRoom();
   const { mutateAsync: updateRoom } = useUPdateRoom();
   const { mutateAsync: deleteRoom } = useDeleteRoom();
 
   const [showAddModal, setShowAddModal] = useState(false);
 
-  const handleAddRoom = () => {
+  const onAdd = () => {
     // setJuriesRooms([...Rooms, newRoom]) // handled by query
     setShowAddModal(false);
   };
 
-  const handleCancelAdd = () => {
+  const onCancel = () => {
     setShowAddModal(false);
   };
 
   const handleExportSchedule = () => {
-    const csvContent = [["Room"], ...Rooms.map((Room) => [Room.room])]
+    const csvContent = [
+      ["id", "room", "create_at", "updated_at", "deleted_at"],
+      ...rooms.map((room) => [
+        room.id,
+        room.room,
+        room.created_at,
+        room.updated_at,
+        room.deleted_at,
+      ]),
+    ]
       .map((row) => row.join(","))
       .join("\n");
 
@@ -51,7 +50,7 @@ function Component() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "Rooms.csv";
+    link.download = "rooms.csv";
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -108,7 +107,6 @@ function Component() {
       style={{ width: "95%", minHeight: "100vh" }}
     >
       <h2>Room Management</h2>
-
       <Container as="div" className="mb-3" style={{ display: "flex", gap: 5 }}>
         <Button
           type="button"
@@ -125,16 +123,14 @@ function Component() {
           Export Rooms
         </Button>
       </Container>
-
       <Table columns={columns} data={rooms} />
-
       {/* Add Juries Room Modal */}
       {showAddModal && (
         <div
           className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"
           style={{ zIndex: 1050 }}
         >
-          <AddRoom onAdd={handleAddRoom} onCancel={handleCancelAdd} />
+          <AddRoom onAdd={onAdd} onCancel={onCancel} />
         </div>
       )}
     </Container>

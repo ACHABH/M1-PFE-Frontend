@@ -72,8 +72,10 @@ function Component() {
                   direction="horizontal"
                   style={{ justifyContent: "space-between" }}
                 >
-                  <Nav.Link as={Link} to="/login">
-                    <Button type="button">Login</Button>
+                  <Nav.Link as="span">
+                    <Link to="/auth/login" className="btn btn-primary">
+                      Login
+                    </Link>
                   </Nav.Link>
                   <ThemeMode />
                 </Stack>
@@ -83,7 +85,11 @@ function Component() {
         </Container>
       </Navbar>
       <NavigationMotionLayout>
-        <Container as="main" style={{ width: "100vw", height: "100vh", padding:"0" }} fluid>
+        <Container
+          as="main"
+          style={{ width: "100vw", height: "100vh", padding: "0" }}
+          fluid
+        >
           <Suspense fallback={<Loading />}>
             <Outlet />
           </Suspense>
