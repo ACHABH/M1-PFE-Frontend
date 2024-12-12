@@ -7,6 +7,7 @@ import Container from "react-bootstrap/Container";
 import { z } from "zod";
 import Table from "../../../components/table";
 import AddRoom from "../../../components/Admin/AddRoom";
+import EditRoom from "../../../components/Admin/EditRoom.tsx";
 import {
   useGetAll as useGetAllRooms,
   useCreate as useCreateRoom,
@@ -41,6 +42,19 @@ function Component() {
   const handleCancelAdd = () => {
     setShowAddModal(false);
   };
+
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [editingRoom, setEditingRoom] = useState<Room | null>(
+    null,
+  )
+
+  const handleCancelEdit = () => {
+    setShowEditModal(false)
+    setEditingRoom(null)
+  }
+
+  const handleEditRoom = () => {
+  }
 
   const handleExportSchedule = () => {
     const csvContent = [["Room"], ...Rooms.map((Room) => [Room.room])]
@@ -127,14 +141,25 @@ function Component() {
       </Container>
 
       <Table columns={columns} data={rooms} />
-
-      {/* Add Juries Room Modal */}
       {showAddModal && (
         <div
           className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"
           style={{ zIndex: 1050 }}
         >
           <AddRoom onAdd={handleAddRoom} onCancel={handleCancelAdd} />
+        </div>
+      )}
+
+      {showEditModal && editingRoom && (
+        <div
+          className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"
+          style={{ zIndex: 1050 }}
+        >
+          <EditRoom
+            room={editingRoom}
+            onUpdate={handleEditRoom}
+            onCancel={handleCancelEdit}
+          />
         </div>
       )}
     </Container>
