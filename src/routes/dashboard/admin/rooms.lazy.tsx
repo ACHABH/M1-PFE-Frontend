@@ -7,7 +7,12 @@ import Container from "react-bootstrap/Container";
 import { z } from "zod";
 import Table from "../../../components/table";
 import AddRoom from "../../../components/Admin/AddRoom";
-import { useGetAll as useGetAllRooms } from "../../../api/room";
+import {
+  useGetAll as useGetAllRooms,
+  useCreate as useCreateRoom,
+  useUpdate as useUPdateRoom,
+  useDelete as useDeleteRoom,
+} from "../../../api/room";
 
 const FormSchema = z.object({
   room: z.string().min(1),
@@ -22,19 +27,9 @@ export const Route = createLazyFileRoute("/dashboard/admin/rooms")({
 
 function Component() {
   const { data: rooms } = useGetAllRooms();
-
-  // const [Rooms] = useState<unknown[]>([
-  //   {
-  //     id: 0,
-  //     room: "S101",
-  //     // status: "Available"
-  //   },
-  //   {
-  //     id: 1,
-  //     room: "N102",
-  //     // status: "Not Available"
-  //   },
-  // ]);
+  const { mutateAsync: createRoom } = useCreateRoom();
+  const { mutateAsync: updateRoom } = useUPdateRoom();
+  const { mutateAsync: deleteRoom } = useDeleteRoom();
 
   const [showAddModal, setShowAddModal] = useState(false);
 
@@ -86,7 +81,7 @@ function Component() {
                   // setShowForm(true);
                 }}
               >
-                Edit
+                Update
               </Button>
               <Button
                 type="button"
@@ -94,7 +89,7 @@ function Component() {
                 size="sm"
                 onClick={() => {
                   const confirmation = window.confirm("Confirm delete action?");
-                  // if (confirmation) deleteTemplate(emailId);
+                  if (confirmation) deleteRoom(roomId);
                 }}
               >
                 Delete
@@ -104,10 +99,14 @@ function Component() {
         },
       },
     ];
-  }, []);
+  }, [deleteRoom]);
 
   return (
-    <div className="mx-auto mt-4" style={{ width: "95%", minHeight: "100vh" }}>
+    <Container
+      as="div"
+      className="mx-auto mt-4"
+      style={{ width: "95%", minHeight: "100vh" }}
+    >
       <h2>Room Management</h2>
 
       <Container as="div" className="mb-3" style={{ display: "flex", gap: 5 }}>
@@ -138,6 +137,6 @@ function Component() {
           <AddRoom onAdd={handleAddRoom} onCancel={handleCancelAdd} />
         </div>
       )}
-    </div>
+    </Container>
   );
 }

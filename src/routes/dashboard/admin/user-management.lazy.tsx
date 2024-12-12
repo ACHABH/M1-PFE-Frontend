@@ -107,7 +107,7 @@ function Component() {
                   // setShowEditModal(true);
                 }}
               >
-                Edit
+                Update
               </Button>
               <Button
                 type="button"
