@@ -9,14 +9,18 @@ import {
 import Modal from "react-bootstrap/Modal";
 
 type Props = {
-  title: string;
-  action: JSX.Element;
-  dialog?: boolean;
+  title?: string | null;
+  action?: JSX.Element | null;
 } & ChildrenProps;
 
+export type Ref = ElementRef<typeof Modal> & {
+  show: () => void;
+  close: () => void;
+};
+
 // eslint-disable-next-line react-refresh/only-export-components
-export default forwardRef<ElementRef<typeof Modal>, Props>(
-  ({ children, title, action }, ref) => {
+export default forwardRef<Ref, Props>(
+  ({ children, title = null, action = null }, ref) => {
     const [show, setShow] = useState(false);
 
     const onShow = useCallback(() => setShow(true), []);
@@ -31,11 +35,13 @@ export default forwardRef<ElementRef<typeof Modal>, Props>(
 
     return (
       <Modal ref={ref} show={show} onHide={onClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>{title}</Modal.Title>
-        </Modal.Header>
+        {title && (
+          <Modal.Header closeButton>
+            <Modal.Title>{title}</Modal.Title>
+          </Modal.Header>
+        )}
         <Modal.Body>{children}</Modal.Body>
-        <Modal.Footer>{action}</Modal.Footer>
+        {action && <Modal.Footer>{action}</Modal.Footer>}
       </Modal>
     );
   }

@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import WelcomeCard from '../../../components/welcome-card'
-import UploadCSV from '../../../components/Admin/UploadCSV'
-import AdminStatus from '../../../components/Admin/AdminStatus'
-import SetDeadline from '../../../components/Admin/SetDeadline'
+import UploadCSV from '../../../components/admin/UploadCSV'
+import AdminStatus from '../../../components/admin/AdminStatus'
+import SetDeadline from '../../../components/admin/SetDeadline'
 
 export const Route = createLazyFileRoute('/dashboard/admin/dashboard')({
   component: RouteComponent,

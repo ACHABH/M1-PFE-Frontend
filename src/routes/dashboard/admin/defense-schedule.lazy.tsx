@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import AddDefenseSlot from "../../../components/Admin/AddDefenseSlot";
+import AddDefenseSlot from "../../../components/admin/AddDefenseSlot";
 import { z } from "zod";
 import Table from "../../../components/table";
 import type { Room, Student, Teacher, User } from "../../../types/db";

@@ -1,8 +1,10 @@
 import Spinner from "react-bootstrap/Spinner";
+import Container from "react-bootstrap/Container";
 
 export default function Loading() {
   return (
-    <div
+    <Container
+      as="div"
       style={{
         width: "100%",
         height: "100%",
@@ -11,6 +13,6 @@ export default function Loading() {
       }}
     >
       <Spinner />
-    </div>
+    </Container>
   );
 }

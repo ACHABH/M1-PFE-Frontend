@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import EditProposalForm from '../../../components/Teacher/EditProposal'
+import EditProposalForm from '../../../components/teacher/EditProposal'
 
 export const Route = createLazyFileRoute(
   '/dashboard/teacher/pending-revisions',

@@ -1,7 +1,7 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import type { Project } from "../../../types/db";
-import AddPFEProposal from "../../../components/Admin/AddPFEProposal";
+import AddPFEProposal from "../../../components/admin/AddPFEProposal";
 import { ColumnDef } from "@tanstack/react-table";
 import Container from "react-bootstrap/esm/Container";
 import Button from "react-bootstrap/esm/Button";

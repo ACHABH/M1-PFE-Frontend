@@ -1,14 +1,13 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Room } from "../../../types/db";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Table from "../../../components/table";
-import AddRoom from "../../../components/Admin/AddRoom";
+import RoomModal from "../../../components/admin/room-modal";
 import {
   useGetAll as useGetAllRooms,
-  useUpdate as useUPdateRoom,
   useDelete as useDeleteRoom,
 } from "../../../api/room";
 
@@ -17,22 +16,23 @@ export const Route = createLazyFileRoute("/dashboard/admin/rooms")({
 });
 
 function Component() {
+  const ref = useRef<ElementRef<typeof RoomModal>>(null);
+  const [roomId, setRoomId] = useState(0);
+
   const { data: rooms } = useGetAllRooms();
-  const { mutateAsync: updateRoom } = useUPdateRoom();
   const { mutateAsync: deleteRoom } = useDeleteRoom();
 
-  const [showAddModal, setShowAddModal] = useState(false);
+  const onShow = useCallback((roomId: number = 0) => {
+    ref.current?.show();
+    setRoomId(roomId);
+  }, []);
 
-  const onAdd = () => {
-    // setJuriesRooms([...Rooms, newRoom]) // handled by query
-    setShowAddModal(false);
-  };
+  const onClose = useCallback(() => {
+    ref.current?.close();
+    setRoomId(0);
+  }, []);
 
-  const onCancel = () => {
-    setShowAddModal(false);
-  };
-
-  const handleExportSchedule = () => {
+  const handleExportSchedule = useCallback(() => {
     const csvContent = [
       ["id", "room", "create_at", "updated_at", "deleted_at"],
       ...rooms.map((room) => [
@@ -53,7 +53,7 @@ function Component() {
     link.download = "rooms.csv";
     link.click();
     URL.revokeObjectURL(url);
-  };
+  }, [rooms]);
 
   const columns = useMemo<ColumnDef<Room>[]>(() => {
     return [
@@ -75,10 +75,7 @@ function Component() {
                 type="button"
                 variant="warning"
                 size="sm"
-                onClick={() => {
-                  // setCurrentTemplate(template);
-                  // setShowForm(true);
-                }}
+                onClick={() => onShow(roomId)}
               >
                 Update
               </Button>
@@ -98,7 +95,7 @@ function Component() {
         },
       },
     ];
-  }, [deleteRoom]);
+  }, [deleteRoom, onShow]);
 
   return (
     <Container
@@ -108,11 +105,7 @@ function Component() {
     >
       <h2>Room Management</h2>
       <Container as="div" className="mb-3" style={{ display: "flex", gap: 5 }}>
-        <Button
-          type="button"
-          variant="primary"
-          onClick={() => setShowAddModal(true)}
-        >
+        <Button type="button" variant="primary" onClick={() => onShow()}>
           Add Room
         </Button>
         <Button
@@ -124,15 +117,7 @@ function Component() {
         </Button>
       </Container>
       <Table columns={columns} data={rooms} />
-      {/* Add Juries Room Modal */}
-      {showAddModal && (
-        <div
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"
-          style={{ zIndex: 1050 }}
-        >
-          <AddRoom onAdd={onAdd} onCancel={onCancel} />
-        </div>
-      )}
+      <RoomModal ref={ref} roomId={roomId} onClose={onClose} />
     </Container>
   );
 }

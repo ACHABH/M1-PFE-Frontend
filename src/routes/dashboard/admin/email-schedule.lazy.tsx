@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-import AddEmailSchedule from '../../../components/Admin/AddEmailSchedule'
-import EditEmailSchedule from '../../../components/Admin/EditEmailSchedule'
+import AddEmailSchedule from '../../../components/admin/AddEmailSchedule'
+import EditEmailSchedule from '../../../components/admin/EditEmailSchedule'
 
 export const Route = createLazyFileRoute('/dashboard/admin/email-schedule')({
   component: RouteComponent,

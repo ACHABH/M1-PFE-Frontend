@@ -24,13 +24,15 @@ export function useGet(id: number) {
   return useQuery({
     queryKey: QUERY.ROOM.ONE(id),
     async queryFn(context) {
-      const res = await request("/api/room", { signal: context.signal });
+      if (id <= 0) return null;
+      const res = await request(`/api/room/${id}`, { signal: context.signal });
       const json = (await res.json()) as FetchResponse<{
         room: Prettier<Room>;
       }>;
       if (!json.ok) throw new Error(json.message ?? "Request failed");
       return json.data.room;
     },
+    initialData: null,
   });
 }
 
