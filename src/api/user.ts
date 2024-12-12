@@ -20,7 +20,9 @@ export function useGetAll() {
     queryKey: QUERY.USER.ALL(),
     async queryFn(context) {
       const res = await request("/api/user/all", { signal: context.signal });
-      const json = (await res.json()) as FetchResponse<{ users: Prettier<FullUser[]> }>;
+      const json = (await res.json()) as FetchResponse<{
+        users: Prettier<FullUser[]>;
+      }>;
       if (!json.ok) throw new Error(json?.message ?? "Request failed");
       return json.data.users;
     },
