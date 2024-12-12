@@ -1,6 +1,10 @@
-import type { StrictPick } from "../types/util";
+import type { Prettier, StrictPick } from "../types/util";
 import type { User } from "../types/db";
-import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
@@ -9,8 +13,8 @@ import { CODE, TOKEN } from "../constant/cookie";
 import { QUERY } from "../constant/query";
 import { auth } from "../lib/auth";
 
-export type UseLoginBody = Partial<
-  StrictPick<User, "email" | "password"> & { remember: boolean }
+export type UseLoginBody = Prettier<
+  Partial<StrictPick<User, "email" | "password"> & { remember: boolean }>
 >;
 
 export function useLogin() {
@@ -101,7 +105,7 @@ export function useOneTimePassword() {
   });
 }
 
-export type UseForgetPasswordBody = StrictPick<User, "email">;
+export type UseForgetPasswordBody = Prettier<StrictPick<User, "email">>;
 
 export function useForgetPassword() {
   const navigate = useNavigate({ from: "/auth/forget-password" });
@@ -120,9 +124,11 @@ export function useForgetPassword() {
   });
 }
 
-export type UseResetPasswordBody = StrictPick<User, "password"> & {
-  password_confirmation: string;
-} & { code: string };
+export type UseResetPasswordBody = Prettier<
+  StrictPick<User, "password"> & {
+    password_confirmation: string;
+  } & { code: string }
+>;
 
 export function useResetPassword() {
   const navigate = useNavigate({ from: "/auth/reset-password" });

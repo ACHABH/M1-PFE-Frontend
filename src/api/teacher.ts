@@ -11,9 +11,12 @@ export function useGetAll() {
     async queryFn(context) {
       const res = await request("/api/teacher/all", { signal: context.signal });
       const json = (await res.json()) as FetchResponse<{
-        teachers: Prettier<StrictOmit<FullUser, "student" | "company" | "admin">>;
+        teachers: Prettier<
+          StrictOmit<FullUser, "student" | "company" | "admin">[]
+        >;
       }>;
-      return json;
+      if (!json.ok) throw new Error(json.message ?? "Request failed");
+      return json.data.teachers;
     },
   });
 }

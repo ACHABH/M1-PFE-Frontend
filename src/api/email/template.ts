@@ -1,4 +1,4 @@
-import type { StrictPick } from "../../types/util";
+import type { Prettier, StrictPick } from "../../types/util";
 import type { FetchResponse } from "../../types/http";
 import type { EmailTemplate, EmailTemplates } from "../../types/db";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -15,7 +15,8 @@ export function useGetAll() {
       const json = (await res.json()) as FetchResponse<{
         email_templates: EmailTemplates;
       }>;
-      return json;
+      if (!json.ok) throw new Error(json.message ?? "Request failed");
+      return json.data.email_templates;
     },
   });
 }
@@ -28,14 +29,15 @@ export function useGet(id: number) {
         signal: context.signal,
       });
       const json = (await res.json()) as FetchResponse<{
-        email_template: EmailTemplate;
+        email_template: Prettier<EmailTemplate>;
       }>;
-      return json;
+      if (!json.ok) throw new Error(json.message ?? "Request failed");
+      return json.data.email_template;
     },
   });
 }
 
-type UseCreateBody = StrictPick<EmailTemplate, "subject" | "content">;
+type UseCreateBody = Prettier<StrictPick<EmailTemplate, "subject" | "content">>;
 
 export function useCreate() {
   const queryClient = useQueryClient();
@@ -55,26 +57,26 @@ export function useCreate() {
   });
 }
 
-type UseUpdatePayload = {
+type UseUpdateParams = {
   id: number;
-  body: StrictPick<EmailTemplate, "subject" | "content">;
+  body: UseCreateBody;
 };
 
 export function useUpdate() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn({ id, body }: UseUpdatePayload) {
-      return request(`/api/email/template/${id}`, {
+    mutationFn(params: UseUpdateParams) {
+      return request(`/api/email/template/${params.id}`, {
         method: "PUT",
-        body: JSON.stringify(body),
+        body: JSON.stringify(params.body),
       });
     },
-    async onSuccess(res, { id }) {
+    async onSuccess(res, params) {
       if (!res.ok) return;
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: QUERY.EMAIL.TEMPLATE.ALL() }),
         queryClient.invalidateQueries({
-          queryKey: QUERY.EMAIL.TEMPLATE.ONE(id),
+          queryKey: QUERY.EMAIL.TEMPLATE.ONE(params.id),
         }),
       ]);
     },

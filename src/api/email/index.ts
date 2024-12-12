@@ -18,8 +18,11 @@ export function useGetAll() {
     queryKey: QUERY.EMAIL.ALL(),
     async queryFn(context) {
       const res = await request("/api/email/all", { signal: context.signal });
-      const json = (await res.json()) as FetchResponse<{ emails: FullEmail[] }>;
-      return json;
+      const json = (await res.json()) as FetchResponse<{
+        emails: Prettier<FullEmail[]>;
+      }>;
+      if (!json.ok) throw new Error(json.message ?? "Request failed");
+      return json.data.emails;
     },
   });
 }
@@ -29,15 +32,17 @@ export function useGet(id: number) {
     queryKey: QUERY.EMAIL.ONE(id),
     async queryFn(context) {
       const res = await request(`/api/email/${id}`, { signal: context.signal });
-      const json = (await res.json()) as FetchResponse<{ email: FullEmail }>;
-      return json;
+      const json = (await res.json()) as FetchResponse<{
+        email: Prettier<FullEmail>;
+      }>;
+      if (!json.ok) throw new Error(json.message ?? "Request failed");
+      return json.data.email;
     },
   });
 }
 
-type UseSendBody = StrictPick<
-  Email,
-  "subject" | "content" | "admin_id" | "receiver_id"
+type UseSendBody = Prettier<
+  StrictPick<Email, "subject" | "content" | "admin_id" | "receiver_id">
 >;
 
 export function useSend() {

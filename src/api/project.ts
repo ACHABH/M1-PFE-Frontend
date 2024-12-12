@@ -1,21 +1,27 @@
-import type { FetchResponse } from "../types/http";
 import type { Project, ProjectNote } from "../types/db";
+import type { FetchResponse } from "../types/http";
+import type { Prettier } from "../types/util";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { request } from "../utils/request";
 import { QUERY } from "../constant/query";
 
-export type FullProject = Project &
-  Partial<{
-    project_note: ProjectNote | null;
-  }>;
+export type FullProject = Prettier<
+  Project &
+    Partial<{
+      project_note: ProjectNote | null;
+    }>
+>;
 
 export function useGetAll() {
   return useQuery({
     queryKey: QUERY.PROJECT.ALL(),
     async queryFn(context) {
       const res = await request("/api/project/all", { signal: context.signal });
-      const json = (await res.json()) as FetchResponse<FullProject[]>;
-      return json;
+      const json = (await res.json()) as FetchResponse<{
+        projects: Prettier<FullProject[]>;
+      }>;
+      if (!json.ok) throw new Error(json.message ?? "Request failed");
+      return json.data.projects;
     },
   });
 }
@@ -24,11 +30,14 @@ export function useGetOne(id: number) {
   return useQuery({
     queryKey: QUERY.PROJECT.ONE(id),
     async queryFn(context) {
-      const res = await request(`/api/project/${encodeURIComponent(id)}`, {
+      const res = await request(`/api/project/${id}`, {
         signal: context.signal,
       });
-      const json = (await res.json()) as FetchResponse<FullProject>;
-      return json;
+      const json = (await res.json()) as FetchResponse<{
+        project: FullProject;
+      }>;
+      if (!json.ok) throw new Error(json.message ?? "Request failed");
+      return json.data.project;
     },
   });
 }
@@ -58,8 +67,9 @@ export function useUpdate() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn(params: UseUpdateParams) {
-      return request(`/api/project/${encodeURIComponent(params.id)}`, {
+      return request(`/api/project/${params.id}`, {
         method: "PUT",
+        body: JSON.stringify(params.body),
       });
     },
     async onSuccess(res, params) {
@@ -78,7 +88,7 @@ export function useDelete() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn(id: number) {
-      return request(`/api/project/${encodeURIComponent(id)}`, {
+      return request(`/api/project/${id}`, {
         method: "DELETE",
       });
     },

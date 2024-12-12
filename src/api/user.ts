@@ -20,7 +20,7 @@ export function useGetAll() {
     queryKey: QUERY.USER.ALL(),
     async queryFn(context) {
       const res = await request("/api/user/all", { signal: context.signal });
-      const json = (await res.json()) as FetchResponse<{ users: FullUser[] }>;
+      const json = (await res.json()) as FetchResponse<{ users: Prettier<FullUser[]> }>;
       if (!json.ok) throw new Error(json?.message ?? "Request failed");
       return json.data.users;
     },
@@ -51,7 +51,7 @@ export function useCreate() {
   });
 }
 
-type UseUpdateArgs = {
+type UseUpdateParams = {
   user_id?: number;
   body: object;
 };
@@ -59,12 +59,12 @@ type UseUpdateArgs = {
 export function useUpdate() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn(args: UseUpdateArgs) {
+    mutationFn(params: UseUpdateParams) {
       return request(
-        `/api/user?user_id=${encodeURIComponent(args.user_id ?? 0)}`,
+        `/api/user?user_id=${encodeURIComponent(params.user_id ?? 0)}`,
         {
           method: "PUT",
-          body: JSON.stringify(args.body),
+          body: JSON.stringify(params.body),
         }
       );
     },
@@ -73,7 +73,6 @@ export function useUpdate() {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: QUERY.AUTH.STATUS() }),
         queryClient.invalidateQueries({ queryKey: QUERY.USER.ALL() }),
-        queryClient.invalidateQueries({ queryKey: QUERY.USER.KEY }),
       ]);
     },
   });
@@ -92,7 +91,6 @@ export function useDelete() {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: QUERY.AUTH.STATUS() }),
         queryClient.invalidateQueries({ queryKey: QUERY.USER.ALL() }),
-        queryClient.invalidateQueries({ queryKey: QUERY.USER.KEY }),
       ]);
     },
   });

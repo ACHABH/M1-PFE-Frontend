@@ -1,17 +1,20 @@
+import type { FetchResponse } from "../types/http";
+import type { Prettier, StrictPick } from "../types/util";
 import type { Room, Rooms } from "../types/db";
-import type { StrictPick } from "../types/util";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { QUERY } from "../constant/query";
 import { request } from "../utils/request";
-import { FetchResponse } from "../types/http";
 
 export function useGetAll() {
   return useQuery({
     queryKey: QUERY.ROOM.ALL(),
     async queryFn(context) {
       const res = await request("/api/room/all", { signal: context.signal });
-      const json = (await res.json()) as FetchResponse<{ rooms: Rooms }>;
-      return json;
+      const json = (await res.json()) as FetchResponse<{
+        rooms: Prettier<Rooms>;
+      }>;
+      if (!json.ok) throw new Error(json.message ?? "Request failed");
+      return json.data.rooms;
     },
   });
 }
@@ -21,13 +24,16 @@ export function useGet(id: number) {
     queryKey: QUERY.ROOM.ONE(id),
     async queryFn(context) {
       const res = await request("/api/room", { signal: context.signal });
-      const json = (await res.json()) as FetchResponse<{ room: Room }>;
-      return json;
+      const json = (await res.json()) as FetchResponse<{
+        room: Prettier<Room>;
+      }>;
+      if (!json.ok) throw new Error(json.message ?? "Request failed");
+      return json.data.room;
     },
   });
 }
 
-type UseUpdateBody = StrictPick<Room, "room">;
+type UseUpdateBody = Prettier<Partial<StrictPick<Room, "room">>>;
 
 export function useCreate() {
   const queryClient = useQueryClient();
@@ -40,32 +46,30 @@ export function useCreate() {
     },
     async onSuccess(res) {
       if (!res.ok) return;
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: QUERY.ROOM.ALL() }),
-      ]);
+      await queryClient.invalidateQueries({ queryKey: QUERY.ROOM.ALL() });
     },
   });
 }
 
-type UseUpdatePayload = {
+type UseUpdateParams = {
   id: number;
-  body: StrictPick<Room, "room">;
+  body: UseUpdateBody;
 };
 
 export function useUpdate() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn({ id, body }: UseUpdatePayload) {
-      return request(`/api/room/${id}`, {
+    mutationFn(params: UseUpdateParams) {
+      return request(`/api/room/${params.id}`, {
         method: "PUT",
-        body: JSON.stringify(body),
+        body: JSON.stringify(params.body),
       });
     },
-    async onSuccess(res, { id }) {
+    async onSuccess(res, params) {
       if (!res.ok) return;
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: QUERY.ROOM.ALL() }),
-        queryClient.invalidateQueries({ queryKey: QUERY.ROOM.ONE(id) }),
+        queryClient.invalidateQueries({ queryKey: QUERY.ROOM.ONE(params.id) }),
       ]);
     },
   });

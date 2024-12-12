@@ -16,7 +16,8 @@ export function useGetAll() {
           StrictOmit<FullUser, "student" | "company" | "teacher">
         >;
       }>;
-      return json;
+      if (!json.ok) throw new Error(json.message ?? "Request failed");
+      return json.data.admins;
     },
   });
 }
