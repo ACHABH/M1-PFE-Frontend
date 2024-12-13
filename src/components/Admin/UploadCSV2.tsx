@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { Container, Form, Button } from 'react-bootstrap';
 
 interface UploadCSV2Props {
   onUpload: (file: File) => void;
@@ -30,28 +31,25 @@ const UploadCSV2: React.FC<UploadCSV2Props> = ({ onUpload, onCancel }) => {
   };
 
   return (
-    <div className="container mt-4 mb-4 component-bg shadow p-3 rounded" style={{ width: '400px' }}>
+    <Container className="my-4 component-bg shadow p-3 rounded" style={{ width: "400px" }}>
       <h3>Upload CSV</h3>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Choose CSV File</label>
-          <input
-            type="file"
-            className="form-control"
-            accept=".csv"
-            onChange={handleFileChange}
-          />
-        </div>
-        <button type="submit" className="btn btn-primary me-2">Upload</button>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={handleCancel}
-        >
-          Cancel
-        </button>
-      </form>
-    </div>
+      <Form onSubmit={handleSubmit}>
+      <Form.Group className="mb-3">
+        <Form.Label>Choose CSV File</Form.Label>
+        <Form.Control
+        type="file"
+        accept=".csv"
+        onChange={handleFileChange}
+        />
+      </Form.Group>
+      <Button type="submit" className="me-2" variant="primary"></Button>
+        Upload
+      </Button>
+      <Button type="button" variant="secondary" onClick={handleCancel}>
+        Cancel
+      </Button>
+      </Form>
+    </Container>
   );
 };
 

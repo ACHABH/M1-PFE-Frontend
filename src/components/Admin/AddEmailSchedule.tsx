@@ -2,6 +2,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "../../hooks/useForm";
 import { useEffect } from "react";
+import { Form, Button } from "react-bootstrap";
 
 type Props = {
   templates: { id: number; title: string; description: string }[];
@@ -59,118 +60,67 @@ export default function AddEmailSchedule({ templates, onAdd, onCancel }: Props) 
         style={{ width: "500px" }}
       >
         <h3>Add Email Schedule</h3>
-        <form
-          onSubmit={form.onSubmit((data) => {
-            onAdd(data);
-          })}
+        <Form
         >
           <div className="d-flex flex-wrap justify-content-between">
-            <div className="mb-3" style={{maxWidth:"47%"}}>
-              <label className="form-label">Template (Optional)</label>
-              <select
-                {...form.register("templateId")}
-                className="form-select"
-                name="templateId"
-              >
-                <option value="">-- Select a Template --</option>
-                {templates.map((template) => (
+            <Form.Group className="mb-3" style={{ maxWidth: "47%" }}>
+                <Form.Label>Template (Optional)</Form.Label>
+                <Form.Select aria-label="Default select example" {...form.register("templateId")} name="templateId">
+                  <option value="">-- Select a Template --</option>
+                  {templates.map((template) => (
                   <option key={template.id} value={template.id}>
                     {template.title}
                   </option>
-                ))}
-              </select>
-            </div>
-            <div className="mb-3" style={{width:"47%"}}>
-              <label className="form-label">Receiver</label>
-              <select
+                  ))}
+                </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3" style={{ width: "47%" }}>
+              <Form.Label>Receiver</Form.Label>
+                <Form.Select
+                aria-label="Receiver select"
                 {...form.register("receiver", { required: true })}
-                className="form-select"
                 name="receiver"
                 required
-              >
+                >
+                <option value="">-- Select Receiver --</option>
                 {["All", "Students", "Teachers", "Companies"].map((receiver) => (
                   <option key={receiver} value={receiver}>
-                    {receiver}
+                  {receiver}
                   </option>
                 ))}
-              </select>
-            </div>
+                </Form.Select>
+            </Form.Group>
           </div>
-          
-
-          {/* Title (Read-Only if template selected) */}
-          <div className="mb-3">
-            <label className="form-label">Title</label>
-            <input
+          <Form.Group className="mb-3">
+            <Form.Label>Title</Form.Label>
+            <Form.Control
               {...form.register("title", { required: true })}
               type="text"
-              className="form-control"
               name="title"
               readOnly={!!selectedTemplate}
               required
             />
-          </div>
+          </Form.Group>
 
-          {/* Description (Read-Only if template selected) */}
-          <div className="mb-3">
-            <label className="form-label">Description</label>
-            <textarea
+          <Form.Group className="mb-3">
+            <Form.Label>Description</Form.Label>
+            <Form.Control
               {...form.register("description", { required: true })}
-              className="form-control"
+              as="textarea"
               name="description"
               rows={4}
               readOnly={!!selectedTemplate}
               required
-            ></textarea>
-          </div>
+            />
+          </Form.Group>
 
-          {/* Send When */}
-          {/* <div className="mb-3">
-            <label className="form-label">Send When</label>
-            <select
-              {...form.register("sendWhen", { required: true })}
-              className="form-select"
-              name="sendWhen"
-              required
-            >
-              {["Right Now", "Specified"].map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {form.watch("sendWhen") === "Specified" && (
-            <div className="d-flex justify-content-between">
-              <div className="mb-3" style={{ width: "47%" }}>
-                <label className="form-label">Date</label>
-                <input
-                  {...form.register("date")}
-                  type="date"
-                  className="form-control"
-                  name="date"
-                />
-              </div>
-              <div className="mb-3" style={{ width: "47%" }}>
-                <label className="form-label">Time</label>
-                <input
-                  {...form.register("time")}
-                  type="time"
-                  className="form-control"
-                  name="time"
-                />
-              </div>
-            </div>
-          )} */}
-
-          <button type="submit" className="btn btn-primary me-2">
+          <Button type="submit" className="me-2">
             Add Schedule
-          </button>
-          <button type="button" className="btn btn-secondary" onClick={onCancel}>
+          </Button>
+          <Button type="button" variant="secondary" onClick={onCancel}>
             Cancel
-          </button>
-        </form>
+          </Button>
+        </Form>
       </div>
       <style>
         {`

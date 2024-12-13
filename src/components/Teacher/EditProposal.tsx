@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Container, Form, Button } from "react-bootstrap";
 
 const EditProposalForm = ({ proposal, onSave, onCancel }) => {
   const [formData, setFormData] = useState({ ...proposal });
@@ -13,37 +14,37 @@ const EditProposalForm = ({ proposal, onSave, onCancel }) => {
   };
 
   return (
-    <div className="container mt-4">
-      <h4>Edit Proposal: {proposal.title}</h4>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Description</label>
-          <textarea
-            className="form-control"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-          ></textarea>
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Feedback</label>
-          <textarea
-            className="form-control"
-            name="feedback"
-            value={formData.feedback}
-            onChange={handleChange}
-            disabled
-          ></textarea>
-        </div>
-        <button type="submit" className="btn btn-success me-2">
-          Save Changes
-        </button>
-        <button type="button" className="btn btn-secondary" onClick={onCancel}>
-          Cancel
-        </button>
-      </form>
-    </div>
+    <Container className="my-4 component-bg shadow p-3 rounded" style={{ width: "400px" }}>
+        <h4>Edit Proposal: {proposal.title}</h4>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3">
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+              as="textarea"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Feedback</Form.Label>
+            <Form.Control
+              as="textarea"
+              name="feedback"
+              value={formData.feedback}
+              onChange={handleChange}
+              disabled
+            />
+          </Form.Group>
+          <Button type="submit" className="me-2" variant="success">
+            Save Changes
+          </Button>
+          <Button type="button" variant="secondary" onClick={onCancel}>
+            Cancel
+          </Button>
+        </Form>
+      </Container>
   );
 };
 

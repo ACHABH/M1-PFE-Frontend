@@ -2,6 +2,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "../../hooks/useForm";
 import { USER_ROLE } from "../../constant/enum";
+import { Container, Form, Button } from "react-bootstrap";
 
 type Props = {
   onAdd: () => void;
@@ -42,63 +43,48 @@ export default function AddUser({ onAdd }: Props) {
   // };
 
   return (
-    <div
-      className="container mt-4 component-bg shadow my-3 p-3"
-      style={{ borderRadius: "15px" }}
+    <Container className="my-4 component-bg shadow p-3 rounded" style={{ width: "400px" }}>
+    <h3>Add User</h3>
+    <Form
     >
-      <h3>Add User</h3>
-      <form
-        onSubmit={form.onSubmit((data) => {
-          console.log(data);
-          onAdd();
-        })}
-      >
-        <div className="mb-3">
-          <label className="form-label">Name</label>
-          <input
-            {...form.register("name", { required: true })}
-            type="text"
-            className="form-control"
-            name="name"
-            // value={formData.name}
-            // onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Email</label>
-          <input
-            {...form.register("email", { required: true })}
-            type="email"
-            className="form-control"
-            name="email"
-            // value={formData.email}
-            // onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Role</label>
-          <select
-            {...form.register("role", { required: true })}
-            className="form-select"
-            name="role"
-            // value={formData.role}
-            // onChange={handleChange}
-          >
-            {USER_ROLE.map((role) =>
-              role === "admin" || role === "owner" ? null : (
-                <option key={role} value={role}>
-                  {role}
-                </option>
-              )
-            )}
-          </select>
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Add User
-        </button>
-      </form>
-    </div>
+      <Form.Group className="mb-3">
+        <Form.Label>Name</Form.Label>
+        <Form.Control
+          {...form.register("name", { required: true })}
+          type="text"
+          name="name"
+          required
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Email</Form.Label>
+        <Form.Control
+          {...form.register("email", { required: true })}
+          type="email"
+          name="email"
+          required
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Role</Form.Label>
+        <Form.Select
+          {...form.register("role", { required: true })}
+          name="role"
+          required
+        >
+          {USER_ROLE.map((role) =>
+            role === "admin" || role === "owner" ? null : (
+              <option key={role} value={role}>
+                {role}
+              </option>
+            )
+          )}
+        </Form.Select>
+      </Form.Group>
+      <Button type="submit" className="me-2" variant="primary">
+        Add User
+      </Button>
+    </Form>
+  </Container>
   );
 }

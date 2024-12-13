@@ -1,7 +1,7 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
-import EmailTemplateForm from '../../../components/admin/EmailTemplateForm'
-import Table from "../../../components/table";
+import EmailTemplateForm from '../../../components/Admin/EmailTemplateForm'
+import Table from "../../../components/Table";
 import type { EmailTemplate } from "../../../types/db";
 import { ColumnDef } from '@tanstack/react-table';
 import Button from 'react-bootstrap/esm/Button';
@@ -68,7 +68,7 @@ function RouteComponent() {
         header: "Actions",
         enableSorting: false,
         cell(props) {
-          const emailId = props.getValue<number>();
+          const emailId = props.getValue();
           return (
             <Container as="div" style={{ display: "flex", gap: 5 }}>
               <Button
@@ -76,7 +76,7 @@ function RouteComponent() {
                 variant="warning"
                 size="sm"
                 onClick={() => {
-                  // setCurrentTemplate(template);
+                  // setCurrentTemplate(emailId);
                   // setShowForm(true);
                 }}
               >

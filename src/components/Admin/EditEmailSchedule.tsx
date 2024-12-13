@@ -1,15 +1,22 @@
 import { useState } from 'react';
+import { Container, Form, Button } from 'react-bootstrap';
+import { useForm } from "../../hooks/useForm";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-interface Schedule {
-  title: string;
-  description: string;
-  // date: string;
-  // time: string;
-}
+import { z } from 'zod';
+
+const ScheduleSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "Description is required"),
+  // date: z.string().optional(),
+  // time: z.string().optional(),
+});
+
+type ZodFormSchema = z.infer<typeof ScheduleSchema>;
 
 interface EditEmailScheduleProps {
-  schedule: Schedule;
-  onUpdate: (schedule: Schedule) => void;
+  schedule: ZodFormSchema;
+  onUpdate: (schedule: ZodFormSchema) => void;
   onCancel: () => void;
 }
 
@@ -29,63 +36,64 @@ const EditEmailSchedule = ({ schedule, onUpdate, onCancel }: EditEmailSchedulePr
     onCancel();
   };
 
+  const form = useForm<ZodFormSchema>({
+    resolver: zodResolver(ScheduleSchema),
+    defaultValues: {
+      title: formData.title,
+      description: formData.description,
+    },
+  });
+
   return (
-    <div className="container my-4 component-bg shadow p-3 rounded" style={{ width: '500px' }}>
+    <Container className="my-4 component-bg shadow p-3 rounded" style={{ width: '500px' }}>
       <h3>Edit Email Schedule</h3>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Title</label>
-          <input
-            type="text"
-            className="form-control"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Description</label>
-          <textarea
-            className="form-control"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-          ></textarea>
-        </div>
-        {/* <div className="mb-3">
-          <label className="form-label">Date</label>
-          <input
-            type="date"
-            className="form-control"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Time</label>
-          <input
-            type="time"
-            className="form-control"
-            name="time"
-            value={formData.time}
-            onChange={handleChange}
-            required
-          />
-        </div> */}
-        <button type="submit" className="btn btn-success me-2">Update Schedule</button>
-        <button
-          type="reset"
-          className="btn btn-secondary"
-          onClick={handleCancel}
-        >
-          Cancel
-        </button>
-      </form>
-    </div>
+      <Form onSubmit={handleSubmit}>
+      <Form.Group className="mb-3">
+        <Form.Label>Title</Form.Label>
+        <Form.Control
+        {...form.register("title", { required: true })}
+        type='text'
+        name="title"
+        value={formData.title}
+        onChange={handleChange}
+        required
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Description</Form.Label>
+        <Form.Control
+        as="textarea"
+        {...form.register("description", { required: true })}
+        name="description"
+        value={formData.description}
+        onChange={handleChange}
+        required
+        />
+      </Form.Group>
+      {/* <Form.Group className="mb-3">
+        <Form.Label>Date</Form.Label>
+        <Form.Control
+        type="date"
+        name="date"
+        value={formData.date}
+        onChange={handleChange}
+        required
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Time</Form.Label>
+        <Form.Control
+        type="time"
+        name="time"
+        value={formData.time}
+        onChange={handleChange}
+        required
+        />
+      </Form.Group> */}
+      <Button type="submit" className="me-2" variant="success">Update Schedule</Button>
+      <Button type="reset" variant="secondary" onClick={handleCancel}>Cancel</Button>
+      </Form>
+    </Container>
   );
 };
 

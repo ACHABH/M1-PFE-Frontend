@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "../../hooks/useForm";
+import { Container, Form, Button } from "react-bootstrap";
 
 type Props = {
   onAdd: () => void;
@@ -50,85 +51,64 @@ export default function AddDefenseSlot({ onAdd, onCancel }: Props) {
   // };
 
   return (
-    <div
-      className="container my-4 component-bg shadow p-3 rounded"
-      style={{ width: "500px" }}
-    >
+    <Container className="my-4 component-bg shadow p-3 rounded" style={{ width: "500px" }}>
       <h3>Add Jurie Slot</h3>
-      <form
-        onSubmit={form.onSubmit(async (data) => {
-          console.log(data);
-          onAdd();
-        })}
+      <Form
+      onSubmit={}
       >
-        <div className="mb-3">
-          <label className="form-label">First Day</label>
-          <input
-            {...form.register("startDate", { required: true })}
-            type="date"
-            className="form-control"
-            name="date"
-            // value={formData.startDate}
-            // onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Last Day</label>
-          <input
-            {...form.register("endDate", { required: true })}
-            type="date"
-            className="form-control"
-            name="date"
-            // value={formData.endDate}
-            // onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Starting Time</label>
-          <input
-            {...form.register("startTime", { required: true })}
-            type="time"
-            className="form-control"
-            name="time"
-            // value={formData.startTime}
-            // onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Ending Time</label>
-          <input
-            {...form.register("endTime", { required: true })}
-            type="time"
-            className="form-control"
-            name="time"
-            // value={formData.endTime}
-            // onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Rooms (Comma-separated)</label>
-          <input
-            {...form.register("rooms", { required: true })}
-            type="text"
-            className="form-control"
-            name="rooms"
-            // value={formData.rooms}
-            // onChange={handleChange}
-            placeholder="e.g., N101, N102, N103"
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary me-2">
-          Add Slot
-        </button>
-        <button type="reset" className="btn btn-secondary" onClick={onCancel}>
-          Cancel
-        </button>
-      </form>
-    </div>
+      <Form.Group className="mb-3">
+        <Form.Label>First Day</Form.Label>
+        <Form.Control
+        {...form.register("startDate", { required: true })}
+        type="date"
+        name="startDate"
+        required
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Last Day</Form.Label>
+        <Form.Control
+        {...form.register("endDate", { required: true })}
+        type="date"
+        name="endDate"
+        required
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Starting Time</Form.Label>
+        <Form.Control
+        {...form.register("startTime", { required: true })}
+        type="time"
+        name="startTime"
+        required
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Ending Time</Form.Label>
+        <Form.Control
+        {...form.register("endTime", { required: true })}
+        type="time"
+        name="endTime"
+        required
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Rooms (Comma-separated)</Form.Label>
+        <Form.Control
+        {...form.register("rooms", { required: true })}
+        type="text"
+        name="rooms"
+        placeholder="e.g., N101, N102, N103"
+        required
+        />
+      </Form.Group>
+      <Button type="submit" className="me-2">
+        Add Slot
+      </Button>
+      <Button type="reset" variant="secondary" onClick={onCancel}>
+        Cancel
+      </Button>
+      </Form>
+    </Container>
   );
 }

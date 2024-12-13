@@ -2,6 +2,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "../../hooks/useForm";
 import { PROJECT_TYPE } from "../../constant/enum";
+import { Form, Button, Container } from "react-bootstrap";
 
 type Props = {
   onAdd: () => void;
@@ -49,64 +50,53 @@ export default function AddPFEProposal({ onAdd, onCancel }: Props) {
   // };
 
   return (
-    <div
-      className="container my-4 component-bg shadow p-3 rounded"
-      style={{ width: "400px" }}
-    >
+    <Container className="my-4 component-bg shadow p-3 rounded" style={{ width: "400px" }}>
       <h3>Add PFE Proposal</h3>
-      <form
-        onSubmit={form.onSubmit((data) => {
-          console.log(data);
-          onAdd();
-        })}
+      <Form
+      onSubmit={form.onSubmit((data) => {
+        console.log(data);
+        onAdd();
+      })}
       >
-        <div className="mb-3">
-          <label className="form-label">Title</label>
-          <input
-            {...form.register("title", { required: true })}
-            type="text"
-            className="form-control"
-            name="title"
-            // value={formData.title}
-            // onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Type</label>
-          <select
-            {...form.register("type", { required: true })}
-            className="form-select"
-            name="type"
-            // value={formData.type}
-            // onChange={handleChange}
-            required
-          >
-            {PROJECT_TYPE.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Description</label>
-          <textarea
-            {...form.register("description", { required: true })}
-            className="form-control"
-            name="description"
-            // value={formData.description}
-            // onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary me-2">
-          Add Proposal
-        </button>
-        <button type="reset" className="btn btn-secondary" onClick={onCancel}>
-          Cancel
-        </button>
-      </form>
-    </div>
+      <Form.Group className="mb-3">
+        <Form.Label>Title</Form.Label>
+        <Form.Control
+        {...form.register("title", { required: true })}
+        type="text"
+        name="title"
+        required
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Type</Form.Label>
+        <Form.Select
+        {...form.register("type", { required: true })}
+        name="type"
+        required
+        >
+        {PROJECT_TYPE.map((type) => (
+          <option key={type} value={type}>
+          {type}
+          </option>
+        ))}
+        </Form.Select>
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Description</Form.Label>
+        <Form.Control
+        {...form.register("description", { required: true })}
+        as="textarea"
+        name="description"
+        required
+        />
+      </Form.Group>
+      <Button type="submit" className="me-2" variant="primary">
+        Add Proposal
+      </Button>
+      <Button type="reset" variant="secondary" onClick={onCancel}>
+        Cancel
+      </Button>
+      </Form>
+    </Container>
   );
 }

@@ -6,9 +6,9 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { USER_ROLE, type UserRole } from "../../../constant/enum";
-import EditUser from "../../../components/admin/EditUser";
-import UploadCSV2 from "../../../components/admin/UploadCSV2";
-import Table from "../../../components/table";
+import EditUser from "../../../components/Admin/EditUser";
+import UploadCSV2 from "../../../components/Admin/UploadCSV2";
+import Table from "../../../components/Table";
 import {
   useGetAll as useGetAllUsers,
   useDelete as useDeleteUser,

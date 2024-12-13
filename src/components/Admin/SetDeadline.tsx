@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Container, Form, Button } from 'react-bootstrap';
 
 const SetDeadline = ({ onSetDeadline }) => {
   const [formData, setFormData] = useState({
@@ -24,37 +25,34 @@ const SetDeadline = ({ onSetDeadline }) => {
   };
 
   return (
-    <div className="container mt-4">
+    <Container className="my-4 component-bg shadow p-3 rounded" style={{ width: "400px" }}>
       <h3>Set Project Choosing Deadline</h3>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Start Date</label>
-          <input
-            type="date"
-            className="form-control"
-            name="startDate"
-            value={formData.startDate}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">End Date</label>
-          <input
-            type="date"
-            className="form-control"
-            name="endDate"
-            value={formData.endDate}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Set Deadline
-        </button>
-        
-      </form>
-    </div>
+      <Form onSubmit={handleSubmit}>
+      <Form.Group className="mb-3">
+        <Form.Label>Start Date</Form.Label>
+        <Form.Control
+        type="date"
+        name="startDate"
+        value={formData.startDate}
+        onChange={handleChange}
+        required
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>End Date</Form.Label>
+        <Form.Control
+        type="date"
+        name="endDate"
+        value={formData.endDate}
+        onChange={handleChange}
+        required
+        />
+      </Form.Group>
+      <Button type="submit" className="me-2" variant="primary">
+        Set Deadline
+      </Button>
+      </Form>
+    </Container>
   );
 };
 
