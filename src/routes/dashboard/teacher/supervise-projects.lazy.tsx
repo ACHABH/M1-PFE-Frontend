@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import Table from "../../../components/table";
+import Table from "../../../components/Table";
 import { useMemo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import type { Project, ProjectProposition } from "../../../types/db";
+import type { Project} from "../../../types/db";
 import { Prettier } from "../../../types/util";
 
 
@@ -17,24 +17,24 @@ function RouteComponent() {
   const [projects, setProjects] = useState([
     {
       title: 'AI Research',
-      proposer: 'Dr. Jane Doe',
       type: 'Classic',
-      summary: 'Exploring AI applications in education.',
-      status: 'Available',
+      description: 'Exploring AI applications in education.',
+      status: 'approved',
+      id: 1,
     },
     {
       title: 'Robotics Design',
-      proposer: 'Dr. John Smith',
       type: 'Innovative',
-      summary: 'Creating robotic models for industrial automation.',
-      status: 'Available',
+      description: 'Creating robotic models for industrial automation.',
+      status: 'approved',
+      id: 2,
     },
     {
       title: 'Blockchain Security',
-      proposer: 'Dr. Alice Green',
       type: 'Innovative',
-      summary: 'Developing secure blockchain algorithms.',
-      status: 'Selected',
+      description: 'Developing secure blockchain algorithms.',
+      status: 'assigned',
+      id: 3,
     },
   ])
 
@@ -47,56 +47,50 @@ function RouteComponent() {
     alert(`You have selected "${title}" for supervision.`)
   }
 
-  type Supervise = Prettier<Project & ProjectProposition>;
+  type Supervise = Prettier<Project>;
 
   const columns = useMemo<ColumnDef<Supervise>[]>(() => {
     return [
       {
         header: 'Title',
-        accessor: 'title',
-        enableSorting: true,
-        cell: (props) => props.getValue(),
-      },
-      {
-        header: 'Proposer',
-        accessor: 'proposer',
+        accessorKey: 'title',
         enableSorting: true,
         cell: (props) => props.getValue(),
       },
       {
         header: 'Type',
-        accessor: 'type',
+        accessorKey: 'type',
         enableSorting: true,
         cell: (props) => props.getValue(),
       },
       {
-        header: 'Summary',
-        accessor: 'summary',
+        header: 'Description',
+        accessorKey: 'description',
         enableSorting: true,
         cell: (props) => props.getValue(),
       },
       {
         header: 'Status',
-        accessor: 'status',
+        accessorKey: 'status',
         enableSorting: true,
-        cell: (props) => props.getValue(),
+        cell: (props) => {
+          const status = props.getValue();
+          return status === 'approved' ? 'Available' : status === 'assigned' ? 'Selected' : status;
+        },
       },
       {
-        header: 'Actions',
-        accessor: 'actions',
-        render: (row: Supervise) => {
-          return (
-            <>
-              {row.status === 'Available' && (
-                <button
-                  className="btn btn-primary btn-sm"
-                  onClick={() => handleSelectProject(row.title)}
-                >
-                  Select
-                </button>
-              )}
-            </>
-          )
+        accessorKey: "actions",
+        header: "Actions",
+        cell: (props) => {
+          const projects = props.row.original;
+          return projects.status === "approved" ? (
+          <button
+            className="btn btn-success btn-sm"
+            onClick={() => handleSelectProject(projects.title)}
+          >
+            Select
+          </button>
+          ) : null;
         },
       },
     ]
@@ -113,7 +107,7 @@ function RouteComponent() {
               <th>Title</th>
               <th>Proposer</th>
               <th>Type</th>
-              <th>Summary</th>
+              <th>description</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -124,7 +118,7 @@ function RouteComponent() {
                 <td>{project.title}</td>
                 <td>{project.proposer}</td>
                 <td>{project.type}</td>
-                <td>{project.summary}</td>
+                <td>{project.description}</td>
                 <td>
                   <span
                     className={`badge ${

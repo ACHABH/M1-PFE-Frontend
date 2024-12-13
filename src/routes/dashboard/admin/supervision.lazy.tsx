@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import Table from "../../../components/table";
+import Table from "../../../components/Table";
 import type { Project, Teacher, User } from "../../../types/db";
 import { useMemo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
