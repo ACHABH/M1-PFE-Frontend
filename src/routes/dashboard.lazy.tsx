@@ -52,7 +52,7 @@ function Component() {
             className="bg-white side-menu-container"
           >
             {isSidebarCollapsed && (
-              <SideMenu userRole={user?.role ?? "admin"} />
+              <SideMenu userRole={user?.role ?? "teacher"} />
             )}
           </div>
           <div style={{ height: "100vh" }} className="mx-auto content">

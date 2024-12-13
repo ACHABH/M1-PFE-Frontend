@@ -215,6 +215,13 @@ export default function SideMenu({ userRole }: Props) {
                   <i className="bi bi-file-earmark-text me-2"></i>
                   Emails Template
                 </Link>
+                <Link
+                  to="/dashboard/admin/rooms"
+                  className="aside-option"
+                >
+                  <i className="bi bi-door-open me-2"></i>
+                  Rooms
+                </Link>
               </div>
             )}
           </div>

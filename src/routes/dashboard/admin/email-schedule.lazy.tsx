@@ -1,8 +1,12 @@
-import * as React from 'react'
+import { useMemo, useState } from 'react'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 import AddEmailSchedule from '../../../components/admin/AddEmailSchedule'
 import EditEmailSchedule from '../../../components/admin/EditEmailSchedule'
+import Table from "../../../components/table";
+import { ColumnDef } from "@tanstack/react-table";
+import type { Email } from "../../../types/db";
+
 
 export const Route = createLazyFileRoute('/dashboard/admin/email-schedule')({
   component: RouteComponent,
@@ -10,8 +14,8 @@ export const Route = createLazyFileRoute('/dashboard/admin/email-schedule')({
 
 const ScheduleSchema = z.object({
   id: z.number(),
-  title: z.string(),
-  description: z.string(),
+  subject: z.string(),
+  content: z.string(),
   date: z.string().date(),
   time: z.string().time(),
 })
@@ -19,36 +23,36 @@ const ScheduleSchema = z.object({
 type Schedule = z.infer<typeof ScheduleSchema>
 
 function RouteComponent() {
-  const [schedules, setSchedules] = React.useState<Schedule[]>([
+  const [schedules, setSchedules] = useState<Schedule[]>([
     {
       id: 1,
-      title: 'PFE Proposal Reminder',
-      description: 'Reminder to submit PFE proposals.',
+      subject: 'PFE Proposal Reminder',
+      content: 'Reminder to submit PFE proposals.',
       date: '2024-12-01',
       time: '10:00 AM',
     },
     {
       id: 2,
-      title: 'Form Submission Deadline',
-      description: 'Notification for form submission deadline.',
+      subject: 'Form Submission Deadline',
+      content: 'Notification for form submission deadline.',
       date: '2024-12-10',
       time: '05:00 PM',
     },
   ])
 
   const templates = [
-    { id: 1, title: "PFE Proposal Reminder", description: "Submit your PFE proposals now!" },
-    { id: 2, title: "Form Submission Deadline", description: "Don't forget to submit your forms!" },
+    { id: 1, subject: "PFE Proposal Reminder", content: "Submit your PFE proposals now!" },
+    { id: 2, subject: "Form Submission Deadline", content: "Don't forget to submit your forms!" },
   ];
 
 
-  const [showAddModal, setShowAddModal] = React.useState(false)
-  const [showEditModal, setShowEditModal] = React.useState(false)
-  const [editingSchedule, setEditingSchedule] = React.useState<Schedule | null>(
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(
     null,
   )
-  const [searchTerm, setSearchTerm] = React.useState('')
-  const [dateFilter, setDateFilter] = React.useState('')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [dateFilter, setDateFilter] = useState('')
 
   // Add Schedule Handler
   const handleAddSchedule = (/* newSchedule: Omit<Schedule, 'id'> */) => {
@@ -66,7 +70,6 @@ function RouteComponent() {
     setEditingSchedule(null)
   }
 
-  // Edit Schedule Handler
   const handleEditSchedule = (updatedSchedule: Schedule) => {
     setSchedules(
       schedules.map((schedule) =>
@@ -77,7 +80,6 @@ function RouteComponent() {
     alert('Schedule updated successfully!')
   }
 
-  // Delete Schedule Handler
   const handleDeleteSchedule = (id: number) => {
     if (window.confirm('Are you sure you want to delete this schedule?')) {
       setSchedules(schedules.filter((schedule) => schedule.id !== id))
@@ -85,12 +87,67 @@ function RouteComponent() {
     }
   }
 
-  // Filter Schedules
   const filteredSchedules = schedules.filter(
     (schedule) =>
-      schedule.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      schedule.subject.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (!dateFilter || schedule.date === dateFilter),
   )
+
+  const columns = useMemo<ColumnDef<Email>[]>(() => {
+    return [
+      {
+        accessorKey: 'subject',
+        header: 'Title',
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        accessorKey: 'content',
+        header: 'Content',
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        accessorKey: 'date',
+        header: 'Date',
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        accessorKey: 'time',
+        header: 'Time',
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        accessorKey: 'id',
+        header: 'Actions',
+        enableSorting: false,
+        cell(props) {
+          const scheduleId = props.getValue<number>()
+          return (
+            <>
+              <button
+                className="btn btn-warning btn-sm me-2"
+                onClick={() => {
+                  setEditingSchedule(schedules.find((s) => s.id === scheduleId)!)
+                  setShowEditModal(true)
+                }}
+              >
+                Edit
+              </button>
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={() => handleDeleteSchedule(scheduleId)}
+              >
+                Delete
+              </button>
+            </>
+          )
+        },
+      },
+    ]
+  },[]);
 
   return (
     <div className="container mt-4">
@@ -101,7 +158,7 @@ function RouteComponent() {
         <input
           type="text"
           className="form-control me-2"
-          placeholder="Search by title"
+          placeholder="Search by subject"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{ width: '69.5%' }}
@@ -121,12 +178,12 @@ function RouteComponent() {
       </div>
 
       {/* Schedule Table */}
-      <div style={{overflowX:"auto"}}>
+      {/* <div style={{overflowX:"auto"}}>
         <table className="table table-bordered table-striped" style={{whiteSpace:"nowrap"}}>
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Description</th>
+              <th>subject</th>
+              <th>content</th>
               <th>Date</th>
               <th>Time</th>
               <th>Actions</th>
@@ -135,8 +192,8 @@ function RouteComponent() {
           <tbody>
             {filteredSchedules.map((schedule) => (
               <tr key={schedule.id}>
-                <td>{schedule.title}</td>
-                <td>{schedule.description}</td>
+                <td>{schedule.subject}</td>
+                <td>{schedule.content}</td>
                 <td>{schedule.date}</td>
                 <td>{schedule.time}</td>
                 <td>
@@ -160,7 +217,11 @@ function RouteComponent() {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
+
+      <Table columns={columns} data={filteredSchedules} />
+
+
       {/* Add Schedule Modal */}
       {showAddModal && (
         <div

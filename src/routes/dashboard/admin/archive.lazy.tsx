@@ -72,6 +72,8 @@ function RouteComponent() {
       const closeModal = () => {
         setSelectedProject(null);
       };
+
+      
     
       return (
         <div className="container mt-4">

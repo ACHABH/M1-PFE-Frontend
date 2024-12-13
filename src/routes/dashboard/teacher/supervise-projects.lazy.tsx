@@ -1,5 +1,11 @@
 import { useState } from 'react'
 import { createLazyFileRoute } from '@tanstack/react-router'
+import Table from "../../../components/table";
+import { useMemo } from "react";
+import { ColumnDef } from "@tanstack/react-table";
+import type { Project, ProjectProposition } from "../../../types/db";
+import { Prettier } from "../../../types/util";
+
 
 export const Route = createLazyFileRoute(
   '/dashboard/teacher/supervise-projects',
@@ -41,11 +47,66 @@ function RouteComponent() {
     alert(`You have selected "${title}" for supervision.`)
   }
 
+  type Supervise = Prettier<Project & ProjectProposition>;
+
+  const columns = useMemo<ColumnDef<Supervise>[]>(() => {
+    return [
+      {
+        header: 'Title',
+        accessor: 'title',
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        header: 'Proposer',
+        accessor: 'proposer',
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        header: 'Type',
+        accessor: 'type',
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        header: 'Summary',
+        accessor: 'summary',
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        header: 'Status',
+        accessor: 'status',
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
+      {
+        header: 'Actions',
+        accessor: 'actions',
+        render: (row: Supervise) => {
+          return (
+            <>
+              {row.status === 'Available' && (
+                <button
+                  className="btn btn-primary btn-sm"
+                  onClick={() => handleSelectProject(row.title)}
+                >
+                  Select
+                </button>
+              )}
+            </>
+          )
+        },
+      },
+    ]
+  }, []);
+
   return (
     <div className="container mt-4">
       <h3>Supervise Project</h3>
       <h6 className='my-3 text-secondary'>Select Project You Want To Supervise</h6>
-      <div style={{overflowX:"auto"}}>
+      {/* <div style={{overflowX:"auto"}}>
         <table className="table table-bordered table-striped" style={{whiteSpace:"nowrap"}}>
           <thead>
             <tr>
@@ -89,7 +150,8 @@ function RouteComponent() {
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
+      <Table data={projects} columns={columns} />
     </div>
   )
 }

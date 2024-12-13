@@ -19,8 +19,8 @@ function RouteComponent() {
   const [templates, setTemplates] = useState([
     {
       id: 1,
-      title: 'PFE Proposal Reminder',
-      subject: 'Reminder: Submit Your PFE Proposal',
+      subject: 'PFE Proposal Reminder',
+      content: 'Reminder: Submit Your PFE Proposal',
       body: 'Dear {name},\n\nThis is a reminder to submit your PFE proposal by {deadline}.',
     },
   ])
@@ -52,14 +52,14 @@ function RouteComponent() {
   const columns = useMemo<ColumnDef<EmailTemplate>[]>(() => {
     return[
       {
-        accessorKey: 'title',
+        accessorKey: 'subject',
         header: 'Title',
         enableSorting: true,
         cell: (props) => props.getValue()
       },
       {
-        accessorKey: 'subject',
-        header: 'Subject',
+        accessorKey: 'content',
+        header: 'Content',
         enableSorting: true,
         cell: (props) => props.getValue()
       },
@@ -68,7 +68,7 @@ function RouteComponent() {
         header: "Actions",
         enableSorting: false,
         cell(props) {
-          const userId = props.getValue<number>();
+          const emailId = props.getValue<number>();
           return (
             <Container as="div" style={{ display: "flex", gap: 5 }}>
               <Button

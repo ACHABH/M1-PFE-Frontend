@@ -68,11 +68,11 @@ useEffect(() => {
   )
 
   // Pagination
-  const totalPages = Math.ceil(filteredProjects.length / itemsPerPage)
-  const paginatedProjects = filteredProjects.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  )
+  // const totalPages = Math.ceil(filteredProjects.length / itemsPerPage)
+  // const paginatedProjects = filteredProjects.slice(
+  //   (currentPage - 1) * itemsPerPage,
+  //   currentPage * itemsPerPage,
+  // )
 
   const handleValidate = (title: string) => {
     if (window.confirm(`Are you sure you want to validate "${title}"?`)) {
@@ -277,7 +277,7 @@ const handleReject = (title: string) => {
       <Table data={filteredProjects} columns={columns} />
 
       {/* Pagination */}
-      <div className="d-flex justify-content-between align-items-center mt-3">
+      {/* <div className="d-flex justify-content-between align-items-center mt-3">
         <span>
           Page {currentPage} of {totalPages}
         </span>
@@ -297,7 +297,7 @@ const handleReject = (title: string) => {
             Next
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }
