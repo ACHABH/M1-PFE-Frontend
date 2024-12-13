@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-import AddEmailSchedule from '../../../components/admin/AddEmailSchedule'
-import EditEmailSchedule from '../../../components/admin/EditEmailSchedule'
+import AddEmailSchedule from '../../../components/Admin/AddEmailSchedule'
+import EditEmailSchedule from '../../../components/Admin/EditEmailSchedule'
 import Table from "../../../components/table";
 import { ColumnDef } from "@tanstack/react-table";
 import type { Email } from "../../../types/db";
