@@ -1,12 +1,11 @@
-import { useMemo, useState } from 'react'
+import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-import AddEmailSchedule from '../../../components/Admin/AddEmailSchedule'
-import EditEmailSchedule from '../../../components/Admin/EditEmailSchedule'
-import Table from "../../../components/table";
+import { Button, Form, InputGroup } from "react-bootstrap";
+import Table from "../../../components/Table";
 import { ColumnDef } from "@tanstack/react-table";
 import type { Email } from "../../../types/db";
-
+import EmailModal from "../../../components/Admin/email-modal";
 
 export const Route = createLazyFileRoute('/dashboard/admin/email-schedule')({
   component: RouteComponent,
@@ -16,27 +15,29 @@ const ScheduleSchema = z.object({
   id: z.number(),
   subject: z.string(),
   content: z.string(),
-  date: z.string().date(),
-  time: z.string().time(),
+  // date: z.string().date(),
+  // time: z.string().time(),
 })
 
 type Schedule = z.infer<typeof ScheduleSchema>
 
 function RouteComponent() {
+  const ref = useRef<ElementRef<typeof EmailModal>>(null);
+
   const [schedules, setSchedules] = useState<Schedule[]>([
     {
       id: 1,
       subject: 'PFE Proposal Reminder',
       content: 'Reminder to submit PFE proposals.',
-      date: '2024-12-01',
-      time: '10:00 AM',
+      // date: '2024-12-01',
+      // time: '10:00 AM',
     },
     {
       id: 2,
       subject: 'Form Submission Deadline',
       content: 'Notification for form submission deadline.',
-      date: '2024-12-10',
-      time: '05:00 PM',
+      // date: '2024-12-10',
+      // time: '05:00 PM',
     },
   ])
 
@@ -46,39 +47,39 @@ function RouteComponent() {
   ];
 
 
-  const [showAddModal, setShowAddModal] = useState(false)
-  const [showEditModal, setShowEditModal] = useState(false)
+  // const [showAddModal, setShowAddModal] = useState(false)
+  // const [showEditModal, setShowEditModal] = useState(false)
+  
+  // const handleAddSchedule = (/* newSchedule: Omit<Schedule, 'id'> */) => {
+  //   // setSchedules([...schedules, { ...newSchedule, id: Date.now() }])
+  //   setShowAddModal(false)
+  //   alert('Schedule added successfully!')
+  // }
+
+  // const handleCancelEmail = () => {
+  //   setShowAddModal(false)
+  // }
+
+  // const handleCancelEdit = () => {
+  //   setShowEditModal(false)
+  //   setEditingSchedule(null)
+  // }
+
+  // const handleEditSchedule = (updatedSchedule: Schedule) => {
+  //   setSchedules(
+  //     schedules.map((schedule) =>
+  //       schedule.id === updatedSchedule.id ? updatedSchedule : schedule,
+  //     ),
+  //   )
+  //   setShowEditModal(false)
+  //   alert('Schedule updated successfully!')
+  // }
+
   const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(
     null,
   )
   const [searchTerm, setSearchTerm] = useState('')
-  const [dateFilter, setDateFilter] = useState('')
-
-  // Add Schedule Handler
-  const handleAddSchedule = (/* newSchedule: Omit<Schedule, 'id'> */) => {
-    // setSchedules([...schedules, { ...newSchedule, id: Date.now() }])
-    setShowAddModal(false)
-    alert('Schedule added successfully!')
-  }
-
-  const handleCancelEmail = () => {
-    setShowAddModal(false)
-  }
-
-  const handleCancelEdit = () => {
-    setShowEditModal(false)
-    setEditingSchedule(null)
-  }
-
-  const handleEditSchedule = (updatedSchedule: Schedule) => {
-    setSchedules(
-      schedules.map((schedule) =>
-        schedule.id === updatedSchedule.id ? updatedSchedule : schedule,
-      ),
-    )
-    setShowEditModal(false)
-    alert('Schedule updated successfully!')
-  }
+  // const [dateFilter, setDateFilter] = useState('')
 
   const handleDeleteSchedule = (id: number) => {
     if (window.confirm('Are you sure you want to delete this schedule?')) {
@@ -89,15 +90,24 @@ function RouteComponent() {
 
   const filteredSchedules = schedules.filter(
     (schedule) =>
-      schedule.subject.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (!dateFilter || schedule.date === dateFilter),
+      schedule.subject.toLowerCase().includes(searchTerm.toLowerCase()) /*&&*/
+      // (!dateFilter || schedule.date === dateFilter),
   )
+
+  const onShow = useCallback(() => {
+    ref.current?.show();
+  }, []);
+
+  const onClose = useCallback(() => {
+    ref.current?.close();
+    setEditingSchedule(null);
+  }, []);
 
   const columns = useMemo<ColumnDef<Email>[]>(() => {
     return [
       {
         accessorKey: 'subject',
-        header: 'Title',
+        header: 'Subject',
         enableSorting: true,
         cell: (props) => props.getValue(),
       },
@@ -107,18 +117,18 @@ function RouteComponent() {
         enableSorting: true,
         cell: (props) => props.getValue(),
       },
-      {
-        accessorKey: 'date',
-        header: 'Date',
-        enableSorting: true,
-        cell: (props) => props.getValue(),
-      },
-      {
-        accessorKey: 'time',
-        header: 'Time',
-        enableSorting: true,
-        cell: (props) => props.getValue(),
-      },
+      // {
+      //   accessorKey: 'date',
+      //   header: 'Date',
+      //   enableSorting: true,
+      //   cell: (props) => props.getValue(),
+      // },
+      // {
+      //   accessorKey: 'time',
+      //   header: 'Time',
+      //   enableSorting: true,
+      //   cell: (props) => props.getValue(),
+      // },
       {
         accessorKey: 'id',
         header: 'Actions',
@@ -130,8 +140,9 @@ function RouteComponent() {
               <button
                 className="btn btn-warning btn-sm me-2"
                 onClick={() => {
-                  setEditingSchedule(schedules.find((s) => s.id === scheduleId)!)
-                  setShowEditModal(true)
+                  const scheduleToEdit = schedules.find((s) => s.id === scheduleId);
+                  setEditingSchedule(scheduleToEdit || null);
+                  onShow();
                 }}
               >
                 Edit
@@ -154,29 +165,39 @@ function RouteComponent() {
       <h2>Email Schedule</h2>
       <p className='h6 text-secondary mb-3'> Schedule Email by adding, editing, and deleting them.</p>
       {/* Search and Filter */}
-      <div className="mb-3 d-flex align-items-center">
-        <input
+      {/* <div className="mb-3 d-flex align-items-center"> */}
+      <InputGroup className="mb-3 px-4">
+        <Form.Control
           type="text"
-          className="form-control me-2"
           placeholder="Search by subject"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ width: '69.5%' }}
+          style={{ width: "70%" }}
+          className="me-2"
         />
-        <input
+        {/* <Form.Control
           type="date"
-          className="form-control w-auto me-2"
           value={dateFilter}
           onChange={(e) => setDateFilter(e.target.value)}
-        />
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowAddModal(true)}
+          className="me-2"
+          style={{ width: "auto" }}
+        /> */}
+        <Button variant="primary" 
+          onClick={() => {
+            setEditingSchedule(null);
+            onShow();
+          }}
         >
           Add Schedule
-        </button>
-      </div>
+        </Button>
+      </InputGroup>
+      {/* </div> */}
 
+
+      <Table columns={columns} data={filteredSchedules} />
+      <EmailModal ref={ref} email={editingSchedule || { id: 0, receiver: "", subject: "", content: "" }} template={templates} onClose={onClose} isEdit={!!editingSchedule}/>
+      
+      
       {/* Schedule Table */}
       {/* <div style={{overflowX:"auto"}}>
         <table className="table table-bordered table-striped" style={{whiteSpace:"nowrap"}}>
@@ -219,11 +240,8 @@ function RouteComponent() {
         </table>
       </div> */}
 
-      <Table columns={columns} data={filteredSchedules} />
-
-
       {/* Add Schedule Modal */}
-      {showAddModal && (
+      {/* {showAddModal && (
         <div
           className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"
           style={{ zIndex: 1050 }}
@@ -234,10 +252,10 @@ function RouteComponent() {
             onCancel={handleCancelEmail}
           />
         </div>
-      )}
+      )} */}
 
       {/* Edit Schedule Modal */}
-      {showEditModal && editingSchedule && (
+      {/* {showEditModal && editingSchedule && (
         <div
           className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"
           style={{ zIndex: 1050 }}
@@ -248,7 +266,7 @@ function RouteComponent() {
             onCancel={handleCancelEdit}
           />
         </div>
-      )}
+      )} */}
     </div>
   )
 }
