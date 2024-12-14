@@ -42,7 +42,7 @@ const UploadCSV2: React.FC<UploadCSV2Props> = ({ onUpload, onCancel }) => {
         onChange={handleFileChange}
         />
       </Form.Group>
-      <Button type="submit" className="me-2" variant="primary"></Button>
+      <Button type="submit" className="me-2" variant="primary">
         Upload
       </Button>
       <Button type="button" variant="secondary" onClick={handleCancel}>
