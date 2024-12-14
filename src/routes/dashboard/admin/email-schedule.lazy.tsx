@@ -2,7 +2,7 @@ import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 import { Button, Form, InputGroup } from "react-bootstrap";
-import Table from "../../../components/Table";
+import Table from "../../../components/table";
 import { ColumnDef } from "@tanstack/react-table";
 import type { Email } from "../../../types/db";
 import EmailModal from "../../../components/Admin/email-modal";

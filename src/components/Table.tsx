@@ -17,7 +17,7 @@ type Props<TData extends any[], TColumns extends ColumnDef<any, any>[]> = {
   columns: TColumns;
 };
 
-export default function table<
+export default function Table<
   TData extends any[],
   TColumns extends ColumnDef<any, any>[],
 >({ data, columns }: Props<TData, TColumns>) {

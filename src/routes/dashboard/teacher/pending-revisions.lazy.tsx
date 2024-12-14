@@ -1,7 +1,7 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import EditProposalForm from '../../../components/Teacher/EditProposal'
-import Table from "../../../components/Table";
+import Table from "../../../components/table";
 import { useMemo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import type { Project, ProjectProposition, ProjectPropositionFeedback} from "../../../types/db";

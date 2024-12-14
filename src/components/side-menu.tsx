@@ -14,23 +14,7 @@ export default function SideMenu({ userRole }: Props) {
     isProjectManagement: true,
     isTeacherScheduleManagement: true,
   });
-  // const [isUserManagementMenuOpen, setIsUserManagementMenuOpen] =
-  //   useState(true);
-  // const [isScheduleManagementMenuOpen, setIsScheduleManagementMenuOpen] =
-  //   useState(true);
-  // const [isProjectManagementMenuOpen, setIsProjectManagementMenuOpen] =
-  //   useState(true);
-  // const [
-  //   isTeacherScheduleManagementMenuOpen,
-  //   setIsTeacherScheduleManagementMenuOpen,
-  // ] = useState(true);
   const [pendingAmount, setPendingAmount] = useState(0);
-
-  // const toggleMenu = (
-  //   setter: React.Dispatch<React.SetStateAction<boolean>>
-  // ) => {
-  //   setter((prev) => !prev);
-  // };
 
   useEffect(() => {
     // Simulate fetching data

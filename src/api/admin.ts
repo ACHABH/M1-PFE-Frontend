@@ -13,16 +13,17 @@ export function useGetAll() {
       const res = await request("/api/admin/all", { signal: context.signal });
       const json = (await res.json()) as FetchResponse<{
         admins: Prettier<
-          StrictOmit<FullUser, "student" | "company" | "teacher">
+          StrictOmit<FullUser, "student" | "company" | "teacher">[]
         >;
       }>;
       if (!json.ok) throw new Error(json.message ?? "Request failed");
-      return json.data.admins;
+      return json?.data?.admins ?? [];
     },
+    initialData: [],
   });
 }
 
-type UseCreateBody = StrictPick<Admin, "user_id">;
+type UseCreateBody = Partial<StrictPick<Admin, "user_id">>;
 
 export function useCreate() {
   const queryClient = useQueryClient();

@@ -8,7 +8,7 @@ import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { USER_ROLE, type UserRole } from "../../../constant/enum";
 import EditUser from "../../../components/Admin/EditUser";
 import UploadCSV2 from "../../../components/Admin/UploadCSV2";
-import Table from "../../../components/Table";
+import Table from "../../../components/table";
 import {
   useGetAll as useGetAllUsers,
   useDelete as useDeleteUser,

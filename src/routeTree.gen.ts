@@ -21,7 +21,6 @@ const DashboardLazyImport = createFileRoute('/dashboard')()
 const AuthLazyImport = createFileRoute('/auth')()
 const IndexLazyImport = createFileRoute('/')()
 const DashboardIndexLazyImport = createFileRoute('/dashboard/')()
-const OwnerOwnerLazyImport = createFileRoute('/owner/owner')()
 const DashboardTeacherLazyImport = createFileRoute('/dashboard/teacher')()
 const DashboardStudentLazyImport = createFileRoute('/dashboard/student')()
 const DashboardCompanyLazyImport = createFileRoute('/dashboard/company')()
@@ -67,6 +66,9 @@ const DashboardStudentMyProjectsLazyImport = createFileRoute(
 )()
 const DashboardStudentHomepageLazyImport = createFileRoute(
   '/dashboard/student/homepage',
+)()
+const DashboardOwnerAdminsLazyImport = createFileRoute(
+  '/dashboard/owner/admins',
 )()
 const DashboardCompanyProposeTopicsLazyImport = createFileRoute(
   '/dashboard/company/propose-topics',
@@ -144,12 +146,6 @@ const DashboardIndexLazyRoute = DashboardIndexLazyImport.update({
 } as any).lazy(() =>
   import('./routes/dashboard/index.lazy').then((d) => d.Route),
 )
-
-const OwnerOwnerLazyRoute = OwnerOwnerLazyImport.update({
-  id: '/owner',
-  path: '/owner',
-  getParentRoute: () => OwnerLazyRoute,
-} as any).lazy(() => import('./routes/owner/owner.lazy').then((d) => d.Route))
 
 const DashboardTeacherLazyRoute = DashboardTeacherLazyImport.update({
   id: '/teacher',
@@ -336,6 +332,14 @@ const DashboardStudentHomepageLazyRoute =
   } as any).lazy(() =>
     import('./routes/dashboard/student/homepage.lazy').then((d) => d.Route),
   )
+
+const DashboardOwnerAdminsLazyRoute = DashboardOwnerAdminsLazyImport.update({
+  id: '/owner/admins',
+  path: '/owner/admins',
+  getParentRoute: () => DashboardLazyRoute,
+} as any).lazy(() =>
+  import('./routes/dashboard/owner/admins.lazy').then((d) => d.Route),
+)
 
 const DashboardCompanyProposeTopicsLazyRoute =
   DashboardCompanyProposeTopicsLazyImport.update({
@@ -556,13 +560,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardTeacherLazyImport
       parentRoute: typeof DashboardLazyImport
     }
-    '/owner/owner': {
-      id: '/owner/owner'
-      path: '/owner'
-      fullPath: '/owner/owner'
-      preLoaderRoute: typeof OwnerOwnerLazyImport
-      parentRoute: typeof OwnerLazyImport
-    }
     '/dashboard/': {
       id: '/dashboard/'
       path: '/'
@@ -667,6 +664,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/company/propose-topics'
       preLoaderRoute: typeof DashboardCompanyProposeTopicsLazyImport
       parentRoute: typeof DashboardCompanyLazyImport
+    }
+    '/dashboard/owner/admins': {
+      id: '/dashboard/owner/admins'
+      path: '/owner/admins'
+      fullPath: '/dashboard/owner/admins'
+      preLoaderRoute: typeof DashboardOwnerAdminsLazyImport
+      parentRoute: typeof DashboardLazyImport
     }
     '/dashboard/student/homepage': {
       id: '/dashboard/student/homepage'
@@ -879,6 +883,7 @@ interface DashboardLazyRouteChildren {
   DashboardStudentLazyRoute: typeof DashboardStudentLazyRouteWithChildren
   DashboardTeacherLazyRoute: typeof DashboardTeacherLazyRouteWithChildren
   DashboardIndexLazyRoute: typeof DashboardIndexLazyRoute
+  DashboardOwnerAdminsLazyRoute: typeof DashboardOwnerAdminsLazyRoute
 }
 
 const DashboardLazyRouteChildren: DashboardLazyRouteChildren = {
@@ -887,29 +892,18 @@ const DashboardLazyRouteChildren: DashboardLazyRouteChildren = {
   DashboardStudentLazyRoute: DashboardStudentLazyRouteWithChildren,
   DashboardTeacherLazyRoute: DashboardTeacherLazyRouteWithChildren,
   DashboardIndexLazyRoute: DashboardIndexLazyRoute,
+  DashboardOwnerAdminsLazyRoute: DashboardOwnerAdminsLazyRoute,
 }
 
 const DashboardLazyRouteWithChildren = DashboardLazyRoute._addFileChildren(
   DashboardLazyRouteChildren,
 )
 
-interface OwnerLazyRouteChildren {
-  OwnerOwnerLazyRoute: typeof OwnerOwnerLazyRoute
-}
-
-const OwnerLazyRouteChildren: OwnerLazyRouteChildren = {
-  OwnerOwnerLazyRoute: OwnerOwnerLazyRoute,
-}
-
-const OwnerLazyRouteWithChildren = OwnerLazyRoute._addFileChildren(
-  OwnerLazyRouteChildren,
-)
-
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/auth': typeof AuthLazyRouteWithChildren
   '/dashboard': typeof DashboardLazyRouteWithChildren
-  '/owner': typeof OwnerLazyRouteWithChildren
+  '/owner': typeof OwnerLazyRoute
   '/auth/forget-password': typeof AuthForgetPasswordLazyRoute
   '/auth/login': typeof AuthLoginLazyRoute
   '/auth/one-time-password': typeof AuthOneTimePasswordLazyRoute
@@ -918,7 +912,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/company': typeof DashboardCompanyLazyRouteWithChildren
   '/dashboard/student': typeof DashboardStudentLazyRouteWithChildren
   '/dashboard/teacher': typeof DashboardTeacherLazyRouteWithChildren
-  '/owner/owner': typeof OwnerOwnerLazyRoute
   '/dashboard/': typeof DashboardIndexLazyRoute
   '/dashboard/admin/add-user': typeof DashboardAdminAddUserLazyRoute
   '/dashboard/admin/archive': typeof DashboardAdminArchiveLazyRoute
@@ -934,6 +927,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/company/homepage': typeof DashboardCompanyHomepageLazyRoute
   '/dashboard/company/my-projects': typeof DashboardCompanyMyProjectsLazyRoute
   '/dashboard/company/propose-topics': typeof DashboardCompanyProposeTopicsLazyRoute
+  '/dashboard/owner/admins': typeof DashboardOwnerAdminsLazyRoute
   '/dashboard/student/homepage': typeof DashboardStudentHomepageLazyRoute
   '/dashboard/student/my-projects': typeof DashboardStudentMyProjectsLazyRoute
   '/dashboard/student/propose-topic': typeof DashboardStudentProposeTopicLazyRoute
@@ -951,7 +945,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/auth': typeof AuthLazyRouteWithChildren
-  '/owner': typeof OwnerLazyRouteWithChildren
+  '/owner': typeof OwnerLazyRoute
   '/auth/forget-password': typeof AuthForgetPasswordLazyRoute
   '/auth/login': typeof AuthLoginLazyRoute
   '/auth/one-time-password': typeof AuthOneTimePasswordLazyRoute
@@ -960,7 +954,6 @@ export interface FileRoutesByTo {
   '/dashboard/company': typeof DashboardCompanyLazyRouteWithChildren
   '/dashboard/student': typeof DashboardStudentLazyRouteWithChildren
   '/dashboard/teacher': typeof DashboardTeacherLazyRouteWithChildren
-  '/owner/owner': typeof OwnerOwnerLazyRoute
   '/dashboard': typeof DashboardIndexLazyRoute
   '/dashboard/admin/add-user': typeof DashboardAdminAddUserLazyRoute
   '/dashboard/admin/archive': typeof DashboardAdminArchiveLazyRoute
@@ -976,6 +969,7 @@ export interface FileRoutesByTo {
   '/dashboard/company/homepage': typeof DashboardCompanyHomepageLazyRoute
   '/dashboard/company/my-projects': typeof DashboardCompanyMyProjectsLazyRoute
   '/dashboard/company/propose-topics': typeof DashboardCompanyProposeTopicsLazyRoute
+  '/dashboard/owner/admins': typeof DashboardOwnerAdminsLazyRoute
   '/dashboard/student/homepage': typeof DashboardStudentHomepageLazyRoute
   '/dashboard/student/my-projects': typeof DashboardStudentMyProjectsLazyRoute
   '/dashboard/student/propose-topic': typeof DashboardStudentProposeTopicLazyRoute
@@ -995,7 +989,7 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/auth': typeof AuthLazyRouteWithChildren
   '/dashboard': typeof DashboardLazyRouteWithChildren
-  '/owner': typeof OwnerLazyRouteWithChildren
+  '/owner': typeof OwnerLazyRoute
   '/auth/forget-password': typeof AuthForgetPasswordLazyRoute
   '/auth/login': typeof AuthLoginLazyRoute
   '/auth/one-time-password': typeof AuthOneTimePasswordLazyRoute
@@ -1004,7 +998,6 @@ export interface FileRoutesById {
   '/dashboard/company': typeof DashboardCompanyLazyRouteWithChildren
   '/dashboard/student': typeof DashboardStudentLazyRouteWithChildren
   '/dashboard/teacher': typeof DashboardTeacherLazyRouteWithChildren
-  '/owner/owner': typeof OwnerOwnerLazyRoute
   '/dashboard/': typeof DashboardIndexLazyRoute
   '/dashboard/admin/add-user': typeof DashboardAdminAddUserLazyRoute
   '/dashboard/admin/archive': typeof DashboardAdminArchiveLazyRoute
@@ -1020,6 +1013,7 @@ export interface FileRoutesById {
   '/dashboard/company/homepage': typeof DashboardCompanyHomepageLazyRoute
   '/dashboard/company/my-projects': typeof DashboardCompanyMyProjectsLazyRoute
   '/dashboard/company/propose-topics': typeof DashboardCompanyProposeTopicsLazyRoute
+  '/dashboard/owner/admins': typeof DashboardOwnerAdminsLazyRoute
   '/dashboard/student/homepage': typeof DashboardStudentHomepageLazyRoute
   '/dashboard/student/my-projects': typeof DashboardStudentMyProjectsLazyRoute
   '/dashboard/student/propose-topic': typeof DashboardStudentProposeTopicLazyRoute
@@ -1049,7 +1043,6 @@ export interface FileRouteTypes {
     | '/dashboard/company'
     | '/dashboard/student'
     | '/dashboard/teacher'
-    | '/owner/owner'
     | '/dashboard/'
     | '/dashboard/admin/add-user'
     | '/dashboard/admin/archive'
@@ -1065,6 +1058,7 @@ export interface FileRouteTypes {
     | '/dashboard/company/homepage'
     | '/dashboard/company/my-projects'
     | '/dashboard/company/propose-topics'
+    | '/dashboard/owner/admins'
     | '/dashboard/student/homepage'
     | '/dashboard/student/my-projects'
     | '/dashboard/student/propose-topic'
@@ -1090,7 +1084,6 @@ export interface FileRouteTypes {
     | '/dashboard/company'
     | '/dashboard/student'
     | '/dashboard/teacher'
-    | '/owner/owner'
     | '/dashboard'
     | '/dashboard/admin/add-user'
     | '/dashboard/admin/archive'
@@ -1106,6 +1099,7 @@ export interface FileRouteTypes {
     | '/dashboard/company/homepage'
     | '/dashboard/company/my-projects'
     | '/dashboard/company/propose-topics'
+    | '/dashboard/owner/admins'
     | '/dashboard/student/homepage'
     | '/dashboard/student/my-projects'
     | '/dashboard/student/propose-topic'
@@ -1132,7 +1126,6 @@ export interface FileRouteTypes {
     | '/dashboard/company'
     | '/dashboard/student'
     | '/dashboard/teacher'
-    | '/owner/owner'
     | '/dashboard/'
     | '/dashboard/admin/add-user'
     | '/dashboard/admin/archive'
@@ -1148,6 +1141,7 @@ export interface FileRouteTypes {
     | '/dashboard/company/homepage'
     | '/dashboard/company/my-projects'
     | '/dashboard/company/propose-topics'
+    | '/dashboard/owner/admins'
     | '/dashboard/student/homepage'
     | '/dashboard/student/my-projects'
     | '/dashboard/student/propose-topic'
@@ -1167,14 +1161,14 @@ export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   AuthLazyRoute: typeof AuthLazyRouteWithChildren
   DashboardLazyRoute: typeof DashboardLazyRouteWithChildren
-  OwnerLazyRoute: typeof OwnerLazyRouteWithChildren
+  OwnerLazyRoute: typeof OwnerLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AuthLazyRoute: AuthLazyRouteWithChildren,
   DashboardLazyRoute: DashboardLazyRouteWithChildren,
-  OwnerLazyRoute: OwnerLazyRouteWithChildren,
+  OwnerLazyRoute: OwnerLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -1212,14 +1206,12 @@ export const routeTree = rootRoute
         "/dashboard/company",
         "/dashboard/student",
         "/dashboard/teacher",
-        "/dashboard/"
+        "/dashboard/",
+        "/dashboard/owner/admins"
       ]
     },
     "/owner": {
-      "filePath": "owner.lazy.tsx",
-      "children": [
-        "/owner/owner"
-      ]
+      "filePath": "owner.lazy.tsx"
     },
     "/auth/forget-password": {
       "filePath": "auth/forget-password.lazy.tsx",
@@ -1287,10 +1279,6 @@ export const routeTree = rootRoute
         "/dashboard/teacher/supervise-projects"
       ]
     },
-    "/owner/owner": {
-      "filePath": "owner/owner.lazy.tsx",
-      "parent": "/owner"
-    },
     "/dashboard/": {
       "filePath": "dashboard/index.lazy.tsx",
       "parent": "/dashboard"
@@ -1350,6 +1338,10 @@ export const routeTree = rootRoute
     "/dashboard/company/propose-topics": {
       "filePath": "dashboard/company/propose-topics.lazy.tsx",
       "parent": "/dashboard/company"
+    },
+    "/dashboard/owner/admins": {
+      "filePath": "dashboard/owner/admins.lazy.tsx",
+      "parent": "/dashboard"
     },
     "/dashboard/student/homepage": {
       "filePath": "dashboard/student/homepage.lazy.tsx",

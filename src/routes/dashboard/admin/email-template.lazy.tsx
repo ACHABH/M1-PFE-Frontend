@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
-import Table from "../../../components/Table";
+import Table from "../../../components/table";
 import type { EmailTemplate } from "../../../types/db";
 import { ColumnDef } from '@tanstack/react-table';
 import Button from 'react-bootstrap/esm/Button';

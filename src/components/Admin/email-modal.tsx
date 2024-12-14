@@ -31,6 +31,7 @@ type Props = {
     onClose: () => void;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default forwardRef<Ref, Props>(({ email, template , onClose, isEdit }, ref) => {
     const form = useForm<ZodFormSchema>({
         resolver: zodResolver(FormSchema),
@@ -75,7 +76,7 @@ export default forwardRef<Ref, Props>(({ email, template , onClose, isEdit }, re
             templateForm.setValue("subject", "");
             templateForm.setValue("content", "");
         }
-    }, [selectedTemplate, form]);
+    }, [selectedTemplate, form, templateForm]);
 
     return (
         <AddModal ref={ref} title={email ? "Update Schedule" : "Add New Schedule"} action={null}>
