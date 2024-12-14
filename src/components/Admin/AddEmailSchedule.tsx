@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "../../hooks/useForm";
 import { useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
+import AddModal, { type Ref } from "../../layout/add-modal";
 
 type Props = {
   templates: { id: number; title: string; description: string }[];

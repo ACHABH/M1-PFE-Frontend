@@ -4,7 +4,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import Table from "../../../components/table";
+import Table from "../../../components/Table";
 import RoomModal from "../../../components/Admin/room-modal";
 import {
   useGetAll as useGetAllRooms,
