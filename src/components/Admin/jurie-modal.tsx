@@ -4,6 +4,9 @@ import { forwardRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm } from "../../hooks/useForm";
+import {
+    useGetOne as useGetDefense,
+} from "../../api/project";
 
 const FormSchema = z.object({
     start: z.string().datetime().min(1),
@@ -14,11 +17,13 @@ const FormSchema = z.object({
 type ZodFormSchema = z.infer<typeof FormSchema>;
 
 type Props = {
-    defenseSlot: ZodFormSchema ;
+    defenseID: number ;
     onClose: () => void;
 };
 
-export default forwardRef<Ref, Props>(({ defenseSlot , onClose }, ref) => {
+export default forwardRef<Ref, Props>(({ defenseID = 0 , onClose }, ref) => {
+    const { data: defenseSlot } = useGetDefense(defenseID);
+
     const form = useForm<ZodFormSchema>({
         resolver: zodResolver(FormSchema),
         defaultValues: {

@@ -1,18 +1,24 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
 import type { Project } from "../../../types/db";
-import AddPFEProposal from "../../../components/admin/AddPFEProposal";
+import AddPFEProposal from "../../../components/Admin/AddPFEProposal";
 import { ColumnDef } from "@tanstack/react-table";
 import Container from "react-bootstrap/esm/Container";
 import Button from "react-bootstrap/esm/Button";
 import { useDelete as useDeleteProject } from "../../../api/project";
 import Table from "../../../components/table";
+import ProposalModal from "../../../components/Admin/proposal-modal";
+
 
 export const Route = createLazyFileRoute("/dashboard/admin/pfe-proposals")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const ref = useRef<ElementRef<typeof ProposalModal>>(null);
+  const [proposalId, setProposalId] = useState(0);
+  
+  
   const { mutateAsync: deleteProject } = useDeleteProject();
   const [proposals, setProposals] = useState([
     {
@@ -91,6 +97,15 @@ function RouteComponent() {
     ];
   }, [deleteProject]);
 
+  const onShow = useCallback((proposalId: number = 0) => {
+    ref.current?.show();
+    setProposalId(proposalId);
+  }, []);
+
+  const onClose = useCallback(() => {
+    ref.current?.close();
+    setProposalId(0);
+  }, []);
 
   return (
     <div
@@ -100,10 +115,15 @@ function RouteComponent() {
       <h2>PFE Proposals</h2>
       <button
         className="btn btn-primary mb-3"
-        onClick={() => setShowAddModal(true)}
+        onClick={() => onShow()}
       >
         Add PFE Proposal
       </button>
+      
+      <Table columns={columns} data={proposals} />
+      <ProposalModal ref={ref} proposalID={proposalId} onClose={onClose} />
+
+
       {/* <table className="table table-bordered table-striped">
         <thead>
           <tr>
@@ -131,9 +151,7 @@ function RouteComponent() {
           ))}
         </tbody>
       </table> */}
-      <Table columns={columns} data={proposals} />
-
-      {showAddModal && (
+      {/* {showAddModal && (
         <div
           className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"
           style={{ zIndex: 1050 }}
@@ -143,7 +161,7 @@ function RouteComponent() {
             onCancel={handleCancelProposal}
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 }

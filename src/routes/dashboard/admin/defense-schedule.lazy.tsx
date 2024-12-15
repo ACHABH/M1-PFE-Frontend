@@ -21,18 +21,10 @@ export const Route = createLazyFileRoute("/dashboard/admin/defense-schedule")({
   component: RouteComponent,
 });
 
-const FormSchema = z.object({
-  start: z.string().datetime().min(1),
-  end: z.string().datetime().min(1),
-  rooms: z.string().min(1),
-});
-
-type ZodFormSchema = z.infer<typeof FormSchema>;
 
 function RouteComponent() {
   const ref = useRef<ElementRef<typeof JurieModal>>(null);
-
-  const [DefenseSlot, setDefenseSlot] = useState<ZodFormSchema | null>(null);
+  const [defenseId, setDefenseId] = useState(0);
 
   const [JuriesSlots] = useState<JuriesSlot[]>([
     {
@@ -125,12 +117,14 @@ function RouteComponent() {
     ];
   }, []);
 
-  const onShow = useCallback(() => {
+  const onShow = useCallback((defenseId: number = 0) => {
     ref.current?.show();
+    setDefenseId(defenseId);
   }, []);
 
   const onClose = useCallback(() => {
     ref.current?.close();
+    setDefenseId(0);
   }, []);
 
   return (
@@ -155,7 +149,7 @@ function RouteComponent() {
       </div>
 
       <Table columns={columns} data={JuriesSlots} />
-      <JurieModal ref={ref} defenseSlot={DefenseSlot} onClose={onClose}/>
+      <JurieModal ref={ref} defenseID={defenseId} onClose={onClose}/>
 
       {/* <div style={{ overflowX: "auto" }}>
         <table
