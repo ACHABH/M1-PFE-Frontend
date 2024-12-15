@@ -1,10 +1,9 @@
-import * as React from "react";
+import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import AddDefenseSlot from "../../../components/admin/AddDefenseSlot";
+import JurieModal from "../../../components/Admin/jurie-modal";
 import { z } from "zod";
 import Table from "../../../components/table";
 import type { Room, Student, Teacher, User } from "../../../types/db";
-import { useMemo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Prettier } from "../../../types/util";
 
@@ -22,8 +21,20 @@ export const Route = createLazyFileRoute("/dashboard/admin/defense-schedule")({
   component: RouteComponent,
 });
 
+const FormSchema = z.object({
+  start: z.string().datetime().min(1),
+  end: z.string().datetime().min(1),
+  rooms: z.string().min(1),
+});
+
+type ZodFormSchema = z.infer<typeof FormSchema>;
+
 function RouteComponent() {
-  const [JuriesSlots] = React.useState<JuriesSlot[]>([
+  const ref = useRef<ElementRef<typeof JurieModal>>(null);
+
+  const [DefenseSlot, setDefenseSlot] = useState<ZodFormSchema | null>(null);
+
+  const [JuriesSlots] = useState<JuriesSlot[]>([
     {
       date: "2024-01-20",
       time: "10:00 AM",
@@ -39,18 +50,19 @@ function RouteComponent() {
       students: "Bob Johnson, Sarah White",
     },
   ]);
-  const [showAddModal, setShowAddModal] = React.useState(false);
 
-  // Add Juries Slot
-  const handleAddSlot = (/* newSlot: JuriesSlot */) => {
-    // setJuriesSlots([...JuriesSlots, newSlot]) // handled by query
-    setShowAddModal(false);
-  };
+  // const [showAddModal, setShowAddModal] = useState(false);
 
-  // Cancel Add Juries Slot
-  const handleCancelAdd = () => {
-    setShowAddModal(false);
-  };
+  // // Add Juries Slot
+  // const handleAddSlot = (/* newSlot: JuriesSlot */) => {
+  //   // setJuriesSlots([...JuriesSlots, newSlot]) // handled by query
+  //   setShowAddModal(false);
+  // };
+
+  // // Cancel Add Juries Slot
+  // const handleCancelAdd = () => {
+  //   setShowAddModal(false);
+  // };
 
   // Export Schedule
   const handleExportSchedule = () => {
@@ -113,6 +125,14 @@ function RouteComponent() {
     ];
   }, []);
 
+  const onShow = useCallback(() => {
+    ref.current?.show();
+  }, []);
+
+  const onClose = useCallback(() => {
+    ref.current?.close();
+  }, []);
+
   return (
     <div className="mx-auto mt-4" style={{ width: "95%", minHeight: "100vh" }}>
       <h2>Juries Schedule</h2>
@@ -122,7 +142,7 @@ function RouteComponent() {
       <div className="mb-3">
         <button
           className="btn btn-primary"
-          onClick={() => setShowAddModal(true)}
+          onClick={() => onShow()}
         >
           Set Juries Plan
         </button>
@@ -133,6 +153,9 @@ function RouteComponent() {
           Export Schedule
         </button>
       </div>
+
+      <Table columns={columns} data={JuriesSlots} />
+      <JurieModal ref={ref} defenseSlot={DefenseSlot} onClose={onClose}/>
 
       {/* <div style={{ overflowX: "auto" }}>
         <table
@@ -162,17 +185,15 @@ function RouteComponent() {
         </table>
       </div> */}
 
-      <Table columns={columns} data={JuriesSlots} />
-
       {/* Add Juries Slot Modal */}
-      {showAddModal && (
+      {/* {showAddModal && (
         <div
           className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"
           style={{ zIndex: 1050 }}
         >
           <AddDefenseSlot onAdd={handleAddSlot} onCancel={handleCancelAdd} />
         </div>
-      )}
+      )} */}
     </div>
   );
 }
