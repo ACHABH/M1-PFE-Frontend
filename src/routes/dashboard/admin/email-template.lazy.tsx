@@ -75,7 +75,7 @@ function RouteComponent() {
   }, [deleteTemplate]);
 
   return (
-    <div className="container mt-4">
+    <Container as="div" className="mt-4">
       <h3>Email Template Manager</h3>
       <Button
         variant="primary"
@@ -90,6 +90,6 @@ function RouteComponent() {
         templateId={templateId}
         onClose={() => ref.current?.close()}
       />
-    </div>
+    </Container>
   );
 }
