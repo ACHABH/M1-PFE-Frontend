@@ -18,13 +18,16 @@ export function useGetAll() {
       if (!json.ok) throw new Error(json.message ?? "Request failed");
       return json.data.email_templates;
     },
+    initialData: [],
   });
 }
 
-export function useGet(id: number) {
+export function useGetOne(id: number) {
   return useQuery({
     queryKey: QUERY.EMAIL.TEMPLATE.ONE(id),
     async queryFn(context) {
+      if (id <= 0) return null;
+
       const res = await request(`/api/email/template/${id}`, {
         signal: context.signal,
       });
@@ -32,8 +35,9 @@ export function useGet(id: number) {
         email_template: Prettier<EmailTemplate>;
       }>;
       if (!json.ok) throw new Error(json.message ?? "Request failed");
-      return json.data.email_template;
+      return json?.data?.email_template ?? null;
     },
+    initialData: null,
   });
 }
 
