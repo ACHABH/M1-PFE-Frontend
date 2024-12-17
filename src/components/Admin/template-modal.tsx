@@ -68,10 +68,36 @@ export default forwardRef<Ref, Props>(
       >
         <Form
           onSubmit={form.onSubmit(async (data) => {
-            if (isSendingEmail) await sendEmail({ ...data, to: data.to! });
-            else if (template)
+            if (isSendingEmail) {
+              if (
+                data.to !== "all" &&
+                data.to !== "students" &&
+                data.to !== "teachers" &&
+                data.to !== "companies" &&
+                data.to !== "admins"
+              ) {
+                await sendEmail({ ...data, to: data.to! });
+              } else {
+                await Promise.all(
+                  users.map((user) => {
+                    if (data.to === "all")
+                      return sendEmail({ ...data, to: user.email });
+                    else if (data.to === "students" && user.role === "student")
+                      return sendEmail({ ...data, to: user.email });
+                    else if (data.to === "teachers" && user.role === "teacher")
+                      return sendEmail({ ...data, to: user.email });
+                    else if (data.to === "companies" && user.role === "company")
+                      return sendEmail({ ...data, to: user.email });
+                    else if (data.to === "admins" && user.role === "admin")
+                      return sendEmail({ ...data, to: user.email });
+                  })
+                );
+              }
+            } else if (template) {
               await updateTemplate({ id: templateId!, body: data });
-            else await createTemplate(data);
+            } else {
+              await createTemplate(data);
+            }
             onClose();
           })}
         >
@@ -103,7 +129,11 @@ export default forwardRef<Ref, Props>(
             <Form.Group className="mb-3">
               <Form.Label>To</Form.Label>
               <Form.Select {...form.register("to", { required: true })}>
-                <option value="">None</option>
+                <option value="all">All</option>
+                <option value="students">Students</option>
+                <option value="teachers">Teachers</option>
+                <option value="companies">Companies</option>
+                <option value="admins">Admins</option>
                 {users.map((user) =>
                   user.role === "admin" || user.role === "owner" ? null : (
                     <option key={user.email} value={user.email}>
