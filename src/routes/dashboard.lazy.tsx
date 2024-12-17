@@ -3,10 +3,10 @@ import {
   Outlet,
   useNavigate,
 } from "@tanstack/react-router";
-import { useAuth } from "../api/auth";
-import Container from "react-bootstrap/esm/Container";
-import SideMenu from "../components/side-menu";
 import { useState, useEffect } from "react";
+import Container from "react-bootstrap/Container";
+import SideMenu from "../components/side-menu";
+import { useAuth } from "../api/auth";
 
 export const Route = createLazyFileRoute("/dashboard")({
   component: Component,
@@ -52,7 +52,7 @@ function Component() {
             className="bg-white side-menu-container"
           >
             {isSidebarCollapsed && (
-              <SideMenu userRole={user?.role ?? "admin"} />
+              <SideMenu userRole={import.meta.env.DEV ? "company" : user!.role} />
             )}
           </div>
           <div style={{ height: "100vh" }} className="mx-auto content">

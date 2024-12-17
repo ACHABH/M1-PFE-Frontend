@@ -24,25 +24,29 @@ export function useGetAll() {
       if (!json.ok) throw new Error(json.message ?? "Request failed");
       return json.data.emails;
     },
+    initialData: [],
   });
 }
 
-export function useGet(id: number) {
+export function useGetOne(id: number) {
   return useQuery({
     queryKey: QUERY.EMAIL.ONE(id),
     async queryFn(context) {
+      if (id <= 0) return null;
+
       const res = await request(`/api/email/${id}`, { signal: context.signal });
       const json = (await res.json()) as FetchResponse<{
         email: Prettier<FullEmail>;
       }>;
       if (!json.ok) throw new Error(json.message ?? "Request failed");
-      return json.data.email;
+      return json?.data?.email ?? null;
     },
+    initialData: null,
   });
 }
 
 type UseSendBody = Prettier<
-  StrictPick<Email, "subject" | "content" | "admin_id" | "receiver_id">
+  StrictPick<Email, "subject" | "content"> & { to: string }
 >;
 
 export function useSend() {

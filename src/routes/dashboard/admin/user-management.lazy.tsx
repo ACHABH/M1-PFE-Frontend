@@ -6,8 +6,8 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { USER_ROLE, type UserRole } from "../../../constant/enum";
-import EditUser from "../../../components/Admin/EditUser";
-import UploadCSV2 from "../../../components/Admin/UploadCSV2";
+import EditUser from "../../../components/admin/EditUser";
+import UploadCSV2 from "../../../components/admin/UploadCSV2";
 import Table from "../../../components/table";
 import {
   useGetAll as useGetAllUsers,
@@ -21,33 +21,6 @@ export const Route = createLazyFileRoute("/dashboard/admin/user-management")({
 function Component() {
   const { data: users } = useGetAllUsers();
   const { mutateAsync: deleteUser } = useDeleteUser();
-
-  // const users = useMemo(() => {
-  //   const newUsers = [];
-  //   for (let i = 0; i < 100; i++) {
-  //     newUsers.push({
-  //       id: i,
-  //       first_name: `First${i}`,
-  //       last_name: `Last${i}`,
-  //       email: `user${i}@example.com`,
-  //       role: i % 2 === 0 ? "teacher" : "student",
-  //     });
-  //   }
-  //   return newUsers;
-  // }, []);
-
-  // const handleEditUser = (updatedUser: User) => {
-  //   setUsers(
-  //     users.map((user) =>
-  //       user.email === updatedUser.email ? updatedUser : user
-  //     )
-  //   );
-  //   setShowEditModal(false);
-  // };
-
-  // const handleDeleteUser = (email: string) => {
-  //   setUsers(users.filter((user) => user.email !== email));
-  // };
 
   const columns = useMemo<ColumnDef<User>[]>(() => {
     return [

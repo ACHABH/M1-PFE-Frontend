@@ -94,6 +94,9 @@ const DashboardAdminProjectManagmentLazyImport = createFileRoute(
 const DashboardAdminPfeProposalsLazyImport = createFileRoute(
   '/dashboard/admin/pfe-proposals',
 )()
+const DashboardAdminEmailsLazyImport = createFileRoute(
+  '/dashboard/admin/emails',
+)()
 const DashboardAdminEmailTemplateLazyImport = createFileRoute(
   '/dashboard/admin/email-template',
 )()
@@ -418,6 +421,14 @@ const DashboardAdminPfeProposalsLazyRoute =
     import('./routes/dashboard/admin/pfe-proposals.lazy').then((d) => d.Route),
   )
 
+const DashboardAdminEmailsLazyRoute = DashboardAdminEmailsLazyImport.update({
+  id: '/emails',
+  path: '/emails',
+  getParentRoute: () => DashboardAdminLazyRoute,
+} as any).lazy(() =>
+  import('./routes/dashboard/admin/emails.lazy').then((d) => d.Route),
+)
+
 const DashboardAdminEmailTemplateLazyRoute =
   DashboardAdminEmailTemplateLazyImport.update({
     id: '/email-template',
@@ -609,6 +620,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAdminEmailTemplateLazyImport
       parentRoute: typeof DashboardAdminLazyImport
     }
+    '/dashboard/admin/emails': {
+      id: '/dashboard/admin/emails'
+      path: '/emails'
+      fullPath: '/dashboard/admin/emails'
+      preLoaderRoute: typeof DashboardAdminEmailsLazyImport
+      parentRoute: typeof DashboardAdminLazyImport
+    }
     '/dashboard/admin/pfe-proposals': {
       id: '/dashboard/admin/pfe-proposals'
       path: '/pfe-proposals'
@@ -786,6 +804,7 @@ interface DashboardAdminLazyRouteChildren {
   DashboardAdminDefenseScheduleLazyRoute: typeof DashboardAdminDefenseScheduleLazyRoute
   DashboardAdminEmailScheduleLazyRoute: typeof DashboardAdminEmailScheduleLazyRoute
   DashboardAdminEmailTemplateLazyRoute: typeof DashboardAdminEmailTemplateLazyRoute
+  DashboardAdminEmailsLazyRoute: typeof DashboardAdminEmailsLazyRoute
   DashboardAdminPfeProposalsLazyRoute: typeof DashboardAdminPfeProposalsLazyRoute
   DashboardAdminProjectManagmentLazyRoute: typeof DashboardAdminProjectManagmentLazyRoute
   DashboardAdminRoomsLazyRoute: typeof DashboardAdminRoomsLazyRoute
@@ -801,6 +820,7 @@ const DashboardAdminLazyRouteChildren: DashboardAdminLazyRouteChildren = {
     DashboardAdminDefenseScheduleLazyRoute,
   DashboardAdminEmailScheduleLazyRoute: DashboardAdminEmailScheduleLazyRoute,
   DashboardAdminEmailTemplateLazyRoute: DashboardAdminEmailTemplateLazyRoute,
+  DashboardAdminEmailsLazyRoute: DashboardAdminEmailsLazyRoute,
   DashboardAdminPfeProposalsLazyRoute: DashboardAdminPfeProposalsLazyRoute,
   DashboardAdminProjectManagmentLazyRoute:
     DashboardAdminProjectManagmentLazyRoute,
@@ -919,6 +939,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/defense-schedule': typeof DashboardAdminDefenseScheduleLazyRoute
   '/dashboard/admin/email-schedule': typeof DashboardAdminEmailScheduleLazyRoute
   '/dashboard/admin/email-template': typeof DashboardAdminEmailTemplateLazyRoute
+  '/dashboard/admin/emails': typeof DashboardAdminEmailsLazyRoute
   '/dashboard/admin/pfe-proposals': typeof DashboardAdminPfeProposalsLazyRoute
   '/dashboard/admin/project-managment': typeof DashboardAdminProjectManagmentLazyRoute
   '/dashboard/admin/rooms': typeof DashboardAdminRoomsLazyRoute
@@ -961,6 +982,7 @@ export interface FileRoutesByTo {
   '/dashboard/admin/defense-schedule': typeof DashboardAdminDefenseScheduleLazyRoute
   '/dashboard/admin/email-schedule': typeof DashboardAdminEmailScheduleLazyRoute
   '/dashboard/admin/email-template': typeof DashboardAdminEmailTemplateLazyRoute
+  '/dashboard/admin/emails': typeof DashboardAdminEmailsLazyRoute
   '/dashboard/admin/pfe-proposals': typeof DashboardAdminPfeProposalsLazyRoute
   '/dashboard/admin/project-managment': typeof DashboardAdminProjectManagmentLazyRoute
   '/dashboard/admin/rooms': typeof DashboardAdminRoomsLazyRoute
@@ -1005,6 +1027,7 @@ export interface FileRoutesById {
   '/dashboard/admin/defense-schedule': typeof DashboardAdminDefenseScheduleLazyRoute
   '/dashboard/admin/email-schedule': typeof DashboardAdminEmailScheduleLazyRoute
   '/dashboard/admin/email-template': typeof DashboardAdminEmailTemplateLazyRoute
+  '/dashboard/admin/emails': typeof DashboardAdminEmailsLazyRoute
   '/dashboard/admin/pfe-proposals': typeof DashboardAdminPfeProposalsLazyRoute
   '/dashboard/admin/project-managment': typeof DashboardAdminProjectManagmentLazyRoute
   '/dashboard/admin/rooms': typeof DashboardAdminRoomsLazyRoute
@@ -1050,6 +1073,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/defense-schedule'
     | '/dashboard/admin/email-schedule'
     | '/dashboard/admin/email-template'
+    | '/dashboard/admin/emails'
     | '/dashboard/admin/pfe-proposals'
     | '/dashboard/admin/project-managment'
     | '/dashboard/admin/rooms'
@@ -1091,6 +1115,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/defense-schedule'
     | '/dashboard/admin/email-schedule'
     | '/dashboard/admin/email-template'
+    | '/dashboard/admin/emails'
     | '/dashboard/admin/pfe-proposals'
     | '/dashboard/admin/project-managment'
     | '/dashboard/admin/rooms'
@@ -1133,6 +1158,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/defense-schedule'
     | '/dashboard/admin/email-schedule'
     | '/dashboard/admin/email-template'
+    | '/dashboard/admin/emails'
     | '/dashboard/admin/pfe-proposals'
     | '/dashboard/admin/project-managment'
     | '/dashboard/admin/rooms'
@@ -1239,6 +1265,7 @@ export const routeTree = rootRoute
         "/dashboard/admin/defense-schedule",
         "/dashboard/admin/email-schedule",
         "/dashboard/admin/email-template",
+        "/dashboard/admin/emails",
         "/dashboard/admin/pfe-proposals",
         "/dashboard/admin/project-managment",
         "/dashboard/admin/rooms",
@@ -1305,6 +1332,10 @@ export const routeTree = rootRoute
     },
     "/dashboard/admin/email-template": {
       "filePath": "dashboard/admin/email-template.lazy.tsx",
+      "parent": "/dashboard/admin"
+    },
+    "/dashboard/admin/emails": {
+      "filePath": "dashboard/admin/emails.lazy.tsx",
       "parent": "/dashboard/admin"
     },
     "/dashboard/admin/pfe-proposals": {

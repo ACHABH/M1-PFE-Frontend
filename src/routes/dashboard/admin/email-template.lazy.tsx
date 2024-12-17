@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { EmailTemplate } from "../../../types/db";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { type ElementRef, useMemo, useRef, useState } from "react";
+import { type ElementRef, useCallback, useMemo, useRef, useState } from "react";
 import Button from "react-bootstrap/esm/Button";
 import Container from "react-bootstrap/esm/Container";
 import Table from "../../../components/table";
@@ -21,7 +21,14 @@ function RouteComponent() {
   const { data: templates } = useGetAllTemplates();
   const { mutateAsync: deleteTemplate } = useDeleteTemplate();
 
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [templateId, setTemplateId] = useState<number | null>(null);
+
+  const onClose = useCallback(() => {
+    ref.current?.close();
+    setTemplateId(null);
+    setIsSendingEmail(false);
+  }, []);
 
   const columns = useMemo<ColumnDef<EmailTemplate>[]>(() => {
     return [
@@ -47,10 +54,23 @@ function RouteComponent() {
             <Container as="div" style={{ display: "flex", gap: 5 }}>
               <Button
                 type="button"
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  setTemplateId(templateId);
+                  setIsSendingEmail(true);
+                  ref.current?.show();
+                }}
+              >
+                Send Email
+              </Button>
+              <Button
+                type="button"
                 variant="warning"
                 size="sm"
                 onClick={() => {
                   setTemplateId(templateId);
+                  setIsSendingEmail(false);
                   ref.current?.show();
                 }}
               >
@@ -87,8 +107,9 @@ function RouteComponent() {
       <Table columns={columns} data={templates} />
       <TemplateModal
         ref={ref}
+        isSendingEmail={isSendingEmail}
         templateId={templateId}
-        onClose={() => ref.current?.close()}
+        onClose={onClose}
       />
     </Container>
   );

@@ -1,9 +1,10 @@
+import type { UserRole } from "../constant/enum";
 import { Link } from "@tanstack/react-router";
 import { Nav } from "react-bootstrap";
 import { useState, useEffect } from "react";
 
 type Props = {
-  userRole: string;
+  userRole: UserRole;
   pendingAmount?: number;
 };
 

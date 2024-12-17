@@ -171,6 +171,7 @@ export function useAuth(callback?: UseAuthCallback) {
       await callback?.(user);
       return user;
     },
+    initialData: null,
   });
   return data;
 }
