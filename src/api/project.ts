@@ -1,4 +1,10 @@
-import type { Project, ProjectNote } from "../types/db";
+import type {
+  Project,
+  ProjectJury,
+  ProjectNote,
+  ProjectProposition,
+  ProjectPropositionFeedback,
+} from "../types/db";
 import type { FetchResponse } from "../types/http";
 import type { Prettier } from "../types/util";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -9,6 +15,8 @@ export type FullProject = Prettier<
   Project &
     Partial<{
       project_note: ProjectNote | null;
+      project_proposition: ProjectProposition | null;
+      project_jury: ProjectJury | null;
     }>
 >;
 
@@ -101,6 +109,49 @@ export function useDelete() {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: QUERY.PROJECT.ALL() }),
         queryClient.invalidateQueries({ queryKey: QUERY.PROJECT.ONE(id) }),
+      ]);
+    },
+  });
+}
+
+export function useValidate() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn(id: number) {
+      return request(`/api/project/validate/${id}`, {
+        method: "PATCH",
+      });
+    },
+    async onSuccess(res, id) {
+      if (!res.ok) return;
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: QUERY.PROJECT.ALL() }),
+        queryClient.invalidateQueries({ queryKey: QUERY.PROJECT.ONE(id) }),
+      ]);
+    },
+  });
+}
+
+type ProjectPropositionParams = {
+  id: number;
+  body: { feedback: ProjectPropositionFeedback["feedback"] };
+};
+
+export function useReject() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn(params: ProjectPropositionParams) {
+      return request(`/api/project/reject/${params.id}`, {
+        method: "PATCH",
+        body: JSON.stringify(params.body),
+      });
+    },
+    async onSuccess(res, params) {
+      if (!res.ok) return;
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: QUERY.PROJECT.ALL() }),
+        queryClient.invalidateQueries({ queryKey: QUERY.PROJECT.ONE(params.id) }),
       ]);
     },
   });

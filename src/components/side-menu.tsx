@@ -180,7 +180,7 @@ export default function SideMenu({ userRole }: Props) {
                   Assign Supervisor
                 </Link>
                 <Link
-                  to="/dashboard/admin/project-managment"
+                  to="/dashboard/admin/project-management"
                   className="aside-option"
                 >
                   <i className="bi bi-collection me-2"></i>

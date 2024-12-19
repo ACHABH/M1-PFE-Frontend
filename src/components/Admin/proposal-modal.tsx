@@ -54,6 +54,8 @@ export default forwardRef<Ref, Props>(({ projectId, onClose }, ref) => {
         onSubmit={form.onSubmit(async (data) => {
           if (project) await updateProject({ id: projectId, body: data });
           else await createProject(data);
+          form.reset();
+          onClose();
         })}
       >
         <Form.Group className="mb-3">

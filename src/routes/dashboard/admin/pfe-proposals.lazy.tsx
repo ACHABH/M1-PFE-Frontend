@@ -22,18 +22,10 @@ function RouteComponent() {
   const { mutateAsync: deleteProject } = useDeleteProject();
   const { data: projects } = useGetAllProjects();
 
-  // const [proposals] = useState([
-  //   {
-  //     title: "AI Research",
-  //     type: "Classic",
-  //     description: "Exploring AI-based solutions for education.",
-  //   },
-  //   {
-  //     title: "Robotics Design",
-  //     type: "Innovative",
-  //     description: "Creating robotic models for industrial automation.",
-  //   },
-  // ]);
+  const proposals = useMemo(
+    () => projects.filter((project) => project.status === "proposed"),
+    [projects]
+  );
 
   const onShow = useCallback((projectId: number = 0) => {
     ref.current?.show();
@@ -109,7 +101,7 @@ function RouteComponent() {
       <Button variant="primary" className="mb-3" onClick={() => onShow()}>
         Create PFE Proposal
       </Button>
-      <Table columns={columns} data={projects} />
+      <Table columns={columns} data={proposals} />
       <ProposalModal ref={ref} projectId={projectId ?? 0} onClose={onClose} />
     </Container>
   );

@@ -39,6 +39,7 @@ export function useProfile() {
       if (!json.ok) throw new Error(json?.message ?? "Request failed");
       return json.data.user;
     },
+    initialData: null
   });
 }
 
