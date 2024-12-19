@@ -8,7 +8,7 @@ import {
 } from "react";
 
 export function useWindowSize(sizes: number[]) {
-  const reversedSize = useMemo(() => sizes.slice().reverse(), [sizes]);
+  const reversedSize = useMemo(() => sizes.reverse(), [sizes]);
   const [size, setSize] = useState(sizes[0]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

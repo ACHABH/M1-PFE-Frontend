@@ -23,6 +23,7 @@ export function useGetAll() {
       if (!json.ok) throw new Error(json.message ?? "Request failed");
       return json.data.projects;
     },
+    initialData: [],
   });
 }
 
@@ -30,6 +31,8 @@ export function useGetOne(id: number) {
   return useQuery({
     queryKey: QUERY.PROJECT.ONE(id),
     async queryFn(context) {
+      if (id <= 0) return null;
+
       const res = await request(`/api/project/${id}`, {
         signal: context.signal,
       });
@@ -39,6 +42,7 @@ export function useGetOne(id: number) {
       if (!json.ok) throw new Error(json.message ?? "Request failed");
       return json.data.project;
     },
+    initialData: null,
   });
 }
 

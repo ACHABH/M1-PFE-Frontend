@@ -52,7 +52,7 @@ function Component() {
             className="bg-white side-menu-container"
           >
             {isSidebarCollapsed && (
-              <SideMenu userRole={import.meta.env.DEV ? "company" : user!.role} />
+              <SideMenu userRole={import.meta.env.DEV ? "admin" : user!.role} />
             )}
           </div>
           <div style={{ height: "100vh" }} className="mx-auto content">

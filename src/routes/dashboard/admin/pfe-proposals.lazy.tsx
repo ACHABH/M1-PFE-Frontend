@@ -1,13 +1,15 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
-import type { Project } from "../../../types/db";
 import { ColumnDef } from "@tanstack/react-table";
-import Container from "react-bootstrap/esm/Container";
-import Button from "react-bootstrap/esm/Button";
-import { useDelete as useDeleteProject } from "../../../api/project";
+import Container from "react-bootstrap/Container";
+import Button from "react-bootstrap/Button";
+import {
+  type FullProject,
+  useDelete as useDeleteProject,
+  useGetAll as useGetAllProjects,
+} from "../../../api/project";
 import Table from "../../../components/table";
-import ProposalModal from "../../../components/Admin/proposal-modal";
-
+import ProposalModal from "../../../components/admin/proposal-modal";
 
 export const Route = createLazyFileRoute("/dashboard/admin/pfe-proposals")({
   component: RouteComponent,
@@ -15,42 +17,35 @@ export const Route = createLazyFileRoute("/dashboard/admin/pfe-proposals")({
 
 function RouteComponent() {
   const ref = useRef<ElementRef<typeof ProposalModal>>(null);
-  const [proposalId, setProposalId] = useState(0);
-  
-  
+  const [projectId, setProjectId] = useState<number | null>(null);
+
   const { mutateAsync: deleteProject } = useDeleteProject();
-  const [proposals, setProposals] = useState([
-    {
-      title: "AI Research",
-      type: "Classic",
-      description: "Exploring AI-based solutions for education.",
-    },
-    {
-      title: "Robotics Design",
-      type: "Innovative",
-      description: "Creating robotic models for industrial automation.",
-    },
-  ]);
-  const [showAddModal, setShowAddModal] = useState(false);
+  const { data: projects } = useGetAllProjects();
 
-  const handleAddProposal = (/* newProposal: {
-    title: string
-    type: string
-    description: string
-  } */) => {
-    // setProposals([...proposals, newProposal])
-    setShowAddModal(false);
-  };
+  // const [proposals] = useState([
+  //   {
+  //     title: "AI Research",
+  //     type: "Classic",
+  //     description: "Exploring AI-based solutions for education.",
+  //   },
+  //   {
+  //     title: "Robotics Design",
+  //     type: "Innovative",
+  //     description: "Creating robotic models for industrial automation.",
+  //   },
+  // ]);
 
-  const handleDeleteProposal = (title: string) => {
-    setProposals(proposals.filter((proposal) => proposal.title !== title));
-  };
+  const onShow = useCallback((projectId: number = 0) => {
+    ref.current?.show();
+    setProjectId(projectId);
+  }, []);
 
-  const handleCancelProposal = () => {
-    setShowAddModal(false);
-  };
+  const onClose = useCallback(() => {
+    ref.current?.close();
+    setProjectId(0);
+  }, []);
 
-  const columns = useMemo<ColumnDef<Project>[]>(() => {
+  const columns = useMemo<ColumnDef<FullProject>[]>(() => {
     return [
       {
         accessorKey: "title",
@@ -80,6 +75,14 @@ function RouteComponent() {
             <Container as="div" style={{ display: "flex", gap: 5 }}>
               <Button
                 type="button"
+                variant="warning"
+                size="sm"
+                onClick={() => onShow(projectId)}
+              >
+                Update
+              </Button>
+              <Button
+                type="button"
                 variant="danger"
                 size="sm"
                 onClick={() => {
@@ -94,73 +97,20 @@ function RouteComponent() {
         },
       },
     ];
-  }, [deleteProject]);
-
-  const onShow = useCallback((proposalId: number = 0) => {
-    ref.current?.show();
-    setProposalId(proposalId);
-  }, []);
-
-  const onClose = useCallback(() => {
-    ref.current?.close();
-    setProposalId(0);
-  }, []);
+  }, [deleteProject, onShow]);
 
   return (
-    <div
+    <Container
+      as="div"
       className=" mx-auto mt-2, mb-3"
       style={{ width: "95%", minHeight: "100vh" }}
     >
       <h2>PFE Proposals</h2>
-      <button
-        className="btn btn-primary mb-3"
-        onClick={() => onShow()}
-      >
-        Add PFE Proposal
-      </button>
-      
-      <Table columns={columns} data={proposals} />
-      <ProposalModal ref={ref} proposalID={proposalId} onClose={onClose} />
-
-
-      {/* <table className="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {proposals.map((proposal, index) => (
-            <tr key={index}>
-              <td>{proposal.title}</td>
-              <td>{proposal.type}</td>
-              <td>{proposal.description}</td>
-              <td>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDeleteProposal(proposal.title)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
-      {/* {showAddModal && (
-        <div
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"
-          style={{ zIndex: 1050 }}
-        >
-          <AddPFEProposal
-            onAdd={handleAddProposal}
-            onCancel={handleCancelProposal}
-          />
-        </div>
-      )} */}
-    </div>
+      <Button variant="primary" className="mb-3" onClick={() => onShow()}>
+        Create PFE Proposal
+      </Button>
+      <Table columns={columns} data={projects} />
+      <ProposalModal ref={ref} projectId={projectId ?? 0} onClose={onClose} />
+    </Container>
   );
 }
