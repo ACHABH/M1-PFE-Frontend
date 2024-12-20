@@ -6,6 +6,7 @@ export const QUERY = {
   USER: {
     KEY: ["user"],
     ALL: () => [...QUERY.USER.KEY, "all"] as const,
+    ARCHIVE: () => [...QUERY.USER.KEY, "archive"] as const,
   },
   TEACHER: {
     KEY: ["teacher"],
@@ -26,11 +27,13 @@ export const QUERY = {
   PROJECT: {
     KEY: ["project"],
     ALL: () => [...QUERY.PROJECT.KEY, "all"] as const,
+    ARCHIVE: () => [...QUERY.PROJECT.KEY, "archive"] as const,
     ONE: (id: number) => [...QUERY.PROJECT.KEY, id] as const,
   },
   ROOM: {
     KEY: ["room"],
     ALL: () => [...QUERY.ROOM.KEY, "all"] as const,
+    ARCHIVE: () => [...QUERY.ROOM.KEY, "archive"] as const,
     ONE: (id: number) => [...QUERY.ROOM.KEY, id] as const,
   },
   EMAIL: {
@@ -40,6 +43,7 @@ export const QUERY = {
     TEMPLATE: {
       KEY: ["template"],
       ALL: () => [...QUERY.EMAIL.TEMPLATE.KEY, "all"] as const,
+      ARCHIVE: () => [...QUERY.EMAIL.TEMPLATE.KEY, "archive"] as const,
       ONE: (id: number) => [...QUERY.EMAIL.TEMPLATE.KEY, id] as const,
     },
   },

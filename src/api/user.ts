@@ -30,6 +30,21 @@ export function useGetAll() {
   });
 }
 
+export function useGetArchive() {
+  return useQuery({
+    queryKey: QUERY.USER.ARCHIVE(),
+    async queryFn(context) {
+      const res = await request("/api/user/archive", { signal: context.signal });
+      const json = (await res.json()) as FetchResponse<{
+        users: Prettier<FullUser[]>;
+      }>;
+      if (!json.ok) throw new Error(json?.message ?? "Request failed");
+      return json.data.users;
+    },
+    initialData: [],
+  });
+}
+
 export function useProfile() {
   return useQuery({
     queryKey: QUERY.USER.KEY,

@@ -22,6 +22,23 @@ export function useGetAll() {
   });
 }
 
+export function useGetArchive() {
+  return useQuery({
+    queryKey: QUERY.EMAIL.TEMPLATE.ARCHIVE(),
+    async queryFn(context) {
+      const res = await request("/api/email/template/archive", {
+        signal: context.signal,
+      });
+      const json = (await res.json()) as FetchResponse<{
+        email_templates: EmailTemplates;
+      }>;
+      if (!json.ok) throw new Error(json.message ?? "Request failed");
+      return json.data.email_templates;
+    },
+    initialData: [],
+  });
+}
+
 export function useGetOne(id: number) {
   return useQuery({
     queryKey: QUERY.EMAIL.TEMPLATE.ONE(id),

@@ -1,6 +1,6 @@
+import type { ColumnDef } from "@tanstack/react-table";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
-import { ColumnDef } from "@tanstack/react-table";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import {
@@ -12,10 +12,10 @@ import Table from "../../../components/table";
 import ProposalModal from "../../../components/admin/proposal-modal";
 
 export const Route = createLazyFileRoute("/dashboard/admin/pfe-proposals")({
-  component: RouteComponent,
+  component: Component,
 });
 
-function RouteComponent() {
+function Component() {
   const ref = useRef<ElementRef<typeof ProposalModal>>(null);
   const [projectId, setProjectId] = useState<number | null>(null);
 

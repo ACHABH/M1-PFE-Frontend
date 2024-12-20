@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import {
-  PROJECT_PROPOSITIONS_STATUS,
-  type ProjectPropositionsStatus,
+  type ProjectStatus,
+  PROJECT_STATUS,
 } from "../../../constant/enum";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
@@ -31,11 +31,13 @@ function RouteComponent() {
   const { mutateAsync: validateProject } = useValidateProject();
   const { mutateAsync: rejectProject } = useRejectProject();
 
-  const [status, setStatus] = useState<ProjectPropositionsStatus | null>(null);
+  const [status, setStatus] = useState<ProjectStatus | null>(null);
 
   const filteredProjects = useMemo(() => {
     return projects.filter((project) => {
-      return status === null || project.project_proposition?.status === status;
+      return (
+        status === null || project.status.toLowerCase() === status.toLowerCase()
+      );
     });
   }, [status, projects]);
 
@@ -75,20 +77,9 @@ function RouteComponent() {
         header: "Status",
         enableSorting: true,
         cell(props) {
-          const status = props.getValue<ProjectPropositionsStatus>();
+          const status = props.getValue<ProjectStatus>();
           return (
-            <Badge
-              as="span"
-              className={
-                status === "pending"
-                  ? "bg-warning"
-                  : status === "validated"
-                    ? "bg-success"
-                    : status === "rejected"
-                      ? "bg-danger"
-                      : "bg-info"
-              }
-            >
+            <Badge as="span" className="bg-info">
               {status}
             </Badge>
           );
@@ -146,12 +137,10 @@ function RouteComponent() {
         <Form.Select
           className="w-auto d-inline"
           value={status ?? ""}
-          onChange={(e) =>
-            setStatus((e.target.value as ProjectPropositionsStatus) || null)
-          }
+          onChange={(e) => setStatus((e.target.value as ProjectStatus) || null)}
         >
           <option value="">All</option>
-          {PROJECT_PROPOSITIONS_STATUS.map((status) => (
+          {PROJECT_STATUS.map((status) => (
             <option key={status} value={status}>
               {status}
             </option>

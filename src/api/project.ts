@@ -35,6 +35,21 @@ export function useGetAll() {
   });
 }
 
+export function useGetArchive() {
+  return useQuery({
+    queryKey: QUERY.PROJECT.ARCHIVE(),
+    async queryFn(context) {
+      const res = await request("/api/project/archive", { signal: context.signal });
+      const json = (await res.json()) as FetchResponse<{
+        projects: Prettier<FullProject[]>;
+      }>;
+      if (!json.ok) throw new Error(json.message ?? "Request failed");
+      return json.data.projects;
+    },
+    initialData: [],
+  });
+}
+
 export function useGetOne(id: number) {
   return useQuery({
     queryKey: QUERY.PROJECT.ONE(id),

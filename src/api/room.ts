@@ -20,6 +20,21 @@ export function useGetAll() {
   });
 }
 
+export function useGetArchive() {
+  return useQuery({
+    queryKey: QUERY.ROOM.ARCHIVE(),
+    async queryFn(context) {
+      const res = await request("/api/room/archive", { signal: context.signal });
+      const json = (await res.json()) as FetchResponse<{
+        rooms: Prettier<Rooms>;
+      }>;
+      if (!json.ok) throw new Error(json.message ?? "Request failed");
+      return json.data.rooms;
+    },
+    initialData: [],
+  });
+}
+
 export function useGet(id: number) {
   return useQuery({
     queryKey: QUERY.ROOM.ONE(id),
