@@ -88,7 +88,7 @@ export default forwardRef<Ref, Props>(({ userId = 0, onClose }, ref) => {
             <Form.Label>Password</Form.Label>
             <Form.Control
                 type="password"
-                {...form.register("password", { required: true })}
+                {...form.register("password")}
                 placeholder="Password"
             />
             </Form.Group>

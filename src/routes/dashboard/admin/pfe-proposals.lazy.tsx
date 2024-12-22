@@ -23,7 +23,7 @@ function Component() {
   const { data: projects } = useGetAllProjects();
 
   const proposals = useMemo(
-    () => projects.filter((project) => project.status === "proposed"),
+    () => projects.filter((project) => project.status === "approved" || project.status === "proposed"),
     [projects]
   );
 
