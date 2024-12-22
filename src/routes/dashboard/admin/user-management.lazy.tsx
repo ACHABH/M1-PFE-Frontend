@@ -1,26 +1,42 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { User } from "../../../types/db";
-import { useMemo, useState } from "react";
+import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { USER_ROLE, type UserRole } from "../../../constant/enum";
-import EditUser from "../../../components/admin/EditUser";
 import UploadCSV2 from "../../../components/admin/UploadCSV2";
 import Table from "../../../components/table";
 import {
   useGetAll as useGetAllUsers,
   useDelete as useDeleteUser,
 } from "../../../api/user";
+import UserModal from "../../../components/admin/user-modal";
 
 export const Route = createLazyFileRoute("/dashboard/admin/user-management")({
   component: Component,
 });
 
 function Component() {
+  const ref = useRef<ElementRef<typeof UserModal>>(null);
+  const [userId, setUserId] = useState<number | null>(null);
   const { data: users } = useGetAllUsers();
   const { mutateAsync: deleteUser } = useDeleteUser();
+
+  const activeUsers = useMemo(() => {
+    return users?.filter((user) => !user.deleted_at) ?? [];
+  }, [users]);
+
+  const onShow = useCallback((userId: number = 0) => {
+      ref.current?.show();
+      setUserId(userId);
+    }, []);
+  
+    const onClose = useCallback(() => {
+      ref.current?.close();
+      setUserId(0);
+    }, []);
 
   const columns = useMemo<ColumnDef<User>[]>(() => {
     return [
@@ -60,10 +76,7 @@ function Component() {
                 type="button"
                 variant="warning"
                 size="sm"
-                onClick={() => {
-                  // setEditingUser(user)
-                  // setShowEditModal(true);
-                }}
+                onClick={() => onShow(userId)}
               >
                 Update
               </Button>
@@ -83,19 +96,16 @@ function Component() {
         },
       },
     ];
-  }, [deleteUser]);
+  }, [deleteUser, onShow]);
 
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
-  // const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 
   const filteredUsers = useMemo(() => {
     return (
-      users?.filter(
+      activeUsers?.filter(
         (user) =>
           (selectedRole === null || user.role === selectedRole) &&
           (user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -142,11 +152,6 @@ function Component() {
 
   const handleCancelUpload = () => {
     setShowUploadModal(false);
-  };
-
-  const handleCancelEdit = () => {
-    setShowEditModal(false);
-    setEditingUser(null);
   };
 
   return (
@@ -213,20 +218,7 @@ function Component() {
       </Container>
 
       <Table data={filteredUsers} columns={columns} />
-
-      {showEditModal && editingUser && (
-        <div
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"
-          style={{ zIndex: 1050 }}
-        >
-          <EditUser
-            user={editingUser}
-            // onUpdate={handleEditUser}
-            onUpdate={() => {}}
-            onCancel={handleCancelEdit}
-          />
-        </div>
-      )}
+      <UserModal ref={ref} userId={userId ?? 0} onClose={onClose} />
       {showUploadModal && (
         <div
           className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"

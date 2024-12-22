@@ -1,6 +1,6 @@
 import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import JurieModal from "../../../components/Admin/jurie-modal";
+import JurieModal from "../../../components/admin/jurie-modal";
 import { z } from "zod";
 import Table from "../../../components/table";
 import type { Room, Student, Teacher, User } from "../../../types/db";

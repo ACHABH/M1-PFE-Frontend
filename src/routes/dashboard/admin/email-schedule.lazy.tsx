@@ -5,7 +5,7 @@ import { Button, Form, InputGroup } from "react-bootstrap";
 import Table from "../../../components/table";
 import { ColumnDef } from "@tanstack/react-table";
 import type { Email } from "../../../types/db";
-import EmailModal from "../../../components/Admin/email-modal";
+import EmailModal from "../../../components/admin/email-modal";
 
 export const Route = createLazyFileRoute('/dashboard/admin/email-schedule')({
   component: RouteComponent,
