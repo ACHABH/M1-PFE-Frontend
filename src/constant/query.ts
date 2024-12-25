@@ -36,6 +36,12 @@ export const QUERY = {
     ARCHIVE: () => [...QUERY.ROOM.KEY, "archive"] as const,
     ONE: (id: number) => [...QUERY.ROOM.KEY, id] as const,
   },
+  GROUP: {
+    KEY: ["group"],
+    ALL: () => [...QUERY.GROUP.KEY, "all"] as const,
+    ARCHIVE: () => [...QUERY.GROUP.KEY, "archive"] as const,
+    ONE: (id: number) => [...QUERY.GROUP.KEY, id] as const,
+  },
   EMAIL: {
     KEY: ["email"],
     ALL: () => [...QUERY.EMAIL.KEY, "all"] as const,

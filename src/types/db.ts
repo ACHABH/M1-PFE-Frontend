@@ -31,6 +31,7 @@ type ForeignKeys = {
   ValidatedBy: { validated_by: number }; // admin
   projectPropositionId: { project_proposition_id: number };
   ReceiverId: { receiver_id: number }; // user
+  GroupId: { group_id: number };
 };
 
 export type User = {
@@ -123,9 +124,21 @@ export type ProjectJury = {
 export type ProjectJuries = ProjectJury[];
 
 // TODO: define student groups, specify project participants/developers
-export type ProjectStudent = ForeignKeys["StudentId"] &
-  ForeignKeys["ProjectId"];
-export type ProjectStudents = ProjectStudent[];
+// export type ProjectStudent = ForeignKeys["StudentId"] &
+//   ForeignKeys["ProjectId"];
+// export type ProjectStudents = ProjectStudent[];
+
+export type ProjectSubmit = {
+  validated: boolean;
+} & ForeignKeys["ProjectId"] &
+  ForeignKeys["GroupId"] &
+  TimeStamps;
+
+export type Group = PrimaryKey & TimeStamps & SoftDeletes;
+export type Groups = Group[];
+
+export type GroupMember = ForeignKeys["StudentId"] & ForeignKeys["GroupId"];
+export type GroupMembers = GroupMember[];
 
 export type Email = {
   subject: string;
