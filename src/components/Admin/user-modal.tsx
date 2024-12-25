@@ -93,9 +93,12 @@ export default forwardRef<Ref, Props>(({ userId = 0, onClose }, ref) => {
             />
             </Form.Group>
             <Container as="div" className="d-flex justify-content-end">
-            <Button type="submit" variant="primary">
-                {user ? "Update" : "Create"}
-            </Button>
+                <Button type="submit" variant="primary">
+                    {user ? "Update" : "Create"}
+                </Button>
+                <Button type="reset" variant="secondary" onClick={onClose}>
+                    Cancel
+                </Button>
             </Container>
         </Form>
         </AddModal>

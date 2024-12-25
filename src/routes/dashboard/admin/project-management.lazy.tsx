@@ -4,7 +4,7 @@ import {
   PROJECT_STATUS,
 } from "../../../constant/enum";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Badge from "react-bootstrap/Badge";
@@ -14,9 +14,10 @@ import {
   type FullProject,
   useGetAll as useGetAllProjects,
   useReject as useRejectProject,
-  useValidate as useValidateProject,
+  // useValidate as useValidateProject,
 } from "../../../api/project";
 import { useGetAll as useGetAllUsers } from "../../../api/user";
+import ValidationModal from "../../../components/admin/validation-modal";
 
 export const Route = createLazyFileRoute("/dashboard/admin/project-management")(
   {
@@ -26,9 +27,10 @@ export const Route = createLazyFileRoute("/dashboard/admin/project-management")(
 
 function RouteComponent() {
   const { data: users } = useGetAllUsers();
-
+  const ref = useRef<ElementRef<typeof ValidationModal>>(null);
+  const [projectId, setProjectId] = useState(0);
   const { data: projects } = useGetAllProjects();
-  const { mutateAsync: validateProject } = useValidateProject();
+  // const { mutateAsync: validateProject } = useValidateProject();
   const { mutateAsync: rejectProject } = useRejectProject();
 
   const [status, setStatus] = useState<ProjectStatus | null>(null);
@@ -40,6 +42,16 @@ function RouteComponent() {
       );
     });
   }, [status, projects]);
+
+  const onShow = useCallback((projectID: number = 0) => {
+    ref.current?.show();
+    setProjectId(projectID);
+  }, []);
+    
+  const onClose = useCallback(() => {
+    ref.current?.close();
+    setProjectId(0);
+  }, []);
 
   const columns = useMemo<ColumnDef<FullProject>[]>(() => {
     return [
@@ -66,10 +78,11 @@ function RouteComponent() {
         enableSorting: true,
         cell(props) {
           const project = props.row.original;
+          if (!users) return null;
           const admin = users.find((user) => {
             return user.id === project?.project_proposition?.validated_by;
           });
-          return admin ? `${admin.first_name} ${admin.last_name}` : null;
+          return admin ? `${admin.first_name} ${admin.last_name}` : "Unknown";
         },
       },
       {
@@ -101,7 +114,7 @@ function RouteComponent() {
               <Button
                 variant="success"
                 size="sm"
-                onClick={() => validateProject(project.id)}
+                onClick={() => onShow(project.id)}
               >
                 Validate
               </Button>
@@ -123,7 +136,7 @@ function RouteComponent() {
         },
       },
     ];
-  }, [rejectProject, users, validateProject]);
+  }, [rejectProject, users, onShow]);
 
   return (
     <Container
@@ -148,6 +161,7 @@ function RouteComponent() {
         </Form.Select>
       </Container>
       <Table columns={columns} data={filteredProjects} />
+      <ValidationModal ref={ref} projectId={projectId} onClose={onClose} />
     </Container>
   );
 }

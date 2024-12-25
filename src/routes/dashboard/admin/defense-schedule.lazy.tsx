@@ -6,8 +6,15 @@ import Table from "../../../components/table";
 import type { Room, Student, Teacher, User } from "../../../types/db";
 import { ColumnDef } from "@tanstack/react-table";
 import { Prettier } from "../../../types/util";
+import ValidationModal from "../../../components/admin/validation-modal";
+import {
+  type FullProject,
+  useGetAll as useGetAllProjects,
+  useGetOne as useGetOneProject
+} from "../../../api/project";
 
 const JuriesSlotSchema = z.object({
+  title: z.string().min(1),
   date: z.string().date(),
   time: z.string().time(),
   room: z.string().min(1),
@@ -25,9 +32,12 @@ export const Route = createLazyFileRoute("/dashboard/admin/defense-schedule")({
 function RouteComponent() {
   const ref = useRef<ElementRef<typeof JurieModal>>(null);
   const [defenseId, setDefenseId] = useState(0);
+  const ValidationRef = useRef<ElementRef<typeof ValidationModal>>(null);
+  const [projectId, setProjectId] = useState(0);
 
   const [JuriesSlots] = useState<JuriesSlot[]>([
     {
+      title: "Project 1",
       date: "2024-01-20",
       time: "10:00 AM",
       room: "S101",
@@ -35,6 +45,7 @@ function RouteComponent() {
       students: "Alice Brown, Bob Green",
     },
     {
+      title: "Project 2",
       date: "2024-01-21",
       time: "02:00 PM",
       room: "N102",
@@ -43,47 +54,19 @@ function RouteComponent() {
     },
   ]);
 
-  // const [showAddModal, setShowAddModal] = useState(false);
+  const { data: projects } = useGetAllProjects();
 
-  // // Add Juries Slot
-  // const handleAddSlot = (/* newSlot: JuriesSlot */) => {
-  //   // setJuriesSlots([...JuriesSlots, newSlot]) // handled by query
-  //   setShowAddModal(false);
-  // };
 
-  // // Cancel Add Juries Slot
-  // const handleCancelAdd = () => {
-  //   setShowAddModal(false);
-  // };
-
-  // Export Schedule
-  const handleExportSchedule = () => {
-    const csvContent = [
-      ["Date", "Time", "Room", "Teachers", "Students"],
-      ...JuriesSlots.map((slot) => [
-        slot.date,
-        slot.time,
-        slot.room,
-        slot.teachers,
-        slot.students,
-      ]),
-    ]
-      .map((row) => row.join(","))
-      .join("\n");
-
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "Juries_schedule.csv";
-    link.click();
-    URL.revokeObjectURL(url);
-  };
-
-  type DefenseSchedule = Prettier<User & Room & Student & Teacher>
+  type DefenseSchedule = Prettier<User & Room & Student & Teacher & FullProject>;
 
   const columns = useMemo<ColumnDef<DefenseSchedule>[]>(() => {
     return [
+      {
+        accessorKey: "title",
+        header: "Title",
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
       {
         accessorKey: "date",
         header: "Date",
@@ -114,6 +97,22 @@ function RouteComponent() {
         enableSorting: true,
         cell: (props) => props.getValue(),
       },
+      {
+        header: "Actions",
+        cell: (props) => {
+          const defense = props.row.original;
+          return (
+            <div className="d-flex justify-content-center">
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={() => onShowValidation(1)}
+              >
+                Update
+              </button>
+            </div>
+          );
+        }
+      }
     ];
   }, []);
 
@@ -126,6 +125,42 @@ function RouteComponent() {
     ref.current?.close();
     setDefenseId(0);
   }, []);
+
+  const onShowValidation = useCallback((projectId: number = 0) => {
+    ValidationRef.current?.show();
+    setProjectId(projectId);
+  }, []);
+
+  const onCloseValidation = useCallback(() => {
+    ValidationRef.current?.close();
+    setProjectId(0);
+  }, []);
+
+
+
+  // Export Schedule
+  const handleExportSchedule = () => {
+    const csvContent = [
+      ["Date", "Time", "Room", "Teachers", "Students"],
+      ...JuriesSlots.map((slot) => [
+        slot.date,
+        slot.time,
+        slot.room,
+        slot.teachers,
+        slot.students,
+      ]),
+    ]
+      .map((row) => row.join(","))
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "Juries_schedule.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="mx-auto mt-4" style={{ width: "95%", minHeight: "100vh" }}>
@@ -150,44 +185,8 @@ function RouteComponent() {
 
       <Table columns={columns} data={JuriesSlots} />
       <JurieModal ref={ref} defenseID={defenseId} onClose={onClose}/>
+      <ValidationModal ref={ValidationRef} projectId={projectId} onClose={onCloseValidation}/>
 
-      {/* <div style={{ overflowX: "auto" }}>
-        <table
-          className="table table-bordered table-striped"
-          style={{ whiteSpace: "nowrap" }}
-        >
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Room</th>
-              <th>Teachers</th>
-              <th>Students</th>
-            </tr>
-          </thead>
-          <tbody>
-            {JuriesSlots.map((slot, index) => (
-              <tr key={index}>
-                <td>{slot.date}</td>
-                <td>{slot.time}</td>
-                <td>{slot.room}</td>
-                <td>{slot.teachers}</td>
-                <td>{slot.students}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div> */}
-
-      {/* Add Juries Slot Modal */}
-      {/* {showAddModal && (
-        <div
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"
-          style={{ zIndex: 1050 }}
-        >
-          <AddDefenseSlot onAdd={handleAddSlot} onCancel={handleCancelAdd} />
-        </div>
-      )} */}
     </div>
   );
 }
