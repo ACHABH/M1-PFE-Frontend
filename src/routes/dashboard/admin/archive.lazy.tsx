@@ -1,6 +1,13 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import Table from "../../../components/table";
+import type { ColumnDef } from "@tanstack/react-table";
+import { User } from '../../../types/db';
+import {
+  type FullProject,
+  useGetAll as useGetAllProjects
+} from "../../../api/project";
 
 export const Route = createLazyFileRoute('/dashboard/admin/archive')({
   component: RouteComponent,
@@ -36,10 +43,11 @@ function RouteComponent() {
           needs: 'Test blockchain environment',
         },
       ]);
+
     
-      // State for modal
-      const [selectedProject, setSelectedProject] = useState<{
-        title: string;
+    // State for modal
+    const [selectedProject, setSelectedProject] = useState<{
+      title: string;
         proposer: string;
         dateProposed: string;
         status: string;
@@ -47,7 +55,7 @@ function RouteComponent() {
         technologies: string;
         needs: string;
       } | null>(null);
-    
+      
       // Status colors for badges
       const statusBadgeClass = {
         Accepted: 'bg-success',
@@ -64,16 +72,51 @@ function RouteComponent() {
         technologies: string;
         needs: string;
       }
-
+      
       const handleProjectClick = (project: Project) => {
         setSelectedProject(project);
       };
-    
+      
       const closeModal = () => {
         setSelectedProject(null);
       };
-
       
+      
+      // const { data: projects } = useGetAllProjects();
+
+      // const columns = useMemo<ColumnDef<FullProject & User>[]>(() => {
+      //   return [
+      //     {
+      //       accessorKey: 'title',
+      //       header: 'Title',
+      //       enableSorting: true,
+      //       cell: (props) => props.getValue(),
+      //     },
+      //     {
+      //       accessorKey: 'proposer',
+      //       accessorFn: (row) => `${row.first_name} ${row.last_name}`,
+      //       header: 'Proposer',
+      //       enableSorting: true,
+      //       cell: (props) => props.getValue(),
+      //     },
+      //     {
+      //       accessorKey: 'dateProposed',
+      //       header: 'Date of Proposition',
+      //       enableSorting: true,
+      //       cell: (props) => props.getValue(),
+      //     },
+      //     {
+      //       accessorKey: 'status',
+      //       header: 'Status',
+      //       enableSorting: true,
+      //       cell: (props) => (
+      //         <span className={`badge ${statusBadgeClass[props.getValue() as keyof typeof statusBadgeClass]}`}>
+      //           {props.getValue() as string}
+      //         </span>
+      //       ),
+      //     },
+      //   ]
+      // }, []);
     
       return (
         <div className="container mt-4">
@@ -103,6 +146,11 @@ function RouteComponent() {
               ))}
             </tbody>
           </table>
+          {/* <Table
+            columns={columns}
+            data={projects}
+            // onRowClick={(row) => handleProjectClick(row as any)}
+          /> */}
     
           {/* Modal for project details */}
           {selectedProject && (

@@ -6,78 +6,93 @@ import { z } from "zod";
 import { PROJECT_TYPE } from "../../constant/enum";
 import { useForm } from "../../hooks/useForm";
 import {
-    useGetOne as useGetProposal,
+  useGetOne as useGetOneProject,
+  useCreate as useCreateProject,
+  useUpdate as useUpdateProject,
 } from "../../api/project";
 
 const FormSchema = z.object({
-    SupervisorFirstName: z.string().trim().min(1),
-    SupervisorLastName: z.string().trim().min(1),
-    coSupervisorFirstName: z.string().trim().min(1),
-    coSupervisorLastName: z.string().trim().min(1),
-    mastersOption: z.string().trim().min(1),
-    type: z.string().trim().min(1),
+    type: z.enum(PROJECT_TYPE),
     title: z.string().trim().min(1),
-    summary: z.string().trim().min(1),
-    technologies: z.string().trim().min(1),
-    materials: z.string().trim().min(1),
+    description: z.string().trim().min(1),
+    feedback: z.string().trim().min(1),
   });
-
+  
 type ZodFormSchema = z.infer<typeof FormSchema>;
 
 type Props = {
-  proposalID: number;
+  projectID: number;
   onClose: () => void;
 };
 
-export default forwardRef<Ref, Props>(({ proposalID = 0, onClose }, ref) => {
-    const { data: proposal } = useGetProposal(proposalID);
+export default forwardRef<Ref, Props>(({ projectID = 0, onClose }, ref) => {
+    const { data: project } = useGetOneProject(projectID);
+      const { mutateAsync: createProject } = useCreateProject();
+      const { mutateAsync: updateProject } = useUpdateProject();
     
-    const form = useForm<ZodFormSchema>({
-        resolver: zodResolver(FormSchema),
-        defaultValues: {
-          coSupervisorFirstName: '',
-          coSupervisorLastName: '',
-          mastersOption: '',
-          type: 'Classic',
-          title: '',
-          summary: '',
-          technologies: '',
-          materials: '',
-        },
-        values: {
-      });
+      const form = useForm<ZodFormSchema>({
+          resolver: zodResolver(FormSchema),
+          defaultValues: {
+            type: project?.type ?? "classical",
+            title: project?.title ?? "",
+            description: project?.description ?? "",
+            feedback: project?.project_proposition_feedback?.feedback ?? "",
+          },
+          values: {
+            type: project?.type ?? "classical",
+            title: project?.title ?? "",
+            description: project?.description ?? "",
+            feedback: project?.project_proposition_feedback?.feedback ?? "",
+          },
+        });
     
     return (
-        <AddModal ref={ref} title={proposal ? "Update Proposal" : "Add Proposal"} action={null}>
+        <AddModal ref={ref} title={project ? "Update Proposal" : "Add Proposal"} action={null}>
         <Form
-        onSubmit={() => console.log(proposal)}
+          onSubmit={form.onSubmit(async (data) => {
+            if (project) await updateProject({ id: projectID, body: data });
+            else await createProject(data);
+            form.reset();
+            onClose();
+          })}
         >
             <Form.Group className="mb-3">
-                <Form.Label>Type</Form.Label>
-                <Form.Select {...form.register("type", { required: true })}>
-                    <option value="classical">Classical</option>
-                    <option value="innovative">Innovative</option>
-                </Form.Select>
+              <Form.Label>Type</Form.Label>
+              <Form.Select {...form.register("type", { required: true })}>
+                {PROJECT_TYPE.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
-                <Form.Label>Title</Form.Label>
-                <Form.Control
-                    type="text"
-                    {...form.register("title", { required: true })}
-                    placeholder="Title"
-                />
-                </Form.Group>
+              <Form.Label>Title</Form.Label>
+              <Form.Control
+                type="text"
+                {...form.register("title", { required: true })}
+                placeholder="Title"
+              />
+            </Form.Group>
             <Form.Group className="mb-3">
-                <Form.Label>Description</Form.Label>
-                <Form.Control
-                    as="textarea"
-                    {...form.register("description", { required: true })}
-                    placeholder="Description"
-                />
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                {...form.register("description", { required: true })}
+                placeholder="Description"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Feedback</Form.Label>
+              <Form.Control
+                as="textarea"
+                {...form.register("feedback")}
+                disabled
+              />
             </Form.Group>
             <Container as="div" style={{ display: "flex", gap: 5 }}>
                 <Button type="submit" variant="primary">
-                    {proposal ? "Update" : "Add"}
+                    {project ? "Update" : "Add"}
                 </Button>
                 <Button type="reset" variant="secondary" onClick={onClose}>
                     Cancel

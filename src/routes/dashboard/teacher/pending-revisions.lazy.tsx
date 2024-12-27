@@ -1,11 +1,13 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
-import EditProposalForm from '../../../components/Teacher/EditProposal'
+import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
+import { useAuth } from '../../../api/auth';
 import Table from "../../../components/table";
-import { useMemo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import type { Project, ProjectProposition, ProjectPropositionFeedback} from "../../../types/db";
-import { Prettier } from "../../../types/util";
+import ProposalModal from "../../../components/Teacher/proposal-modal";
+import { 
+  type FullProject,
+  useGetAll as useGetAllProjects,
+ } from '../../../api/project';
 
 export const Route = createLazyFileRoute(
   '/dashboard/teacher/pending-revisions',
@@ -14,68 +16,62 @@ export const Route = createLazyFileRoute(
 })
 
 function RouteComponent() {
-  const [proposals, setProposals] = useState([
-    {
-      title: 'AI Research',
-      feedback: 'Please elaborate on the technologies section.',
-      status: 'pending',
-      description: 'Exploring AI applications in education.',
-    },
-    {
-      title: 'Robotics Design',
-      feedback: 'Provide more details on material requirements.',
-      status: 'pending',
-      description: 'Creating robotic models for industrial automation.',
-    },
-    {
-      title: 'Blockchain Security',
-      feedback: '',
-      status: 'approved',
-      description: 'Developing secure blockchain algorithms.',
-    },
-  {
-    title: 'Quantum Computing',
-    feedback: 'The proposal lacks sufficient detail on implementation.',
-    status: 'rejected',
-    description: 'Investigating quantum algorithms for cryptography.',
-  },
-  ])
+  // const [proposals, setProposals] = useState([
+  //   {
+  //     title: 'AI Research',
+  //     feedback: 'Please elaborate on the technologies section.',
+  //     status: 'pending',
+  //     description: 'Exploring AI applications in education.',
+  //   },
+  //   {
+  //     title: 'Robotics Design',
+  //     feedback: 'Provide more details on material requirements.',
+  //     status: 'pending',
+  //     description: 'Creating robotic models for industrial automation.',
+  //   },
+  //   {
+  //     title: 'Blockchain Security',
+  //     feedback: '',
+  //     status: 'approved',
+  //     description: 'Developing secure blockchain algorithms.',
+  //   },
+  // {
+  //   title: 'Quantum Computing',
+  //   feedback: 'The proposal lacks sufficient detail on implementation.',
+  //   status: 'rejected',
+  //   description: 'Investigating quantum algorithms for cryptography.',
+  // },
+  // ])
 
-  const [currentProposal, setCurrentProposal] = useState<Proposal | null>(null)
-  const [showEditForm, setShowEditForm] = useState(false)
+  const { data: projects } = useGetAllProjects();
+  const user = useAuth((user) => {
+      if (user) return;
+    });
 
-  interface Proposal {
-    title: string
-    feedback: string
-    status: string
-    description: string
-  }
-
-  const handleEdit = (proposal: Proposal) => {
-    setCurrentProposal(proposal)
-    setShowEditForm(true)
-  }
-
-  interface UpdatedProposal {
-    title: string
-    feedback: string
-    status: string
-    description: string
-  }
-
-  const handleSaveChanges = (updatedProposal: UpdatedProposal) => {
-    setProposals(
-      proposals.map((proposal) =>
-        proposal.title === updatedProposal.title ? updatedProposal : proposal,
+  const proposals = useMemo(
+    () =>
+      projects.filter(
+        (project) =>
+          (project.status === "proposed") &&
+          project.project_proposition?.user_id === user?.id
       ),
-    )
-    setShowEditForm(false)
-    alert('Proposal updated successfully!')
-  }
+    [projects, user?.id]
+  );
+  const ref = useRef<ElementRef<typeof ProposalModal>>(null);
+  const [projectId, setProjectId] = useState<number | null>(null);
 
-  type Revision = Prettier<Project & ProjectPropositionFeedback & ProjectProposition>;
+  const onShow = useCallback((projectId: number = 0) => {
+    ref.current?.show();
+    setProjectId(projectId);
+  }, []);
 
-  const columns = useMemo<ColumnDef<Revision>[]>(() => {
+  const onClose = useCallback(() => {
+    ref.current?.close();
+    setProjectId(0);
+  }, []);
+
+
+  const columns = useMemo<ColumnDef<FullProject>[]>(() => {
     return[
       {
         header: 'Title',
@@ -106,10 +102,10 @@ function RouteComponent() {
         header: "Actions",
         cell: (props) => {
           const proposal = props.row.original;
-          return proposal.status === "pending" ? (
+          return proposal.project_proposition?.status === "pending" ? (
             <button
               className="btn btn-primary btn-sm"
-              onClick={() => handleEdit(proposal)}
+              onClick={() => onShow(proposal.id)}
             >
               Edit
             </button>
@@ -122,7 +118,9 @@ function RouteComponent() {
   return (
     <div className="container mt-4">
       <h3>Validate Subjects</h3>
-      {!showEditForm ? (
+      <Table data={proposals} columns={columns} />
+      <ProposalModal ref={ref} projectID={projectId ?? 0} onClose={onClose} />
+      {/* {!showEditForm ? (
         // <div style={{overflowX:"auto"}}>
         //   <table className="table table-bordered table-striped" style={{whiteSpace:"nowrap"}}>
         //     <thead>
@@ -169,11 +167,10 @@ function RouteComponent() {
       <Table data={proposals} columns={columns} />
       ) : (
         <EditProposalForm
-          proposal={currentProposal}
-          onSave={handleSaveChanges}
+        projectID={currentProposal}
           onCancel={() => setShowEditForm(false)}
         />
-      )}
+      )} */}
     </div>
   )
 }

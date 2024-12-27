@@ -38,8 +38,8 @@ export default forwardRef<Ref, Props>(({ onClose/*, onSave*/ }, ref) => {
       e.nativeEvent.offsetX,
       e.nativeEvent.offsetY
     );
-    ctx.strokeStyle = "black"; // Set signature color
-    ctx.lineWidth = 2; // Set signature thickness
+    ctx.strokeStyle = "green"; // color
+    ctx.lineWidth = 2; // thickness
     ctx.stroke();
   };
 

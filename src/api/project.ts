@@ -17,6 +17,7 @@ export type FullProject = Prettier<
       project_note: ProjectNote | null;
       project_proposition: ProjectProposition | null;
       project_jury: ProjectJury | null;
+      project_proposition_feedback: ProjectPropositionFeedback | null;
     }>
 >;
 
@@ -90,7 +91,7 @@ type UseUpdateParams = {
   body: object;
 };
 
-export function useUpdate() {
+export function useUpdate(proposalID: number, p0: { description: (data: any) => any; }) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn(params: UseUpdateParams) {

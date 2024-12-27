@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import WelcomeCard from '../../../components/welcome-card'
-import UploadCSV from '../../../components/admin/UploadCSV'
+import UploadCSV from '../../../components/admin/UploadCSV2'
 import AdminStatus from '../../../components/admin/AdminStatus'
 import SetDeadline from '../../../components/admin/SetDeadline'
 
@@ -28,6 +28,18 @@ function RouteComponent() {
   const closeSetDeadline = () => {
     setIsSetDeadlineOpen(false)
   }
+  
+  const [showUploadModal, setShowUploadModal] = useState(false);
+
+  const handleUploadCSV = (file: File) => {
+    alert(`File ${file.name} uploaded! Users will be processed.`);
+    setShowUploadModal(false);
+  };
+
+  const handleCancelUpload = () => {
+    setShowUploadModal(false);
+  };
+
 
   return (
     <>
@@ -38,7 +50,7 @@ function RouteComponent() {
             <div>
               <button
                 className="btn-oxford mx-3 mt-3 uploadCSV-btn"
-                onClick={toggleUploadCSV}
+                onClick={() => setShowUploadModal(true)}
                 style={{ borderRadius: '10px' }}
               >
                 Upload CSV
@@ -72,12 +84,19 @@ function RouteComponent() {
         </div>
       ) : (
         <>
-          {isUploadCSVOpen ? (
-            <UploadCSV togglePage={toggleUploadCSV} />
-          ) : (
-            <WelcomeCard name="User Full Name" path="" />
+          {showUploadModal && (
+            <div
+              className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"
+              style={{ zIndex: 1050 }}
+            >
+              <UploadCSV
+                onUpload={handleUploadCSV}
+                onCancel={handleCancelUpload}
+              />
+            </div>
           )}
-          {!isUploadCSVOpen && <AdminStatus />}
+          <WelcomeCard name="User Full Name" path="" />
+          <AdminStatus />
         </>
       )}
     </>
