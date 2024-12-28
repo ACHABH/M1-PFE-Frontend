@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -27,6 +26,7 @@ type ZodFormSchema = z.infer<typeof FormSchema>;
 
 const EditProposalForm = ({ projectID, onCancel }: Props) => {
   const { data: project } = useGetOneProject(projectID);
+  const { mutateAsync: updateProject } = useUpdateProject()
 
   const form = useForm<ZodFormSchema>({
       resolver: zodResolver(FormSchema),

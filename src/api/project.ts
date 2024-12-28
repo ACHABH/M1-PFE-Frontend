@@ -91,7 +91,7 @@ type UseUpdateParams = {
   body: object;
 };
 
-export function useUpdate(proposalID: number, p0: { description: (data: any) => any; }) {
+export function useUpdate() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn(params: UseUpdateParams) {

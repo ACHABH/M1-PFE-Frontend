@@ -25,6 +25,7 @@ type Props = {
   onClose: () => void;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default forwardRef<Ref, Props>(({ projectID = 0, onClose }, ref) => {
     const { data: project } = useGetOneProject(projectID);
       const { mutateAsync: createProject } = useCreateProject();

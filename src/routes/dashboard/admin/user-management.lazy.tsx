@@ -114,7 +114,7 @@ function Component() {
             user.role.toLowerCase().includes(searchTerm.toLowerCase()))
       ) ?? []
     );
-  }, [searchTerm, selectedRole, users]);
+  }, [activeUsers, searchTerm, selectedRole]);
 
   const handleUploadCSV = (file: File) => {
     alert(`File ${file.name} uploaded! Users will be processed.`);
