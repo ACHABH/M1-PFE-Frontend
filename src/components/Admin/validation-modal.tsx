@@ -18,10 +18,10 @@ type Props = {
   };
   
 const FormSchema = z.object({
-    registration_end: z.string().date(),
-    presantation_date: z.string().date(),
-    presanation_time: z.string().time(),
-    presanation_time_end: z.string().time(),
+    registration_start: z.string().datetime(),
+    registration_end: z.string().datetime(),
+    presantation_start: z.string().datetime(),
+    presanation_end: z.string().datetime(),
 });
   
 type ZodFormSchema = z.infer<typeof FormSchema>;
@@ -34,16 +34,16 @@ export default forwardRef<Ref, Props>(({ projectId, onClose }, ref) => {
     const form = useForm<ZodFormSchema>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
+            registration_start: "",
             registration_end: "",
-            presantation_date: "",
-            presanation_time: "",
-            presanation_time_end: "",
+            presantation_start: "",
+            presanation_end: "",
         },
         values: {
+            registration_start: "",
             registration_end: "",
-            presantation_date: "",
-            presanation_time: "",
-            presanation_time_end: "",
+            presantation_start: "",
+            presanation_end: "",
         },
     });
 
@@ -57,31 +57,31 @@ export default forwardRef<Ref, Props>(({ projectId, onClose }, ref) => {
                 })}
             >
                 <Form.Group className="mb-3">
+                    <Form.Label>Registration Start</Form.Label>
+                    <Form.Control
+                        type="datetime"
+                        {...form.register("registration_start", { required: true })}
+                    />
+                </Form.Group>
+                <Form.Group className="mb-3">
                     <Form.Label>Registration End</Form.Label>
                     <Form.Control
-                        type="date"
+                        type="datetime"
                         {...form.register("registration_end", { required: true })}
                     />
                 </Form.Group>
                 <Form.Group className="mb-3">
-                    <Form.Label>Presantation Date</Form.Label>
+                    <Form.Label>Presantation Start</Form.Label>
                     <Form.Control
-                        type="date"
-                        {...form.register("presantation_date", { required: true })}
+                        type="datetime"
+                        {...form.register("presantation_start", { required: true })}
                     />
                 </Form.Group>
                 <Form.Group className="mb-3">
-                    <Form.Label>Presanation Time</Form.Label>
+                    <Form.Label>Presanation End</Form.Label>
                     <Form.Control
-                        type="time"
-                        {...form.register("presanation_time", { required: true })}
-                    />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label>Presanation Time End</Form.Label>
-                    <Form.Control
-                        type="time"
-                        {...form.register("presanation_time_end", { required: true })}
+                        type="datetime"
+                        {...form.register("presanation_end", { required: true })}
                     />
                 </Form.Group>
                 <Container as="div" style={{ display: "flex", gap: 5 }}>
