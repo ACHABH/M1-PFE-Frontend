@@ -14,6 +14,7 @@ export async function sql(type: QueryType, query: Query) {
     }),
   });
   const json = await res.json();
+  console.log(type, query, json);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return json as any;
 }
