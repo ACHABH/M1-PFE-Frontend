@@ -32,7 +32,10 @@ function Component() {
   };
 
   return (
-    <Container className="my-3 component-bg rounded p-3" style={{ width: "90%" }}>
+    <Container
+      className="my-3 component-bg rounded p-3"
+      style={{ width: "90%" }}
+    >
       <h3>Submit Your Topic Proposal</h3>
 
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -218,10 +221,6 @@ function Component() {
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
-        </Row>
-
-        <Row className="mb-3">
-          
         </Row>
 
         <Container className="d-flex justify-content-end">
