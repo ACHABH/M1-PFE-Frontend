@@ -1,5 +1,5 @@
 import { useForm, Controller } from "react-hook-form";
-import { Form, Button, Col, Row } from "react-bootstrap";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/dashboard/company/propose-topics")({
@@ -28,145 +28,129 @@ function Component() {
   };
 
   return (
-    <div className="container mt-4">
-      <div className="mb-5">
-        <h2>Propose a New Topic</h2>
-      </div>
+    <Container
+      className="my-3 component-bg rounded p-3"
+      style={{ width: "90%" }}
+    >
+      <h3>Submit a New Topic Proposal</h3>
+
       <Form onSubmit={handleSubmit(onSubmit)}>
-        {/* Company Name */}
-        <Form.Group as={Row} className="mb-4" controlId="companyName">
-          <Form.Label column sm={2}>
-            Company Name
-          </Form.Label>
-          <Col sm={10}>
-            <Controller
-              name="companyName"
-              control={control}
-              defaultValue=""
-              rules={{ required: "Company name is required" }}
-              render={({ field }) => (
-                <Form.Control
-                  {...field}
-                  placeholder="Enter the company name"
-                  isInvalid={!!errors.companyName}
-                />
-              )}
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.companyName?.message}
-            </Form.Control.Feedback>
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Group controlId="companyName">
+              <Form.Label>Company Name</Form.Label>
+              <Controller
+                name="companyName"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Company name is required" }}
+                render={({ field }) => (
+                  <Form.Control
+                    {...field}
+                    placeholder="Enter the company name"
+                    isInvalid={!!errors.companyName}
+                  />
+                )}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.companyName?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
           </Col>
-        </Form.Group>
-
-        {/* Project Specialty */}
-        <Form.Group as={Row} className="mb-4" controlId="specialty">
-          <Form.Label column sm={2}>
-            Specialty
-          </Form.Label>
-          <Col sm={10}>
-            <Controller
-              name="specialty"
-              control={control}
-              defaultValue=""
-              rules={{ required: "Specialty is required" }}
-              render={({ field }) => (
-                <Form.Control
-                  {...field}
-                  placeholder="Enter the project specialty"
-                  isInvalid={!!errors.specialty}
-                />
-              )}
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.specialty?.message}
-            </Form.Control.Feedback>
+          <Col md={6}>
+            <Form.Group controlId="specialty">
+              <Form.Label>Specialty</Form.Label>
+              <Controller
+                name="specialty"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Specialty is required" }}
+                render={({ field }) => (
+                  <Form.Control
+                    {...field}
+                    placeholder="Enter the project specialty"
+                    isInvalid={!!errors.specialty}
+                  />
+                )}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.specialty?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
           </Col>
-        </Form.Group>
+        </Row>
 
-        {/* Topic Title */}
-        <Form.Group as={Row} className="mb-4" controlId="title">
-          <Form.Label column sm={2}>
-            Title
-          </Form.Label>
-          <Col sm={10}>
-            <Controller
-              name="title"
-              control={control}
-              defaultValue=""
-              rules={{ required: "Title is required" }}
-              render={({ field }) => (
-                <Form.Control
-                  {...field}
-                  placeholder="Enter topic title"
-                  isInvalid={!!errors.title}
-                />
-              )}
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.title?.message}
-            </Form.Control.Feedback>
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Group controlId="title"  className="mb-3">
+              <Form.Label>Title</Form.Label>
+              <Controller
+                name="title"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Title is required" }}
+                render={({ field }) => (
+                  <Form.Control
+                    {...field}
+                    placeholder="Enter topic title"
+                    isInvalid={!!errors.title}
+                  />
+                )}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.title?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="technologies">
+              <Form.Label>Technologies</Form.Label>
+              <Controller
+                name="technologies"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <Form.Control
+                    {...field}
+                    as="textarea"
+                    rows={3}
+                    placeholder="Enter technologies to be used"
+                  />
+                )}
+              />
+            </Form.Group>
           </Col>
-        </Form.Group>
-
-        {/* Topic Description */}
-        <Form.Group as={Row} className="mb-4" controlId="description">
-          <Form.Label column sm={2}>
-            Description
-          </Form.Label>
-          <Col sm={10}>
-            <Controller
-              name="description"
-              control={control}
-              defaultValue=""
-              rules={{ required: "Description is required" }}
-              render={({ field }) => (
-                <Form.Control
-                  {...field}
-                  as="textarea"
-                  rows={4}
-                  placeholder="Enter topic description"
-                  isInvalid={!!errors.description}
-                />
-              )}
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.description?.message}
-            </Form.Control.Feedback>
+          <Col md={6}>
+            <Form.Group controlId="description">
+              <Form.Label>Description</Form.Label>
+              <Controller
+                name="description"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Description is required" }}
+                render={({ field }) => (
+                  <Form.Control
+                    {...field}
+                    as="textarea"
+                    rows={6}
+                    placeholder="Enter topic description"
+                    isInvalid={!!errors.description}
+                  />
+                )}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.description?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
           </Col>
-        </Form.Group>
+        </Row>
 
-        {/* Used Technologies */}
-        <Form.Group as={Row} className="mb-4" controlId="technologies">
-          <Form.Label column sm={2}>
-            Used Technologies
-          </Form.Label>
-          <Col sm={10}>
-            <Controller
-              name="technologies"
-              control={control}
-              defaultValue=""
-              rules={{ required: "Technologies are required" }}
-              render={({ field }) => (
-                <Form.Control
-                  {...field}
-                  placeholder="Enter technologies to be used"
-                  isInvalid={!!errors.technologies}
-                />
-              )}
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.technologies?.message}
-            </Form.Control.Feedback>
-          </Col>
-        </Form.Group>
-
-        {/* Submit Button */}
-        <div className="text-center">
-          <Button variant="primary" type="submit" size="lg">
+        <Container className="d-flex justify-content-end">
+          <Button type="submit" variant="primary">
             Submit Proposal
           </Button>
-        </div>
+        </Container>
       </Form>
-    </div>
+    </Container>
   );
 }
+
+export default Component;
