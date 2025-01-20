@@ -1,17 +1,16 @@
-import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
+import { ElementRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import JurieModal from "../../../components/admin/jurie-modal";
 import { z } from "zod";
-import Table from "../../../components/table";
+import Table from "../../../components/Table";
 import type { Room, Student, Teacher, User } from "../../../types/db";
 import { ColumnDef } from "@tanstack/react-table";
 import { Prettier } from "../../../types/util";
 import ValidationModal from "../../../components/admin/validation-modal";
 import {
-  type FullProject,
-  useGetAll as useGetAllProjects,
-  useGetOne as useGetOneProject
+  type FullProject
 } from "../../../api/project";
+import { useSelectSql } from '../../../api/sql.ts';
 
 const JuriesSlotSchema = z.object({
   title: z.string().min(1),
@@ -31,30 +30,43 @@ export const Route = createLazyFileRoute("/dashboard/admin/defense-schedule")({
 
 function RouteComponent() {
   const ref = useRef<ElementRef<typeof JurieModal>>(null);
-  const [defenseId, setDefenseId] = useState(0);
   const ValidationRef = useRef<ElementRef<typeof ValidationModal>>(null);
   const [projectId, setProjectId] = useState(0);
+  const [defenseSchedules, setDefenseSchedules] = useState<any[]>([]);
 
-  const [JuriesSlots] = useState<JuriesSlot[]>([
-    {
-      title: "Project 1",
-      date: "2024-01-20",
-      time: "10:00 AM",
-      room: "S101",
-      teachers: "John Doe, Jane Smith",
-      students: "Alice Brown, Bob Green",
-    },
-    {
-      title: "Project 2",
-      date: "2024-01-21",
-      time: "02:00 PM",
-      room: "N102",
-      teachers: "Alice Green, Mark Brown",
-      students: "Bob Johnson, Sarah White",
-    },
-  ]);
 
-  const { data: projects } = useGetAllProjects();
+  const { data, isLoading, isError } = useSelectSql(`
+    SELECT 
+    p.id AS id,
+    p.title AS title,
+    pp.date AS date,
+    strftime('%H:%M', pp.date) AS time, -- Extracting time from datetime
+    r.room AS room,
+    GROUP_CONCAT(DISTINCT t.first_name || ' ' || t.last_name || ' (' || pj.role || ')') AS teachers,
+    GROUP_CONCAT(DISTINCT s.first_name || ' ' || s.last_name) AS students
+    FROM 
+        project_presentations pp
+    JOIN 
+        rooms r ON pp.room_id = r.id
+    JOIN 
+        projects p ON pp.project_id = p.id
+    LEFT JOIN 
+        project_juries pj ON pj.project_id = p.id
+    LEFT JOIN 
+        users t ON pj.teacher_id = t.id
+    LEFT JOIN 
+        project_students ps ON ps.project_id = p.id
+    LEFT JOIN 
+        users s ON ps.student_id = s.id
+    GROUP BY 
+        p.id, pp.date, r.room;
+    `);
+
+    useEffect(() => {
+        if (data) {
+          setDefenseSchedules(data?.data);
+        }
+      }, [data]);
 
 
   type DefenseSchedule = Prettier<User & Room & Student & Teacher & FullProject>;
@@ -105,7 +117,7 @@ function RouteComponent() {
             <div className="d-flex justify-content-center">
               <button
                 className="btn btn-primary btn-sm"
-                onClick={() => onShowValidation(1)}
+                onClick={() => onShowValidation(defense.id)}
               >
                 Update
               </button>
@@ -116,17 +128,16 @@ function RouteComponent() {
     ];
   }, []);
 
-  const onShow = useCallback((defenseId: number = 0) => {
-    ref.current?.show();
-    setDefenseId(defenseId);
-  }, []);
+  // const onShow = useCallback((defenseId: number) => {
+  //   ref.current?.show();
+  // }, []);
 
-  const onClose = useCallback(() => {
-    ref.current?.close();
-    setDefenseId(0);
-  }, []);
+  // const onClose = useCallback(() => {
+  //   ref.current?.close();
+  //   setDefenseId(0);
+  // }, []);
 
-  const onShowValidation = useCallback((projectId: number = 0) => {
+  const onShowValidation = useCallback((projectId: number) => {
     ValidationRef.current?.show();
     setProjectId(projectId);
   }, []);
@@ -162,6 +173,14 @@ function RouteComponent() {
     URL.revokeObjectURL(url);
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading defense schedules.</div>;
+  }
+
   return (
     <div className="mx-auto mt-4" style={{ width: "95%", minHeight: "100vh" }}>
       <h2>Juries Schedule</h2>
@@ -169,12 +188,12 @@ function RouteComponent() {
         This page allows you to generate and view Jurie schedule.
       </p>
       <div className="mb-3">
-        <button
+        {/* <button
           className="btn btn-primary"
           onClick={() => onShow()}
         >
           Set Juries Plan
-        </button>
+        </button> */}
         <button
           className="btn btn-secondary ms-2"
           onClick={handleExportSchedule}
@@ -183,8 +202,7 @@ function RouteComponent() {
         </button>
       </div>
 
-      <Table columns={columns} data={JuriesSlots} />
-      <JurieModal ref={ref} defenseID={defenseId} onClose={onClose}/>
+      <Table columns={columns} data={defenseSchedules} />
       <ValidationModal ref={ValidationRef} projectId={projectId} onClose={onCloseValidation}/>
 
     </div>

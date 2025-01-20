@@ -10,6 +10,7 @@ import { routeTree } from "./routeTree.gen";
 import ThemeProvider from "./contexts/theme.tsx";
 import QueryProvider from "./providers/query.tsx";
 import ErrorBoundary from "./error-boundary.tsx";
+import SchedulerProvider from "./contexts/scheduler.tsx";
 // import { sql } from "./api/sql.ts";
 
 const router = createRouter({ routeTree });
@@ -29,7 +30,9 @@ if (rootElement && !rootElement.innerHTML) {
         <React.Suspense fallback={<Loading />}>
           <QueryProvider>
             <ThemeProvider>
-              <RouterProvider router={router} />
+              {/* <SchedulerProvider> */}
+                <RouterProvider router={router} />
+              {/* </SchedulerProvider> */}
             </ThemeProvider>
           </QueryProvider>
         </React.Suspense>

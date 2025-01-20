@@ -9,7 +9,7 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Badge from "react-bootstrap/Badge";
 import Form from "react-bootstrap/Form";
-import Table from "../../../components/table";
+import Table from "../../../components/Table";
 import {
   type FullProject,
   useGetAll as useGetAllProjects,
@@ -18,6 +18,8 @@ import {
 } from "../../../api/project";
 import { useGetAll as useGetAllUsers } from "../../../api/user";
 import ValidationModal from "../../../components/admin/validation-modal";
+import { sql, useSelectSql } from '../../../api/sql.ts';
+
 
 export const Route = createLazyFileRoute("/dashboard/admin/project-management")(
   {
@@ -74,26 +76,27 @@ function RouteComponent() {
         cell: (props) => props.getValue(),
       },
       {
-        header: "Submitted By",
-        enableSorting: true,
-        cell(props) {
-          const project = props.row.original;
-          if (!users) return null;
-          const admin = users.find((user) => {
-            return user.id === project?.project_proposition?.validated_by;
-          });
-          return admin ? `${admin.first_name} ${admin.last_name}` : "Unknown";
-        },
-      },
-      {
         accessorKey: "status",
         header: "Status",
         enableSorting: true,
         cell(props) {
           const status = props.getValue<ProjectStatus>();
           return (
-            <Badge as="span" className="bg-info">
-              {status}
+            <Badge
+              as="span"
+              className={`${
+                status === "proposed"
+                  ? "bg-warning"
+                  : status === "approved"
+                  ? "bg-primary"
+                  : status === "assigned"
+                  ? "bg-secondary"
+                  : status === "completed"
+                  ? "bg-success"
+                  : ""
+              }`}
+            >
+              {status.toLocaleUpperCase()}
             </Badge>
           );
         },
@@ -103,7 +106,7 @@ function RouteComponent() {
         enableSorting: false,
         cell(props) {
           const project = props.row.original;
-          return project?.project_proposition?.status !== "validated" ? (
+          return project?.status == "proposed" ? (
             <Container
               as="div"
               style={{
@@ -123,10 +126,21 @@ function RouteComponent() {
                 size="sm"
                 onClick={async () => {
                   const feedback = window.prompt("Feedback", "")!;
-                  await rejectProject({
-                    id: project.id,
-                    body: { feedback },
-                  });
+                  if (feedback) {
+                    const TestQuery= `SELECT * FROM project_proposition_feedback WHERE project_id = ${project.id}`;	
+                    const result = await sql("select",TestQuery);
+                    if(result?.data?.length>0){
+                      const query1= `UPDATE project_proposition_feedback SET feedback='${feedback}' WHERE project_id = ${project.id}`;
+                      await sql("update", query1);
+                    }else if(result?.data?.length==0){
+                      const query3= `INSERT INTO project_proposition_feedback (project_id, feedback) VALUES (${project.id}, '${feedback}')`;
+                      await sql("insert", query3);
+                    }
+                  }else{
+                    if (window.confirm("Are you sure you want to reject this project?")) {
+                      await sql("update", `UPDATE project_propositions SET status = 'rejected' WHERE project_id = ${project.id}`);
+                    }
+                  }                
                 }}
               >
                 Reject

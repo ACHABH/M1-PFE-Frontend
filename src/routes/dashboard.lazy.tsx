@@ -55,7 +55,7 @@ function Component() {
               <SideMenu userRole={import.meta.env.DEV ? "admin" : user!.role} />
             )}
           </div>
-          <div style={{ height: "100vh" }} className="mx-auto content">
+          <div style={{ height: "100%" }} className="mx-auto content">
             <button
               onClick={() => toggleMenu(setIsSidebarCollapsed)}
               className="collapse-toggle btn btn-primary"

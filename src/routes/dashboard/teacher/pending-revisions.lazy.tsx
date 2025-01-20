@@ -1,13 +1,15 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
 import { useAuth } from '../../../api/auth';
-import Table from "../../../components/table";
+import Table from "../../../components/Table";
 import { ColumnDef } from "@tanstack/react-table";
 import ProposalModal from "../../../components/Teacher/proposal-modal";
 import { 
   type FullProject,
   useGetAll as useGetAllProjects,
  } from '../../../api/project';
+// import { sql, useSelectSql  } from "../../../api/sql.ts";
+
 
 export const Route = createLazyFileRoute(
   '/dashboard/teacher/pending-revisions',
@@ -16,37 +18,11 @@ export const Route = createLazyFileRoute(
 })
 
 function RouteComponent() {
-  // const [proposals, setProposals] = useState([
-  //   {
-  //     title: 'AI Research',
-  //     feedback: 'Please elaborate on the technologies section.',
-  //     status: 'pending',
-  //     description: 'Exploring AI applications in education.',
-  //   },
-  //   {
-  //     title: 'Robotics Design',
-  //     feedback: 'Provide more details on material requirements.',
-  //     status: 'pending',
-  //     description: 'Creating robotic models for industrial automation.',
-  //   },
-  //   {
-  //     title: 'Blockchain Security',
-  //     feedback: '',
-  //     status: 'approved',
-  //     description: 'Developing secure blockchain algorithms.',
-  //   },
-  // {
-  //   title: 'Quantum Computing',
-  //   feedback: 'The proposal lacks sufficient detail on implementation.',
-  //   status: 'rejected',
-  //   description: 'Investigating quantum algorithms for cryptography.',
-  // },
-  // ])
+  const user = useAuth((user) => {
+    if (user) return;
+  });
 
   const { data: projects } = useGetAllProjects();
-  const user = useAuth((user) => {
-      if (user) return;
-    });
 
   const proposals = useMemo(
     () =>

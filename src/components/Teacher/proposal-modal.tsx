@@ -7,9 +7,8 @@ import { PROJECT_TYPE } from "../../constant/enum";
 import { useForm } from "../../hooks/useForm";
 import {
   useGetOne as useGetOneProject,
-  useCreate as useCreateProject,
-  useUpdate as useUpdateProject,
 } from "../../api/project";
+import { sql } from "../../api/sql.ts";
 
 const FormSchema = z.object({
     type: z.enum(PROJECT_TYPE),
@@ -28,8 +27,6 @@ type Props = {
 // eslint-disable-next-line react-refresh/only-export-components
 export default forwardRef<Ref, Props>(({ projectID = 0, onClose }, ref) => {
     const { data: project } = useGetOneProject(projectID);
-      const { mutateAsync: createProject } = useCreateProject();
-      const { mutateAsync: updateProject } = useUpdateProject();
     
       const form = useForm<ZodFormSchema>({
           resolver: zodResolver(FormSchema),
@@ -46,17 +43,29 @@ export default forwardRef<Ref, Props>(({ projectID = 0, onClose }, ref) => {
             feedback: project?.project_proposition_feedback?.feedback ?? "",
           },
         });
+
+      const handleSubmit = async () => {
+        const data = form.getValues();
+        // console.log("Handle submit called with data:", data);
+        try {
+            const updatePropositionQuery = `UPDATE project_propositions SET status='pending' WHERE id = ${projectID}`;
+            const resultProposition = await sql("update", updatePropositionQuery);
+            // console.log(resultProposition);
+
+            const updateQuery = `UPDATE projects SET type='${data.type}', title='${data.title}', description='${data.description}' WHERE id = ${projectID}`;
+            const result = await sql("update", updateQuery);
+            alert("Project updated successfully");
+            // console.log(result);
+        } catch (error) {
+            console.error("Error updating project:", error);
+        }
+        form.reset();
+        onClose();
+     }
     
     return (
         <AddModal ref={ref} title={project ? "Update Proposal" : "Add Proposal"} action={null}>
-        <Form
-          onSubmit={form.onSubmit(async (data) => {
-            if (project) await updateProject({ id: projectID, body: data });
-            else await createProject(data);
-            form.reset();
-            onClose();
-          })}
-        >
+        <Form>
             <Form.Group className="mb-3">
               <Form.Label>Type</Form.Label>
               <Form.Select {...form.register("type", { required: true })}>
@@ -92,7 +101,7 @@ export default forwardRef<Ref, Props>(({ projectID = 0, onClose }, ref) => {
               />
             </Form.Group>
             <Container as="div" style={{ display: "flex", gap: 5 }}>
-                <Button type="submit" variant="primary">
+                <Button variant="primary" onClick={async () => await handleSubmit()}>
                     {project ? "Update" : "Add"}
                 </Button>
                 <Button type="reset" variant="secondary" onClick={onClose}>

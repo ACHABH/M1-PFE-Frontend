@@ -8,12 +8,17 @@ import {
   type FullProject,
   useGetAll as useGetAllProjects
 } from "../../../api/project";
-
+import {useSelectSql} from '../../../api/sql';
+import { sql } from "../../../api/sql.ts";
 export const Route = createLazyFileRoute('/dashboard/admin/archive')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
+  const query = "SELECT * FROM projects";
+  const {data} = useSelectSql(query);
+  const propositionQuery= "SELECT * FROM project_propositions";
+
     const [projects] = useState([
         {
           title: 'AI Research',
@@ -117,7 +122,18 @@ function RouteComponent() {
       //     },
       //   ]
       // }, []);
-    
+      
+
+      async function addNewProject() {
+        const query = "INSERT INTO project_students (project_id, student_id) VALUES ('23','5')";
+        try {
+          const result = await sql("insert", query);
+          console.log("Insert successful:", result);
+        } catch (error) {
+          console.error("Error inserting user:", error);
+        }
+      }
+      // addNewProject();
       return (
         <div className="container mt-4">
           <h3>Project Archive</h3>
