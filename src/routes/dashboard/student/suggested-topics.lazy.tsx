@@ -8,8 +8,10 @@ import {
   Modal,
   Form,
   Alert,
+  Spinner,
 } from "react-bootstrap";
 import { useState } from "react";
+import { useSelectSql } from "../../../api/sql";
 
 export const Route = createLazyFileRoute("/dashboard/student/suggested-topics")(
   {
@@ -17,142 +19,16 @@ export const Route = createLazyFileRoute("/dashboard/student/suggested-topics")(
   }
 );
 
-interface Topic {
-  id: number;
-  title: string;
-  description: string;
-  type: "1275" | "Classic";
-  teacher: string;
-}
-
-// Sample Topics
-const topics: Topic[] = [
-  {
-    id: 1,
-    title: "AI-Based Disease Prediction",
-    description:
-      "A project to use machine learning for early disease prediction.",
-    type: "1275",
-    teacher: "Dr. Sarah Johnson",
-  },
-  {
-    id: 2,
-    title: "Augmented Reality in Education",
-    description:
-      "Developing AR applications for immersive learning experiences.",
-    type: "1275",
-    teacher: "Dr. Marie Curie",
-  },
-  {
-    id: 3,
-    title: "Blockchain for Secure Voting",
-    description:
-      "Implementing a blockchain-based solution for secure voting systems.",
-    type: "Classic",
-    teacher: "Prof. Alan Turing",
-  },
-  {
-    id: 4,
-    title: "Sustainable Energy Solutions",
-    description:
-      "Developing innovative solutions for renewable energy and energy efficiency.",
-    type: "Classic",
-    teacher: "Dr. Albert Einstein",
-  },
-  {
-    id: 5,
-    title: "Cybersecurity Threat Intelligence",
-    description:
-      "Building advanced threat intelligence platforms to protect critical infrastructure.",
-    type: "1275",
-    teacher: "Dr. Grace Hopper",
-  },
-  {
-    id: 6,
-    title: "Quantum Computing for Drug Discovery",
-    description:
-      "Utilizing quantum computing to accelerate drug discovery processes.",
-    type: "1275",
-    teacher: "Dr. Richard Feynman",
-  },
-  {
-    id: 7,
-    title: "IoT-Enabled Smart Cities",
-    description:
-      "Developing IoT solutions for intelligent urban infrastructure.",
-    type: "1275",
-    teacher: "Dr. Nikola Tesla",
-  },
-  {
-    id: 8,
-    title: "Natural Language Processing for Sentiment Analysis",
-    description:
-      "Building NLP models to analyze and understand human language.",
-    type: "Classic",
-    teacher: "Dr. Alan Turing",
-  },
-  {
-    id: 9,
-    title: "Autonomous Vehicle Navigation Systems",
-    description:
-      "Developing self-driving car technology for safer and more efficient transportation.",
-    type: "1275",
-    teacher: "Dr. Elon Musk",
-  },
-  {
-    id: 10,
-    title: "Bioinformatics for Precision Medicine",
-    description:
-      "Analyzing biological data to develop personalized medical treatments.",
-    type: "Classic",
-    teacher: "Dr. Marie Curie",
-  },
-  {
-    id: 11,
-    title: "Edge Computing for Real-time Applications",
-    description:
-      "Deploying computing resources closer to data sources for faster processing.",
-    type: "1275",
-    teacher: "Dr. John McCarthy",
-  },
-  {
-    id: 12,
-    title: "Machine Learning for Financial Forecasting",
-    description: "Using ML algorithms to predict future market trends.",
-    type: "Classic",
-    teacher: "Dr. Andrew Ng",
-  },
-  {
-    id: 13,
-    title: "Virtual and Augmented Reality for Therapy",
-    description: "Developing VR/AR experiences for therapeutic interventions.",
-    type: "1275",
-    teacher: "Dr. Jane Goodall",
-  },
-  {
-    id: 14,
-    title: "Blockchain for Supply Chain Transparency",
-    description:
-      "Implementing blockchain technology to track products through the supply chain.",
-    type: "Classic",
-    teacher: "Dr. Satoshi Nakamoto",
-  },
-  {
-    id: 15,
-    title: "AI-Powered Personal Assistants",
-    description:
-      "Creating intelligent personal assistants to enhance productivity and convenience.",
-    type: "1275",
-    teacher: "Dr. Geoffrey Hinton",
-  },
-];
-
 function Component() {
+  // Fetching topics from the database
+  const { data, isLoading, error } = useSelectSql(
+    `SELECT id, title, description, type FROM projects WHERE status = 'approved'`
+  );
+
   // State Management
   const [selectedTopics, setSelectedTopics] = useState<number[]>([]); // Track selected topic IDs
   const [showModal, setShowModal] = useState(false); // Modal visibility
   const [binomeEmail, setBinomeEmail] = useState<string>(""); // Binome email
-  // const [binomeStatus, setBinomeStatus] = useState<"Pending" | "Accepted" | "Declined" | null>(null); // Binome response
 
   const handleSelectTopic = (topicId: number) => {
     if (selectedTopics.includes(topicId)) {
@@ -171,14 +47,11 @@ function Component() {
   const handleSubmitBinome = () => {
     console.log("Selected Topics:", selectedTopics);
     console.log("Binome Email:", binomeEmail);
-
-    // setBinomeStatus("Pending");
     setShowModal(false);
   };
 
-  // const handleBinomeResponse = (response: "Accepted" | "Declined") => {
-  //   setBinomeStatus(response);
-  // };
+  if (isLoading) return <Spinner animation="border" />;
+  if (error) return <Alert variant="danger">Error fetching topics.</Alert>;
 
   return (
     <div>
@@ -199,7 +72,7 @@ function Component() {
         )}
       </div>
       <Row className="gy-4">
-        {topics.map((topic) => (
+        {data.map((topic: any) => (
           <Col md={6} key={topic.id}>
             <Card
               className={`h-100 shadow-sm ${
@@ -212,7 +85,7 @@ function Component() {
                   {topic.description}
                 </Card.Text>
                 <Card.Subtitle className="mb-2 text-muted">
-                  Proposed by {topic.teacher}
+                  {topic.teacher}
                 </Card.Subtitle>
                 <Badge
                   bg={topic.type === "1275" ? "success" : "secondary"}

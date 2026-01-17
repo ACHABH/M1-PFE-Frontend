@@ -1,61 +1,55 @@
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import Table from "../../../components/table";
-import type { Project, Teacher, User } from "../../../types/db";
-import { useMemo } from "react";
+import Table from "../../../components/Table";
 import { ColumnDef } from "@tanstack/react-table";
-import { Prettier } from "../../../types/util";
+import { sql, useSelectSql } from '../../../api/sql.ts';
 
 export const Route = createLazyFileRoute("/dashboard/admin/supervision")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const [projects, setProjects] = useState([
-    { title: "AI Research", supervisor: "Dr. Jane Doe", status: "Assigned" },
-    { title: "Robotics Design", supervisor: "Unassigned", status: "approved" },
-    {
-      title: "Blockchain Security",
-      supervisor: "Unassigned",
-      status: "approved",
-    },
-  ]);
+  // const { data: projects = [] } = useGetAllProjects();
+  const query1 = `SELECT * FROM projects WHERE status = 'approved';`
+  const { data: projets, refetch } = useSelectSql(query1);
+  const projects = projets?.data;
+  const query = `SELECT * FROM users WHERE role = 'teacher';`;
+  const { data, error, isLoading  } = useSelectSql(query);
+  const teachers = data?.data;
 
-  const [availableTeachers] = useState([
-    "Dr. Jane Doe",
-    "Dr. John Smith",
-    "Dr. Alice Green",
-    "Dr. Mark Brown",
-  ]);
-
-  const [selectedProject, setSelectedProject] = useState<string | null>(null);
+  const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [showTeacherList, setShowTeacherList] = useState(false);
 
-  const handleAssign = (title: string, supervisor: string) => {
-    setProjects(
-      projects.map((project) =>
-        project.title === title
-          ? { ...project, supervisor, status: "Assigned" }
-          : project
-      )
-    );
-    setShowTeacherList(false); // Hide the teacher list after assignment
-    setSelectedProject(null);
-  };
+  const handleAssign = useCallback(
+    async (projectId: number, teacherId: number) => {
+      try {
+        const query= `UPDATE projects SET status = 'assigned' WHERE id = ${projectId}`;
+        const query2 = `INSERT INTO project_supervisors (project_id, teacher_id, role) VALUES (${projectId}, ${teacherId}, 'SUPERVISOR')`;
+        await sql("update", query);
+        await sql("insert", query2);
+        alert("Supervisor assigned successfully");
+        setShowTeacherList(false);
+        setSelectedProject(null);
+        refetch();
+      } catch (error) {
+        console.error("Failed to assign supervisor:", error);
+      }
+    },
+    [refetch]
+  );
 
-  const openTeacherList = (projectTitle: string) => {
-    setSelectedProject(projectTitle);
+  const openTeacherList = useCallback((projectId: number) => {
+    setSelectedProject(projectId);
     setShowTeacherList(true);
-  };
+  }, []);
 
-  const closeTeacherList = () => {
+  const closeTeacherList = useCallback(() => {
     setShowTeacherList(false);
     setSelectedProject(null);
-  };
+  }, []);
 
-  type Supervision = Prettier<Project & User & Teacher>;
 
-  const columns = useMemo<ColumnDef<Supervision>[]>(() => {
+  const columns = useMemo<ColumnDef<any>[]>(() => {
     return [
       {
         accessorKey: "title",
@@ -67,16 +61,16 @@ function RouteComponent() {
         accessorKey: "supervisor",
         header: "Supervisor",
         enableSorting: true,
-        cell: (props) => props.getValue(),
+        cell: (props) => {
+          const supervisor = props.row.original.supervisor;
+          return supervisor ? supervisor.name : "Unassigned";
+        },
       },
       {
         accessorKey: "status",
         header: "Status",
         enableSorting: true,
-        cell: (props) => {
-          const status = props.getValue() as string;
-          return status === "approved" ? "Pending" : status;
-        },
+        cell: (props) => props.getValue() === "approved" ? "Pending" : props.getValue(),
       },
       {
         accessorKey: "actions",
@@ -86,7 +80,7 @@ function RouteComponent() {
           return project.status === "approved" ? (
             <button
               className="btn btn-success btn-sm"
-              onClick={() => openTeacherList(project.title)}
+              onClick={() => openTeacherList(project.id)}
             >
               Assign Supervisor
             </button>
@@ -94,78 +88,72 @@ function RouteComponent() {
         },
       },
     ];
-  }, []);
+  }, [openTeacherList]);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div className="mx-auto mt-4" style={{ width: "95%", minHeight: "100vh" }}>
-      <h2>Assign Supervision</h2>
-      <p className="h6 text-secondary">
-        This's the list of project left without superviser, Assign a superviser
-        for each project from the list of available Professors
-      </p>
-      {/* <table className="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Supervisor</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {projects.map((project, index) => (
-            <tr key={index}>
-              <td>{project.title}</td>
-              <td>{project.supervisor}</td>
-              <td>{project.status}</td>
-              <td>
-                {project.status === 'approved' && (
-                  <button
-                    className="btn btn-success btn-sm"
-                    onClick={() => openTeacherList(project.title)}
-                  >
-                    Assign Supervisor
-                  </button>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
-      <Table data={projects} columns={columns} />
-      {/* Modal for Selecting a Teacher */}
-      {showTeacherList && selectedProject && (
-        <div
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"
-          style={{ zIndex: 1050 }}
-        >
-          <div
-            className="component-bg p-4 rounded shadow"
-            style={{ width: "400px" }}
+    <div className="container-fluid px-4 py-5">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 className="fw-bold mb-2">Project Supervision</h2>
+          <p className="text-muted mb-0">
+            Manage and assign supervisors to approved projects
+          </p>
+        </div>
+        <div className="d-flex gap-2">
+          <button 
+            className="btn btn-outline-primary" 
+            onClick={() => refetch()}
           >
-            <h5>Assign Supervisor for "{selectedProject}"</h5>
-            <ul className="list-group mt-3">
-              {availableTeachers.map((teacher, index) => (
-                <li
-                  key={index}
-                  className="list-group-item d-flex justify-content-between align-items-center"
-                >
-                  {teacher}
-                  <button
-                    className="btn btn-primary btn-sm"
-                    onClick={() => handleAssign(selectedProject, teacher)}
-                  >
-                    Assign
-                  </button>
-                </li>
-              ))}
-            </ul>
-            <button
-              className="btn btn-secondary mt-3 w-100"
-              onClick={closeTeacherList}
-            >
-              Cancel
-            </button>
+            <i className="fas fa-sync-alt me-2"></i>
+            Refresh List
+          </button>
+        </div>
+      </div>
+
+      <div className="card shadow-sm border-0">
+        <div className="card-body p-0">
+          <Table
+            data={projects || []}
+            columns={columns}
+            className="table-hover"
+          />
+        </div>
+      </div>
+
+      {/* Teacher Assignment Modal */}
+      {showTeacherList && (
+        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content border-0 shadow">
+              <div className="modal-header border-bottom-0">
+                <h5 className="modal-title">Assign Supervisor</h5>
+                <button type="button" className="btn-close" onClick={closeTeacherList}></button>
+              </div>
+              <div className="modal-body">
+                <div className="list-group">
+                  {teachers?.map((teacher: any) => (
+                    <button
+                      key={teacher.id}
+                      className="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
+                      onClick={() => handleAssign(selectedProject!, teacher.id)}
+                    >
+                      <div className="avatar bg-primary bg-opacity-10 rounded-circle p-2">
+                        <i className="fas fa-user text-primary"></i>
+                      </div>
+                      <div>
+                        <h6 className="mb-0">{teacher.name}</h6>
+                        <small className="text-muted">
+                          {teacher.department || 'Department not specified'}
+                        </small>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -1,11 +1,11 @@
-import { useState } from 'react'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import Table from "../../../components/table";
+import Table from "../../../components/Table";
 import { useMemo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import type { Project} from "../../../types/db";
 import { Prettier } from "../../../types/util";
-
+import { sql, useSelectSql  } from "../../../api/sql.ts";
+import { useAuth } from "../../../api/auth";
 
 export const Route = createLazyFileRoute(
   '/dashboard/teacher/supervise-projects',
@@ -14,37 +14,27 @@ export const Route = createLazyFileRoute(
 })
 
 function RouteComponent() {
-  const [projects, setProjects] = useState([
-    {
-      title: 'AI Research',
-      type: 'Classic',
-      description: 'Exploring AI applications in education.',
-      status: 'approved',
-      id: 1,
-    },
-    {
-      title: 'Robotics Design',
-      type: 'Innovative',
-      description: 'Creating robotic models for industrial automation.',
-      status: 'approved',
-      id: 2,
-    },
-    {
-      title: 'Blockchain Security',
-      type: 'Innovative',
-      description: 'Developing secure blockchain algorithms.',
-      status: 'assigned',
-      id: 3,
-    },
-  ])
+  const query = `SELECT * FROM projects WHERE status = 'approved'`;
+  const { data, error, isLoading, refetch } = useSelectSql(query);
+  
 
-  const handleSelectProject = (title: string) => {
-    setProjects(
-      projects.map((project) =>
-        project.title === title ? { ...project, status: 'Selected' } : project,
-      ),
-    )
-    alert(`You have selected "${title}" for supervision.`)
+  const user = useAuth((user) => {
+    if (user) return;
+  });
+
+  const handleSelectProject = (id: number, title: string) => {
+    try{
+      const updateQuery = `UPDATE projects SET status = 'assigned' WHERE id = ${id}`;
+      const result = sql("update",updateQuery);
+      console.log("Project Assigned: ",result);
+      const setSupervisorQuery = `INSERT INTO project_supervisors (project_id, teacher_id, role) VALUES (${id}, ${user?.id}, 'SUPERVISOR')`;
+      const result2 = sql("insert",setSupervisorQuery);
+      console.log("Project Assigned: ",result2);
+      alert(`You have selected "${title}" for supervision.`);
+      refetch();
+    }catch (error) {
+      console.error("Error submitting proposal:", error);
+    }
   }
 
   type Supervise = Prettier<Project>;
@@ -86,7 +76,7 @@ function RouteComponent() {
           return projects.status === "approved" ? (
           <button
             className="btn btn-success btn-sm"
-            onClick={() => handleSelectProject(projects.title)}
+            onClick={() => handleSelectProject(projects.id, projects.title)}
           >
             Select
           </button>
@@ -96,6 +86,8 @@ function RouteComponent() {
     ]
   }, []);
 
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
   return (
     <div className="container mt-4">
       <h3>Supervise Project</h3>
@@ -145,7 +137,7 @@ function RouteComponent() {
           </tbody>
         </table>
       </div> */}
-      <Table data={projects} columns={columns} />
+      <Table data={data?.data} columns={columns} />
     </div>
   )
 }

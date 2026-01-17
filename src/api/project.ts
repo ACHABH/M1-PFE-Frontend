@@ -17,6 +17,7 @@ export type FullProject = Prettier<
       project_note: ProjectNote | null;
       project_proposition: ProjectProposition | null;
       project_jury: ProjectJury | null;
+      project_proposition_feedback: ProjectPropositionFeedback | null;
     }>
 >;
 
@@ -39,7 +40,9 @@ export function useGetArchive() {
   return useQuery({
     queryKey: QUERY.PROJECT.ARCHIVE(),
     async queryFn(context) {
-      const res = await request("/api/project/archive", { signal: context.signal });
+      const res = await request("/api/project/archive", {
+        signal: context.signal,
+      });
       const json = (await res.json()) as FetchResponse<{
         projects: Prettier<FullProject[]>;
       }>;
@@ -129,20 +132,32 @@ export function useDelete() {
   });
 }
 
+type UseValidateParams = {
+  id: number;
+  body: {
+    registration_start: string;
+    registration_end: string;
+    presentation_start: string;
+    presentation_end: string;
+  };
+};
+
 export function useValidate() {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn(id: number) {
-      return request(`/api/project/validate/${id}`, {
+    mutationFn(params: UseValidateParams) {
+      return request(`/api/project/validate/${params.id}`, {
         method: "PATCH",
+        body: JSON.stringify(params.body),
       });
     },
-    async onSuccess(res, id) {
+    async onSuccess(res, params) {
       if (!res.ok) return;
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: QUERY.PROJECT.ALL() }),
-        queryClient.invalidateQueries({ queryKey: QUERY.PROJECT.ONE(id) }),
+        queryClient.invalidateQueries({
+          queryKey: QUERY.PROJECT.ONE(params.id),
+        }),
       ]);
     },
   });
@@ -166,7 +181,9 @@ export function useReject() {
       if (!res.ok) return;
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: QUERY.PROJECT.ALL() }),
-        queryClient.invalidateQueries({ queryKey: QUERY.PROJECT.ONE(params.id) }),
+        queryClient.invalidateQueries({
+          queryKey: QUERY.PROJECT.ONE(params.id),
+        }),
       ]);
     },
   });

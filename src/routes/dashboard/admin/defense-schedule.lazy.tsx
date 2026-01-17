@@ -1,13 +1,19 @@
-import { ElementRef, useCallback, useMemo, useRef, useState } from "react";
+import { ElementRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import JurieModal from "../../../components/admin/jurie-modal";
 import { z } from "zod";
-import Table from "../../../components/table";
+import Table from "../../../components/Table";
 import type { Room, Student, Teacher, User } from "../../../types/db";
 import { ColumnDef } from "@tanstack/react-table";
 import { Prettier } from "../../../types/util";
+import ValidationModal from "../../../components/admin/validation-modal";
+import {
+  type FullProject
+} from "../../../api/project";
+import { useSelectSql } from '../../../api/sql.ts';
 
 const JuriesSlotSchema = z.object({
+  title: z.string().min(1),
   date: z.string().date(),
   time: z.string().time(),
   room: z.string().min(1),
@@ -24,66 +30,55 @@ export const Route = createLazyFileRoute("/dashboard/admin/defense-schedule")({
 
 function RouteComponent() {
   const ref = useRef<ElementRef<typeof JurieModal>>(null);
-  const [defenseId, setDefenseId] = useState(0);
+  const ValidationRef = useRef<ElementRef<typeof ValidationModal>>(null);
+  const [projectId, setProjectId] = useState(0);
+  const [defenseSchedules, setDefenseSchedules] = useState<any[]>([]);
 
-  const [JuriesSlots] = useState<JuriesSlot[]>([
-    {
-      date: "2024-01-20",
-      time: "10:00 AM",
-      room: "S101",
-      teachers: "John Doe, Jane Smith",
-      students: "Alice Brown, Bob Green",
-    },
-    {
-      date: "2024-01-21",
-      time: "02:00 PM",
-      room: "N102",
-      teachers: "Alice Green, Mark Brown",
-      students: "Bob Johnson, Sarah White",
-    },
-  ]);
 
-  // const [showAddModal, setShowAddModal] = useState(false);
+  const { data, isLoading, isError } = useSelectSql(`
+    SELECT 
+    p.id AS id,
+    p.title AS title,
+    pp.date AS date,
+    strftime('%H:%M', pp.date) AS time, -- Extracting time from datetime
+    r.room AS room,
+    GROUP_CONCAT(DISTINCT t.first_name || ' ' || t.last_name || ' (' || pj.role || ')') AS teachers,
+    GROUP_CONCAT(DISTINCT s.first_name || ' ' || s.last_name) AS students
+    FROM 
+        project_presentations pp
+    JOIN 
+        rooms r ON pp.room_id = r.id
+    JOIN 
+        projects p ON pp.project_id = p.id
+    LEFT JOIN 
+        project_juries pj ON pj.project_id = p.id
+    LEFT JOIN 
+        users t ON pj.teacher_id = t.id
+    LEFT JOIN 
+        project_students ps ON ps.project_id = p.id
+    LEFT JOIN 
+        users s ON ps.student_id = s.id
+    GROUP BY 
+        p.id, pp.date, r.room;
+    `);
 
-  // // Add Juries Slot
-  // const handleAddSlot = (/* newSlot: JuriesSlot */) => {
-  //   // setJuriesSlots([...JuriesSlots, newSlot]) // handled by query
-  //   setShowAddModal(false);
-  // };
+    useEffect(() => {
+        if (data) {
+          setDefenseSchedules(data?.data);
+        }
+      }, [data]);
 
-  // // Cancel Add Juries Slot
-  // const handleCancelAdd = () => {
-  //   setShowAddModal(false);
-  // };
 
-  // Export Schedule
-  const handleExportSchedule = () => {
-    const csvContent = [
-      ["Date", "Time", "Room", "Teachers", "Students"],
-      ...JuriesSlots.map((slot) => [
-        slot.date,
-        slot.time,
-        slot.room,
-        slot.teachers,
-        slot.students,
-      ]),
-    ]
-      .map((row) => row.join(","))
-      .join("\n");
-
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "Juries_schedule.csv";
-    link.click();
-    URL.revokeObjectURL(url);
-  };
-
-  type DefenseSchedule = Prettier<User & Room & Student & Teacher>
+  type DefenseSchedule = Prettier<User & Room & Student & Teacher & FullProject>;
 
   const columns = useMemo<ColumnDef<DefenseSchedule>[]>(() => {
     return [
+      {
+        accessorKey: "title",
+        header: "Title",
+        enableSorting: true,
+        cell: (props) => props.getValue(),
+      },
       {
         accessorKey: "date",
         header: "Date",
@@ -114,18 +109,77 @@ function RouteComponent() {
         enableSorting: true,
         cell: (props) => props.getValue(),
       },
+      {
+        header: "Actions",
+        cell: (props) => {
+          const defense = props.row.original;
+          return (
+            <div className="d-flex justify-content-center">
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={() => onShowValidation(defense.id)}
+              >
+                Update
+              </button>
+            </div>
+          );
+        }
+      }
     ];
   }, []);
 
-  const onShow = useCallback((defenseId: number = 0) => {
-    ref.current?.show();
-    setDefenseId(defenseId);
+  // const onShow = useCallback((defenseId: number) => {
+  //   ref.current?.show();
+  // }, []);
+
+  // const onClose = useCallback(() => {
+  //   ref.current?.close();
+  //   setDefenseId(0);
+  // }, []);
+
+  const onShowValidation = useCallback((projectId: number) => {
+    ValidationRef.current?.show();
+    setProjectId(projectId);
   }, []);
 
-  const onClose = useCallback(() => {
-    ref.current?.close();
-    setDefenseId(0);
+  const onCloseValidation = useCallback(() => {
+    ValidationRef.current?.close();
+    setProjectId(0);
   }, []);
+
+
+
+  // Export Schedule
+  const handleExportSchedule = () => {
+    const csvContent = [
+      ["Date", "Time", "Room", "Teachers", "Students"],
+      ...JuriesSlots.map((slot) => [
+        slot.date,
+        slot.time,
+        slot.room,
+        slot.teachers,
+        slot.students,
+      ]),
+    ]
+      .map((row) => row.join(","))
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "Juries_schedule.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading defense schedules.</div>;
+  }
 
   return (
     <div className="mx-auto mt-4" style={{ width: "95%", minHeight: "100vh" }}>
@@ -134,12 +188,12 @@ function RouteComponent() {
         This page allows you to generate and view Jurie schedule.
       </p>
       <div className="mb-3">
-        <button
+        {/* <button
           className="btn btn-primary"
           onClick={() => onShow()}
         >
           Set Juries Plan
-        </button>
+        </button> */}
         <button
           className="btn btn-secondary ms-2"
           onClick={handleExportSchedule}
@@ -148,46 +202,9 @@ function RouteComponent() {
         </button>
       </div>
 
-      <Table columns={columns} data={JuriesSlots} />
-      <JurieModal ref={ref} defenseID={defenseId} onClose={onClose}/>
+      <Table columns={columns} data={defenseSchedules} />
+      <ValidationModal ref={ValidationRef} projectId={projectId} onClose={onCloseValidation}/>
 
-      {/* <div style={{ overflowX: "auto" }}>
-        <table
-          className="table table-bordered table-striped"
-          style={{ whiteSpace: "nowrap" }}
-        >
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Room</th>
-              <th>Teachers</th>
-              <th>Students</th>
-            </tr>
-          </thead>
-          <tbody>
-            {JuriesSlots.map((slot, index) => (
-              <tr key={index}>
-                <td>{slot.date}</td>
-                <td>{slot.time}</td>
-                <td>{slot.room}</td>
-                <td>{slot.teachers}</td>
-                <td>{slot.students}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div> */}
-
-      {/* Add Juries Slot Modal */}
-      {/* {showAddModal && (
-        <div
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"
-          style={{ zIndex: 1050 }}
-        >
-          <AddDefenseSlot onAdd={handleAddSlot} onCancel={handleCancelAdd} />
-        </div>
-      )} */}
     </div>
   );
 }

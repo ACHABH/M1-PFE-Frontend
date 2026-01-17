@@ -88,14 +88,17 @@ export default forwardRef<Ref, Props>(({ userId = 0, onClose }, ref) => {
             <Form.Label>Password</Form.Label>
             <Form.Control
                 type="password"
-                {...form.register("password", { required: true })}
+                {...form.register("password")}
                 placeholder="Password"
             />
             </Form.Group>
             <Container as="div" className="d-flex justify-content-end">
-            <Button type="submit" variant="primary">
-                {user ? "Update" : "Create"}
-            </Button>
+                <Button type="submit" variant="primary">
+                    {user ? "Update" : "Create"}
+                </Button>
+                <Button type="reset" variant="secondary" onClick={onClose}>
+                    Cancel
+                </Button>
             </Container>
         </Form>
         </AddModal>
