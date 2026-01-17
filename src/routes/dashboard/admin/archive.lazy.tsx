@@ -1,14 +1,14 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useMemo, useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import Table from "../../../components/table";
+import Table from "../../../components/Table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { User } from '../../../types/db';
 import {
   type FullProject,
   useGetAll as useGetAllProjects
 } from "../../../api/project";
-import {useSelectSql} from '../../../api/sql';
+import { useSelectSql } from '../../../api/sql';
 import { sql } from "../../../api/sql.ts";
 export const Route = createLazyFileRoute('/dashboard/admin/archive')({
   component: RouteComponent,

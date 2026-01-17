@@ -94,50 +94,66 @@ function RouteComponent() {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div className="mx-auto mt-4" style={{ width: "95%", minHeight: "100vh" }}>
-      <h2>Assign Supervision</h2>
-      <p className="h6 text-secondary">
-        This is the list of projects without a supervisor. Assign a supervisor to each project from the list of available professors.
-      </p>
-      <Table data={projects} columns={columns} />
-      
-      {/* Modal for Selecting a Teacher */}
-      {showTeacherList && selectedProject !== null && (
-        <div
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50"
-          style={{ zIndex: 1050 }}
-        >
-          <div
-            className="component-bg p-4 rounded shadow"
-            style={{ width: "400px" }}
+    <div className="container-fluid px-4 py-5">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 className="fw-bold mb-2">Project Supervision</h2>
+          <p className="text-muted mb-0">
+            Manage and assign supervisors to approved projects
+          </p>
+        </div>
+        <div className="d-flex gap-2">
+          <button 
+            className="btn btn-outline-primary" 
+            onClick={() => refetch()}
           >
-            <h5>Assign Supervisor for "{projects.find((p:any) => p.id === selectedProject)?.title}"</h5>
-            <ul className="list-group mt-3">
-              {teachers.length > 0 ? (
-                teachers?.map((teacher:any) => (
-                  <li
-                    key={teacher.id}
-                    className="list-group-item d-flex justify-content-between align-items-center"
-                  >
-                    {teacher.first_name}
+            <i className="fas fa-sync-alt me-2"></i>
+            Refresh List
+          </button>
+        </div>
+      </div>
+
+      <div className="card shadow-sm border-0">
+        <div className="card-body p-0">
+          <Table
+            data={projects || []}
+            columns={columns}
+            className="table-hover"
+          />
+        </div>
+      </div>
+
+      {/* Teacher Assignment Modal */}
+      {showTeacherList && (
+        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content border-0 shadow">
+              <div className="modal-header border-bottom-0">
+                <h5 className="modal-title">Assign Supervisor</h5>
+                <button type="button" className="btn-close" onClick={closeTeacherList}></button>
+              </div>
+              <div className="modal-body">
+                <div className="list-group">
+                  {teachers?.map((teacher: any) => (
                     <button
-                      className="btn btn-primary btn-sm"
+                      key={teacher.id}
+                      className="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
                       onClick={() => handleAssign(selectedProject!, teacher.id)}
                     >
-                      Assign
+                      <div className="avatar bg-primary bg-opacity-10 rounded-circle p-2">
+                        <i className="fas fa-user text-primary"></i>
+                      </div>
+                      <div>
+                        <h6 className="mb-0">{teacher.name}</h6>
+                        <small className="text-muted">
+                          {teacher.department || 'Department not specified'}
+                        </small>
+                      </div>
                     </button>
-                  </li>
-                ))
-              ) : (
-                <li className="list-group-item text-center">No teachers available</li>
-              )}
-            </ul>
-            <button
-              className="btn btn-secondary mt-3 w-100"
-              onClick={closeTeacherList}
-            >
-              Cancel
-            </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

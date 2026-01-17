@@ -11,7 +11,6 @@ import ThemeProvider from "./contexts/theme.tsx";
 import QueryProvider from "./providers/query.tsx";
 import ErrorBoundary from "./error-boundary.tsx";
 import SchedulerProvider from "./contexts/scheduler.tsx";
-// import { sql } from "./api/sql.ts";
 
 const router = createRouter({ routeTree });
 
@@ -23,16 +22,15 @@ declare module "@tanstack/react-router" {
 
 const rootElement = document.getElementById("root");
 if (rootElement && !rootElement.innerHTML) {
-  // sql("select", "select * from users");
   createRoot(rootElement).render(
     <React.StrictMode>
       <ErrorBoundary>
         <React.Suspense fallback={<Loading />}>
           <QueryProvider>
             <ThemeProvider>
-              {/* <SchedulerProvider> */}
+              <SchedulerProvider>
                 <RouterProvider router={router} />
-              {/* </SchedulerProvider> */}
+              </SchedulerProvider>
             </ThemeProvider>
           </QueryProvider>
         </React.Suspense>
